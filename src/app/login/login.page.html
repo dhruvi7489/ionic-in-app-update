@@ -1,0 +1,38 @@
+<ion-content>
+  <div class="container w-100">
+    <div class="centered-element w-100">
+      <div class="content-wrap">
+        <div class="logo-title w-100">
+          <div>
+            <img class="img-wrapper" src="../../assets/shapes.svg">
+          </div>
+          <div>
+            <h3 class="header-title">
+              Hour4u
+            </h3>
+          </div>
+        </div>
+
+        <div>
+          <h1 class="title">Welcome to Hour4u</h1>
+          <p class="sub-title">Find temporary staff for your next gig fast and easy!</p>
+        </div>
+
+        <div class="c-input-label">
+          <ion-label>Enter your phone or email</ion-label>
+        </div>
+        <custom-input [inputType]="'text'" [placeholder]="'Phone or Email'" [ngModelData]="phone_no"
+          (keyUp)="onKeyUp($event)"></custom-input>
+        <div class="c-button-wrapper">
+          <custom-button [title]="'Next'" (btnClick)="openOTPPage()" [disabled]="!phone_no" [button]="'primary'">
+          </custom-button>
+        </div>
+        <h5 class="or-wrapper"><span>Or</span></h5>
+        <div class="c-button-wrapper">
+          <custom-button [title]="'Continue with Facebook'" (btnClick)="goToFacebook()" [button]="'secondary'"
+            [image]="'../../assets/facebook.png'"></custom-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -2,6 +2,7 @@
     position: relative;
     height: 100vh;
     text-align: center;
+    background-color: #fff;
 
     .centered-element {
         position: absolute;
@@ -11,6 +12,7 @@
         .header-title {
             padding-left: 15px;
             margin-bottom: 16px;
+            color: #1A1A1A;
         }
 
         .content-wrap {
@@ -19,16 +21,20 @@
             text-align: left;
             padding: 24px;
 
-            @media screen and (max-width: 1024px) {
+            @media screen and (max-width: 1440px) {
                 width: 40%;
+            }
+            
+            @media screen and (max-width: 1024px) {
+                width: 50%;
             }
 
             @media screen and (max-width: 768px) {
-                width: 45%;
+                width: 96%;
             }
 
             @media screen and (max-width: 425px) {
-                width: 70%;
+                width: 98%;
             }
         }
 
@@ -42,6 +48,7 @@
         .title {
             font-weight: 600;
             font-size: 24px;
+            color: #1A1A1A;
         }
 
         .sub-title {
@@ -73,31 +80,10 @@
                 margin-top: 7px;
                 font-weight: 500;
                 font-size: 16px;
+                color: #1A1A1A;
             }
         }
-
-        .c-button {
-            text-transform: capitalize;
-            font-weight: 500;
-            font-size: 16px;
-            margin: 20px 0px 20px 0px;
-            color: #fff;
-            --background: #080A52;
-            --color: #fff;
-            color: #fff;
-            box-shadow: 0px 1px 2px rgba(26, 26, 26, 0.04);
-            border-radius: 12px;
-        }
-
-        .button-disabled {
-            --background: #EBEBF1;
-            border: 1px solid #EBEBF1;
-            --color: #B2B3CB;
-            color: #B2B3CB;
-            box-shadow: 0px 1px 2px rgba(26, 26, 26, 0.04);
-            border-radius: 12px;
-        }
-
+        
         .resend_code {
             padding: 0px 0px 0px 10px;
         }
@@ -107,6 +93,10 @@
             font-size: 16px;
             color: #080A52;
             font-weight: 500;
+        }
+
+        .mt-4 {
+            margin-top: 4px;
         }
 
         .call_icon {
@@ -130,6 +120,10 @@
                 }
             }
         }
+
+        ion-icon {
+            color: #080A52;
+        }
     }
 
     .or-wrapper {
@@ -137,7 +131,7 @@
         text-align: center;
         border-bottom: 1px solid #636363;
         line-height: 0.1em;
-        margin: 10px 0 20px;
+        margin: 30px 0 20px;
 
         span {
             background: #fff;

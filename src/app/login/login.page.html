@@ -4,7 +4,7 @@
       <div class="content-wrap">
         <div class="logo-title w-100">
           <div>
-            <img class="img-wrapper" src="../../assets/shapes.svg">
+            <img class="img-wrapper" src="../../assets/imgs/logo.svg">
           </div>
           <div>
             <h3 class="header-title">
@@ -21,7 +21,7 @@
         <div class="c-input-label">
           <ion-label>Enter your phone or email</ion-label>
         </div>
-        <custom-input [inputType]="'text'" [placeholder]="'Phone or Email'" [ngModelData]="phone_no"
+        <custom-input [inputType]="'text'" [placeholder]="'Phone or Email'" [ngModelData]="phone_no" [id]="'phone_no'"
           (keyUp)="onKeyUp($event)"></custom-input>
         <div class="c-button-wrapper">
           <custom-button [title]="'Next'" (btnClick)="openOTPPage()" [disabled]="!phone_no" [button]="'primary'">
@@ -30,7 +30,7 @@
         <h5 class="or-wrapper"><span>Or</span></h5>
         <div class="c-button-wrapper">
           <custom-button [title]="'Continue with Facebook'" (btnClick)="goToFacebook()" [button]="'secondary'"
-            [image]="'../../assets/facebook.png'"></custom-button>
+            [image]="'../../assets/imgs/facebook.png'"></custom-button>
         </div>
       </div>
     </div>

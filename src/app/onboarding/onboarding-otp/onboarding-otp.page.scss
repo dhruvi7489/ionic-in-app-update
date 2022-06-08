@@ -1,0 +1,41 @@
+.container {
+    .c-container-body {
+        .c-input-label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #1A1A1A;
+            margin: 30px 0px 10px 0px;
+            line-height: 20px;
+        }
+    }
+
+    .resend_code {
+        padding: 0px 0px 0px 10px;
+
+        ion-icon {
+            color: #080A52;
+        }
+    }
+
+    .resend_link {
+        padding: 0px 0px 0px 10px;
+        font-size: 16px;
+        color: #080A52;
+        font-weight: 500;
+    }
+}
+
+.footer {
+    background: #fff;
+    border-top: 1px solid #E8E8E8;
+    padding: 16px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+
+    .img-outer-wrap {
+        margin-top: 10px;
+    }
+}

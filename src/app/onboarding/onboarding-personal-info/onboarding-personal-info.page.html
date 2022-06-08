@@ -1,0 +1,62 @@
+<app-onboarding-header></app-onboarding-header>
+
+<ion-content class="container m-10" id="personal-info">
+  <div class="c-container-body mt-20 ml-15 mr-15 mb-15">
+    <div class="main-body-heading-sm bold-graphik-font fw-600">Provide your personal information</div>
+    <div class="c-button-wrapper">
+      <custom-button [title]="'Continue with Facebook'" (btnClick)="goToFacebook()" [button]="'secondary'"
+        [image]="'../../assets/imgs/facebook.png'"></custom-button>
+    </div>
+    <div class="c-input-label">
+      <ion-label>Your name*</ion-label>
+    </div>
+    <custom-input [inputType]="'text'" [placeholder]="'Full name'" [ngModelData]="onboardingService.full_name"
+      [id]="'full_name'" (keyUp)="gtFullName($event)">
+    </custom-input>
+
+    <div class="c-input-label">
+      <ion-label>Date of birth*</ion-label>
+    </div>
+    <custom-input [inputType]="'date'" [placeholder]="'Email Address'" [ngModelData]="onboardingService.dob"
+      (dateChange)="getDOB($event)" [id]="'dob'" (dateChange)="onDateChange($event)"
+      [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg'">
+    </custom-input>
+
+    <div class="c-input-label">
+      <ion-label>Email address*</ion-label>
+    </div>
+
+    <custom-input [inputType]="'email'" [placeholder]="'Email Address'" [ngModelData]="onboardingService.email_address"
+      [id]="'email_address'" (keyUp)="getEmailAddress($event)">
+    </custom-input>
+    <!-- <input (click)="focus()" id="iddata"> -->
+
+    <div class="c-input-label">
+      <ion-label>Gender*</ion-label>
+    </div>
+    <div class="d-flex justify-content-space-between">
+      <custom-input [inputType]="'radio'" [ngModelData]="onboardingService.gender" [id]="'male'" [value]="'Male'"
+        [name]="'gender'" (radioChange)="getGender($event)">
+      </custom-input>
+      <custom-input [inputType]="'radio'" [ngModelData]="gender" [id]="'female'" [value]="'Female'" [name]="'gender'"
+        (radioChange)="getGender($event)">
+      </custom-input>
+      <custom-input [inputType]="'radio'" [ngModelData]="gender" [id]="'other'" [value]="'Other'" [name]="'gender'"
+        (radioChange)="getGender($event)">
+      </custom-input>
+    </div>
+
+    <div class="c-input-label">
+      <ion-label>Referral code</ion-label>
+    </div>
+    <custom-input [inputType]="'text'" [placeholder]="'Referral code'" [ngModelData]="onboardingService.referral_code"
+      [id]="'referral_code'" (keyUp)="getReferralCode($event)">
+    </custom-input>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <custom-button [title]="'Next'" (btnClick)="openProfilePictureUploadPage()" [disabled]="disable()"
+    [button]="'primary'">
+  </custom-button>
+</ion-footer>

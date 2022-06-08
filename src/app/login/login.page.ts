@@ -22,7 +22,6 @@ export class LoginPage implements OnInit {
           phone_no: this.phone_no
         }
       };
-      console.log(navigationExtras)
       this.router.navigate(["otp"], navigationExtras);
     }
   }
@@ -31,6 +30,6 @@ export class LoginPage implements OnInit {
   }
 
   onKeyUp(event) {
-    this.phone_no = event;
+    this.phone_no = event.ngModelData;
   }
 }

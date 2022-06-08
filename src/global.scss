@@ -25,8 +25,317 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+// IMPORT FONT-FAMILY
+@import "./font-stylesheet.css";
+
+// IMPORT SPACING FILES
+@import "./margin-stylesheet.css";
+@import "./padding-stylesheet.css";
+
+ion-content,
+ion-header,
+ion-footer,
+app-onboarding-header {
+    font-family: Graphik !important;
+    --background: #fff !important;
+    font-style: normal;
+    background: #fff !important;
+}
+
+.graphik-font {
+    font-family: Graphik;
+}
+
+// COLOR CODE
+.primary {
+    color: #080A52;
+}
+
+.secondary {
+    color: #1A1A1A;
+}
+
+.ternary {
+    color: #636363;
+}
+
+// FONT WEIGHT
+.fw-400 {
+    font-weight: 400; // Regular Font
+}
+
+.fw-500 {
+    font-weight: 500; // Medium Font
+}
+
+.fw-600 {
+    font-weight: 600; // Semi-Bold Font
+}
+
+.fw-700 {
+    font-weight: 700; // Bold font
+}
+
+
+// HEADER STYLES
+@media screen and (max-width: 320px) {
+    .main-body-heading-2xl {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 36px;
+        line-height: 44px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-xl {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 32px;
+        line-height: 40px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-lg {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 28px;
+        line-height: 36px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-md {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 32px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-sm {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 20px;
+        line-height: 28px;
+        letter-spacing: -0.02em;
+    }
+}
+
+@media screen and (min-width: 321px) and (max-width: 768px) {
+    .main-body-heading-2xl {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 36px;
+        line-height: 44px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-xl {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 32px;
+        line-height: 40px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-lg {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 28px;
+        line-height: 36px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-md {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 32px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-sm {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 20px;
+        line-height: 28px;
+        letter-spacing: -0.02em;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .main-body-heading-2xl {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 40px;
+        line-height: 48px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-xl {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 36px;
+        line-height: 44px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-lg {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 32px;
+        line-height: 40px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-md {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 28px;
+        line-height: 36px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-sm {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 32px;
+        letter-spacing: -0.02em;
+    }
+}
+
+@media screen and (min-width: 1025px) and (max-width: 1440px) {
+    .main-body-heading-2xl {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 40px;
+        line-height: 48px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-xl {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 36px;
+        line-height: 44px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-lg {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 32px;
+        line-height: 40px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-md {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 28px;
+        line-height: 36px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-sm {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 32px;
+        letter-spacing: -0.02em;
+    }
+}
+
+@media screen and (min-width: 1441px) {
+    .main-body-heading-2xl {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 40px;
+        line-height: 48px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-xl {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 36px;
+        line-height: 44px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-lg {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 32px;
+        line-height: 40px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-md {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 28px;
+        line-height: 36px;
+        letter-spacing: -0.02em;
+    }
+
+    .main-body-heading-sm {
+        color: #1A1A1A;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 32px;
+        letter-spacing: -0.02em;
+    }
+}
+
+
+// SUB-HEADER STYLES
+.sub-heading-xl {
+    font-style: normal;
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: -0.02em;
+}
+
+.sub-heading-lg {
+    font-style: normal;
+    font-size: 18px;
+    line-height: 28px;
+    letter-spacing: -0.02em;
+}
+
+.sub-heading-md {
+    font-style: normal;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+}
+
+.sub-heading-sm {
+    font-style: normal;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -0.02em;
+}
+
+.sub-heading-xs {
+    font-style: normal;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: -0.02em;
+}
+
+// GENERAL STYLES
 .align-self-center {
     align-self: center;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.justify-content-space-between {
+    justify-content: space-between;
 }
 
 .d-flex {
@@ -35,4 +344,28 @@
 
 .c-pointer {
     cursor: pointer;
+}
+
+.header-md::after {
+    background-image: none !important;
+}
+
+.position-fixed {
+    position: fixed;
+}
+
+.position-absolute {
+    position: absolute;
+}
+
+.inner-scroll {
+    height: calc(100% - 175px) !important;
+}
+
+ion-footer {
+    bottom: 0px;
+    min-height: 98px;
+    padding: 16px 16px 0px 16px;
+    background: #fff;
+    border: 1px solid #E8E8E8;
 }

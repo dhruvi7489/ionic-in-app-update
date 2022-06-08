@@ -2,6 +2,7 @@
     position: relative;
     height: 100vh;
     text-align: center;
+    background-color: #fff;
 
     .centered-element {
         position: absolute;
@@ -10,6 +11,7 @@
 
         .header-title {
             padding-left: 15px;
+            color: #1A1A1A;
         }
 
         .content-wrap {
@@ -17,6 +19,10 @@
             margin: auto;
             text-align: left;
             padding: 24px;
+
+            @media screen and (max-width: 1440px) {
+                width: 40%;
+            }
 
             @media screen and (max-width: 1024px) {
                 width: 50%;
@@ -41,6 +47,7 @@
         .title {
             font-weight: 600;
             font-size: 24px;
+            color: #1A1A1A;
         }
 
         .sub-title {

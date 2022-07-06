@@ -7,7 +7,7 @@ import { NavigationExtras, Router } from '@angular/router';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  phone_no = null;
+  mobile = null;
   constructor(
     public router: Router
   ) { }
@@ -16,10 +16,10 @@ export class LoginPage implements OnInit {
   }
 
   openOTPPage() {
-    if (this.phone_no) {
+    if (this.mobile) {
       const navigationExtras: NavigationExtras = {
         state: {
-          phone_no: this.phone_no
+          mobile: this.mobile
         }
       };
       this.router.navigate(["otp"], navigationExtras);
@@ -30,6 +30,6 @@ export class LoginPage implements OnInit {
   }
 
   onKeyUp(event) {
-    this.phone_no = event.ngModelData;
+    this.mobile = event.ngModelData;
   }
 }

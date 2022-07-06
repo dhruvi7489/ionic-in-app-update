@@ -18,13 +18,13 @@
           <p class="sub-title">Find temporary staff for your next gig fast and easy!</p>
         </div>
 
-        <div class="c-input-label">
+        <div class="c-input-label secondary">
           <ion-label>Enter your phone or email</ion-label>
         </div>
-        <custom-input [inputType]="'text'" [placeholder]="'Phone or Email'" [ngModelData]="phone_no" [id]="'phone_no'"
+        <custom-input [inputType]="'text'" [placeholder]="'Phone or Email'" [ngModelData]="mobile" [id]="'mobile'"
           (keyUp)="onKeyUp($event)"></custom-input>
         <div class="c-button-wrapper">
-          <custom-button [title]="'Next'" (btnClick)="openOTPPage()" [disabled]="!phone_no" [button]="'primary'">
+          <custom-button [title]="'Next'" (btnClick)="openOTPPage()" [disabled]="!mobile" [button]="'primary'">
           </custom-button>
         </div>
         <h5 class="or-wrapper"><span>Or</span></h5>

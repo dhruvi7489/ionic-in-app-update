@@ -4,8 +4,9 @@ import { BehaviorSubject } from 'rxjs';
 import { ToastService } from '../services/toast.service';
 import { ApiService } from './api.service';
 import { Apiurl } from './route';
-import { TOKEN_KEY } from './storage-keys';
+import { TOKEN_KEY, TOKEN_TYPE } from './storage-keys';
 import { map } from 'rxjs/operators';
+import { LoadingService } from '../services/loading.service';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +17,8 @@ export class CommonProvider {
     constructor(
         public http: HttpClient,
         private toastService: ToastService,
-        public apiService: ApiService
+        public apiService: ApiService,
+        public loadingService: LoadingService
     ) {
     }
 
@@ -26,8 +28,9 @@ export class CommonProvider {
         data: any,
         headers?: any
     ) {
+        this.loadingService.show();
         const httpHeader = new HttpHeaders({
-            Authorization: 'Bearer ' + localStorage.getItem(TOKEN_KEY)
+            Authorization: localStorage.getItem(TOKEN_TYPE) + " " + localStorage.getItem(TOKEN_KEY)
         });
         return new Promise(async (resolve, reject) => {
             return this.http
@@ -35,8 +38,11 @@ export class CommonProvider {
                 .subscribe(
                     (data: any) => {
                         resolve(data);
+                        this.loadingService.dismiss();
                     },
                     (error: HttpErrorResponse) => {
+                        reject(error)
+                        this.loadingService.dismiss();
                         if (error && error.error && error.error.message) {
                             this.toastService.showMessage(error.error.message)
                         }
@@ -51,8 +57,9 @@ export class CommonProvider {
         data: any,
         headers?: any
     ) {
+        this.loadingService.show();
         const httpHeader = new HttpHeaders({
-            Authorization: 'Bearer ' + localStorage.getItem(TOKEN_KEY)
+            Authorization: localStorage.getItem(TOKEN_TYPE) + " " + localStorage.getItem(TOKEN_KEY)
         });
 
         return new Promise(async (resolve, reject) => {
@@ -61,8 +68,11 @@ export class CommonProvider {
                 .subscribe(
                     (data: any) => {
                         resolve(data);
+                        this.loadingService.dismiss();
                     },
                     (error: HttpErrorResponse) => {
+                        reject(error)
+                        this.loadingService.dismiss();
                         if (error && error.error && error.error.message) {
                             this.toastService.showMessage(error.error.message)
                         }
@@ -77,17 +87,20 @@ export class CommonProvider {
         data: any,
         headers?: any
     ) {
+        this.loadingService.show();
         const httpHeader = new HttpHeaders({
-            Authorization: 'Bearer ' + localStorage.getItem(TOKEN_KEY)
+            Authorization: localStorage.getItem(TOKEN_TYPE) + " " + localStorage.getItem(TOKEN_KEY)
         });
-
 
         return new Promise(async (resolve, reject) => {
             return this.http.put(Apiurl.RoutePath + url, data, { headers: httpHeader }).subscribe(
                 (data: any) => {
                     resolve(data);
+                    this.loadingService.dismiss();
                 },
                 (error: any) => {
+                    reject(error)
+                    this.loadingService.dismiss();
                     if (error && error.error && error.error.message) {
                         this.toastService.showMessage(error.error.message)
                     }

@@ -1,34 +1,36 @@
-<app-onboarding-header></app-onboarding-header>
+<app-onboarding-header *ngIf="!onboardingService.showExperience"></app-onboarding-header>
+<app-onboarding-header *ngIf="onboardingService.showExperience" [headerTitle]="'Experiences'"></app-onboarding-header>
 
-<ion-content class="container m-10" *ngIf="!onboardingService.showExperience">
-  <div class="c-container-body mt-20 ml-15 mr-15">
-    <div class="main-body-heading-sm bold-graphik-font fw-600">Select the type of jobs you are interested in</div>
-    <div class="sub-heading-sm bold-graphik-font secondary fw-500 mt-15 mb-8">Marketing</div>
+<ion-content class="container" *ngIf="!onboardingService.showExperience">
+  <div class="c-container-body mt-24 ml-16 mr-16">
+    <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Select the type of jobs you are interested in
+    </div>
+    <div class="sub-heading-sm bold-graphik-font secondary fw-500 mt-24 mb-8">Marketing</div>
 
-    <ion-chip *ngFor="let in of counter;let i=index" class="ml-8"
+    <ion-chip *ngFor="let in of counter;let i=index" (click)="addMarketing(in)"
       [ngClass]="{'active-chip' : in.active,'in-active-chip' : !in.active}">
-      <ion-label class="chip-label">Icon Chip</ion-label>
-      <ion-icon name="add" *ngIf="!in.active" (click)="addMarketing(in)"></ion-icon>
-      <ion-icon name="close" *ngIf="in.active" (click)="updateMarketing(in)"></ion-icon>
+      <ion-label class="sub-heading-md fw-400" [ngClass]="{'ternary':!in.active}">Icon Chip</ion-label>
+      <ion-icon name="add" *ngIf="!in.active"></ion-icon>
+      <ion-icon name="close" *ngIf="in.active"></ion-icon>
     </ion-chip>
 
-    <!-- <div class="d-flex mt-10">
+    <!-- <div class="d-flex mt-16">
         <div>
           <ion-icon class="add-more-icon" name="add"></ion-icon>
         </div>
         <div class="add-more">Add more</div>
       </div> -->
 
-    <div class="sub-heading-sm bold-graphik-font secondary fw-500 mt-15 mb-8">Video production</div>
+    <div class="sub-heading-sm bold-graphik-font secondary fw-500 mt-24 mb-8 ml-6">Video production</div>
 
-    <ion-chip *ngFor="let in of counter;let i=index" class="ml-8"
+    <ion-chip *ngFor="let in of counter1;let i=index" (click)="addVideoProduction(in)"
       [ngClass]="{'active-chip' : in.active,'in-active-chip' : !in.active}">
-      <ion-label class="chip-label">Icon Chip data</ion-label>
-      <ion-icon name="add" *ngIf="!in.active" (click)="addVideoProduction(in)"></ion-icon>
-      <ion-icon name="close" *ngIf="in.active" (click)="updateVideoProduction(in)"></ion-icon>
+      <ion-label class="sub-heading-md fw-400" [ngClass]="{'ternary':!in.active}">Icon Chip data</ion-label>
+      <ion-icon name="add" *ngIf="!in.active"></ion-icon>
+      <ion-icon name="close" *ngIf="in.active"></ion-icon>
     </ion-chip>
 
-    <!-- <div class="d-flex mt-10">
+    <!-- <div class="d-flex mt-16">
         <div>
           <ion-icon name="add" class="add-more-icon"></ion-icon>
         </div>
@@ -36,21 +38,21 @@
       </div> -->
   </div>
 </ion-content>
-<ion-footer  *ngIf="!onboardingService.showExperience">
+<ion-footer *ngIf="!onboardingService.showExperience">
   <div class="mt-10">
     <custom-button [title]="'Next'" (btnClick)="experienceAdd()" [disabled]="disabled" [button]="'primary'">
     </custom-button>
   </div>
-  <!-- <div class="img-outer-wrap text-align-center">
+  <!-- <div class="img-outer-wrap ion-text-center">
         <img class="img-wrapper" src="../../assets/imgs/thick-active-line.png">
       </div> -->
 </ion-footer>
 
 
-<ion-content class="container m-10" *ngIf="onboardingService.showExperience" class="h-75vh">
-  <div class="c-container-body mt-20 ml-15 mr-15">
-    <div class="main-body-heading-sm bold-graphik-font fw-600">Share work experiences</div>
-    <div class="c-input-label mt-15 mb-8">
+<ion-content class="container" *ngIf="onboardingService.showExperience" class="h-75vh">
+  <div class="c-container-body mt-24 ml-16 mr-16">
+    <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Share work experiences</div>
+    <div class="c-input-label secondary mt-24 mb-8">
       <ion-label class="sub-heading-sm bold-graphik-font secondary fw-500">Title and description
       </ion-label>
     </div>
@@ -58,14 +60,15 @@
       [id]="'description'" [rows]="'5'" (keyUp)="addDescription($event)"
       [maxlength]="onboardingService.maxlengthDescription">
     </custom-input>
-    <div *ngIf="onboardingService.description" class="sub-heading-sm ternary fw-400 ">
+    <div class="sub-heading-sm ternary fw-400 mt-8">
       {{onboardingService.leftCharacters}} characters left</div>
 
-    <div class="c-input-label mt-15 mb-8">
+    <div class="c-input-label secondary mt-16 mb-8">
       <ion-label class="sub-heading-sm bold-graphik-font secondary fw-500">Add link</ion-label>
     </div>
-    <div *ngFor="let link of links; let i=index;" [ngClass]="{'mt-10': links.length > 1}">
-      <custom-input [inputType]="'text'" [placeholder]="'Link'" [ngModelData]="link.link" (keyUp)="addLink($event)"
+    <div *ngFor="let link of onboardingService.links; let i=index;"
+      [ngClass]="{'mt-10': onboardingService.links.length > 1}">
+      <custom-input [inputType]="'text'" [placeholder]="'Link'" [ngModelData]="link.url" (keyUp)="addLink($event)"
         [id]="link.id" [imgPath]="link.imgPath" [imgPath1]="link.imgPath1" (imgPathIconClick)="addNewLink(i)"
         (imgPath1IconClick)="minusNewLink(i)">
       </custom-input>
@@ -79,7 +82,7 @@
   </div>
 </ion-content>
 
-<ion-footer  *ngIf="onboardingService.showExperience">
+<ion-footer *ngIf="onboardingService.showExperience">
   <div>
     <custom-button [title]="'Skip'" (btnClick)="skip()" [disabled]="disabled" [button]="'ternary'">
     </custom-button>
@@ -88,7 +91,7 @@
     <custom-button [title]="'Continue'" (btnClick)="continue()" [disabled]="disabled" [button]="'primary'">
     </custom-button>
   </div>
-  <!-- <div class="img-outer-wrap text-align-center">
+  <!-- <div class="img-outer-wrap ion-text-center">
         <img class="img-wrapper" src="../../assets/imgs/thick-active-line.png">
       </div> -->
 </ion-footer>

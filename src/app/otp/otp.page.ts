@@ -14,7 +14,7 @@ export class OtpPage implements OnInit {
   @ViewChild('otp4', { static: false }) otp4: any;
   @ViewChild('otp5', { static: false }) otp5: any;
   @ViewChild('otp6', { static: false }) otp6: any;
-  phone_no: string = "";
+  mobile: string = "";
   otp: string = "";
 
   constructor(
@@ -22,8 +22,8 @@ export class OtpPage implements OnInit {
     private location: Location) { }
 
   ngOnInit() {
-    if (history.state && history.state.phone_no) {
-      this.phone_no = history.state.phone_no;
+    if (history.state && history.state.mobile) {
+      this.mobile = history.state.mobile;
     } else {
       this.route.navigate([""]);
     }

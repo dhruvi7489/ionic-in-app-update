@@ -6,6 +6,8 @@ import { OnboardingPage } from './onboarding.page';
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'onboarding-phone-number',
+    pathMatch: 'full',
     component: OnboardingPage
   },
   {

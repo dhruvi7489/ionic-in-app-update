@@ -2,6 +2,7 @@
 export class LoginResponse {
 
     private _jwtToken: string;
+    private _jwtTokenType: string;
     private _userName: string;
     private _email: string;
     private _userId: string;
@@ -16,6 +17,13 @@ export class LoginResponse {
     }
     set jwtToken(value: string) {
         this._jwtToken = value;
+    }
+
+    get tokentype(): string {
+        return this._jwtTokenType;
+    }
+    set tokentype(value: string) {
+        this._jwtTokenType = value;
     }
 
     get userName(): string {

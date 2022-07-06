@@ -6,7 +6,12 @@ import { Component } from '@angular/core';
   styleUrls: ['tabs.page.scss']
 })
 export class TabsPage {
+  activeTab: string = '';
 
-  constructor() {}
+  constructor() { }
 
+  setCurrentTab(event) {
+    console.log("333333", event)
+    this.activeTab = event.tab;
+  }
 }

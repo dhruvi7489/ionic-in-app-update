@@ -30,9 +30,32 @@ export class OnboardingJobTypePage implements OnInit {
       page: "JobTypePage"
     }
   ];
+
+
+  counter1: any[] = [
+    {
+      active: false,
+      page: "PhoneNumberPage"
+    },
+    {
+      active: false,
+      page: "OtpPage"
+    },
+    {
+      active: false,
+      page: "PersonalInfoPage"
+    },
+    {
+      active: false,
+      page: "ProfilePicturePage"
+    },
+    {
+      active: false,
+      page: "JobTypePage"
+    }
+  ];
   disabled = true;
 
-  links: any[] = [];
 
   constructor(
     public onboardingService: OnboardingService,
@@ -48,28 +71,33 @@ export class OnboardingJobTypePage implements OnInit {
   }
 
   addMarketing(data) {
-    data.active = true;
+    data.active = !data.active;
     this.checkCounterActive();
   }
 
-  updateMarketing(data) {
-    data.active = false;
-    this.checkCounterActive();
-  }
+  // updateMarketing(data) {
+  //   data.active = false;
+  //   this.checkCounterActive();
+  // }
 
   addVideoProduction(data) {
-    data.active = true;
+    data.active = !data.active;
     this.checkCounterActive();
   }
 
-  updateVideoProduction(data) {
-    data.active = false;
-    this.checkCounterActive();
-  }
+  // updateVideoProduction(data) {
+  //   data.active = false;
+  //   this.checkCounterActive();
+  // }
 
   checkCounterActive() {
     this.disabled = true;
     this.counter.forEach(ele => {
+      if (ele.active) {
+        this.disabled = false;
+      }
+    })
+    this.counter1.forEach(ele => {
       if (ele.active) {
         this.disabled = false;
       }
@@ -89,8 +117,7 @@ export class OnboardingJobTypePage implements OnInit {
   }
 
   addLink(event) {
-    this.onboardingService.link = event.ngModelData;
-    this.links[event.id].link = event.ngModelData;
+    this.onboardingService.links[event.id].url = event.ngModelData;
   }
 
   addNewLink(i) {
@@ -99,35 +126,35 @@ export class OnboardingJobTypePage implements OnInit {
 
   addLinks(i) {
     let obj;
-    if (this.links.length < 3) {
+    if (this.onboardingService.links.length < 3) {
       obj = {
         imgPath: '../../assets/imgs/Iconsax/Svg/All/outline/add.svg',
         imgPath1: '',
-        id: this.links.length,
-        link: ''
+        id: this.onboardingService.links.length,
+        url: ''
       }
-      this.links.push(obj)
-      if (this.links.length >= 2) {
+      this.onboardingService.links.push(obj)
+      if (this.onboardingService.links.length >= 2) {
         obj = {
           imgPath1: '../../assets/imgs/Iconsax/Svg/All/outline/minus.svg',
           imgPath: '',
-          id: this.links[i].id,
-          link: this.links[i].link
+          id: this.onboardingService.links[i].id,
+          url: this.onboardingService.links[i].url
         }
-        this.links[i] = obj
+        this.onboardingService.links[i] = obj
       }
     }
   }
 
   minusNewLink(i) {
-    this.links.splice(i, 1)
+    this.onboardingService.links.splice(i, 1)
   }
 
   skip() {
-    // this.router.navigateByUrl('tabs/tabs1');
+    this.router.navigateByUrl('tabs/available-jobs');
   }
 
   continue() {
-    // this.router.navigateByUrl('tabs/tabs1');
+    this.onboardingService.SaveExperience();
   }
 }

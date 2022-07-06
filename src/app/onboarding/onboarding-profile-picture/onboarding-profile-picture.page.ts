@@ -9,9 +9,6 @@ import { OnboardingService } from '../onboarding.service';
 })
 export class OnboardingProfilePicturePage implements OnInit {
 
-  @Output() skipProfilePictureUploadPage = new EventEmitter();
-  @Output() openJobTypePage = new EventEmitter();
-
   constructor(
     public onboardingService: OnboardingService,
     public router: Router
@@ -25,13 +22,13 @@ export class OnboardingProfilePicturePage implements OnInit {
   }
 
   skipProfilePictureUpload() {
-    this.skipProfilePictureUploadPage.emit();
-    this.router.navigateByUrl('onboarding-job-type');
+    this.onboardingService.getProfileData();
+    this.router.navigateByUrl('onboarding/onboarding-job-type');
   }
 
   openJobType() {
-    this.openJobTypePage.emit();
-    this.router.navigateByUrl('onboarding-job-type');
+    this.onboardingService.getProfileData();
+    this.router.navigateByUrl('onboarding/onboarding-job-type');
   }
 
   fileChange(event) {

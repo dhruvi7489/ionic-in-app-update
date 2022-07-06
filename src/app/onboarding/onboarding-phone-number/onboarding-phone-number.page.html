@@ -1,14 +1,14 @@
 <app-onboarding-header></app-onboarding-header>
 
-<ion-content class="container m-10">
-  <div class="c-container-body mt-20 ml-15 mr-15">
-    <div class="main-body-heading-sm bold-graphik-font fw-600">Start with your phone number</div>
+<ion-content class="container">
+  <div class="c-container-body mt-24 ml-16 mr-16">
+    <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Start with your phone number</div>
 
-    <div class="c-input-label">
+    <div class="c-input-label secondary mt-24 mb-8">
       <ion-label class="sub-heading-sm bold-graphik-font fw-500">Enter your phone number</ion-label>
     </div>
-    <custom-input [inputType]="'tel'" [placeholder]="'Phone'" [ngModelData]="onboardingService.phone_no"
-      (keyUp)="onKeyUp($event)" [maxlength]="'10'" [id]="'phone_no'">
+    <custom-input [inputType]="'tel'" [placeholder]="'Phone'" [ngModelData]="onboardingService.mobile" [isNumber]="true"
+      (keyUp)="onKeyUp($event)" [maxlength]="'10'" [id]="'mobile'">
     </custom-input>
 
     <div class="sub-heading-sm bold-graphik-font fw-400 ternary mt-8">You will receive a 6-digit OTP on this number to
@@ -18,7 +18,7 @@
 
 <!-- <ion-footer class="footer position-fixed">
   <custom-button [title]="'Next'" (btnClick)="openOTPPage()"
-    [disabled]="!onboardingService.phone_no || onboardingService.phone_no.length != 10" [button]="'primary'">
+    [disabled]="!onboardingService.mobile || onboardingService.mobile.length != 10" [button]="'primary'">
   </custom-button>
 </ion-footer> -->
 
@@ -26,6 +26,6 @@
 
 <ion-footer>
  <custom-button [title]="'Next'" (btnClick)="openOTPPage()"
- [disabled]="!onboardingService.phone_no || onboardingService.phone_no.length != 10" [button]="'primary'">
+ [disabled]="!onboardingService.mobile || onboardingService.mobile.length != 10" [button]="'primary'">
 </custom-button>
 </ion-footer>

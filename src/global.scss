@@ -32,31 +32,73 @@
 @import "./margin-stylesheet.css";
 @import "./padding-stylesheet.css";
 
+// IMPORT ION-BUTTON CSS
+@import "./ion-button-stylesheet.scss";
+
+// Global color add
+@import "./theme/variables.scss";
+
+:host {
+    font-family: "Graphik" !important;
+}
+
+html {
+    font-family: "Graphik" !important;
+}
+
+body {
+    font-family: "Graphik" !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div,
+span,
+label,
+ion-col,
+ion-row {
+    font-family: "Graphik" !important;
+}
+
 ion-content,
 ion-header,
 ion-footer,
-app-onboarding-header {
-    font-family: Graphik !important;
+app-onboarding-header,
+ion-toolbar,
+ion-tab-bar {
+    font-family: "Graphik" !important;
     --background: #fff !important;
-    font-style: normal;
     background: #fff !important;
 }
 
-.graphik-font {
-    font-family: Graphik;
+ion-card {
+    --background: #fff !important;
+    background: #fff !important;
+}
+
+ion-tab-bar {
+    border-top: 1px solid #E8E8E8;
 }
 
 // COLOR CODE
 .primary {
-    color: #080A52;
+    color: var(--ion-color-primary);
 }
 
 .secondary {
-    color: #1A1A1A;
+    color: var(--ion-color-secondary);
 }
 
 .ternary {
-    color: #636363;
+    color: var(--ion-color-ternary);
+}
+
+.backgroud-color {
+    background: #E8E8E8 !important;
 }
 
 // FONT WEIGHT
@@ -80,7 +122,6 @@ app-onboarding-header {
 // HEADER STYLES
 @media screen and (max-width: 320px) {
     .main-body-heading-2xl {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 36px;
         line-height: 44px;
@@ -88,7 +129,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-xl {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 32px;
         line-height: 40px;
@@ -96,7 +136,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-lg {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 28px;
         line-height: 36px;
@@ -104,7 +143,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-md {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 24px;
         line-height: 32px;
@@ -112,7 +150,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-sm {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 20px;
         line-height: 28px;
@@ -122,7 +159,6 @@ app-onboarding-header {
 
 @media screen and (min-width: 321px) and (max-width: 768px) {
     .main-body-heading-2xl {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 36px;
         line-height: 44px;
@@ -130,7 +166,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-xl {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 32px;
         line-height: 40px;
@@ -138,7 +173,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-lg {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 28px;
         line-height: 36px;
@@ -146,7 +180,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-md {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 24px;
         line-height: 32px;
@@ -154,7 +187,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-sm {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 20px;
         line-height: 28px;
@@ -164,7 +196,6 @@ app-onboarding-header {
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {
     .main-body-heading-2xl {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 40px;
         line-height: 48px;
@@ -172,7 +203,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-xl {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 36px;
         line-height: 44px;
@@ -180,7 +210,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-lg {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 32px;
         line-height: 40px;
@@ -188,7 +217,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-md {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 28px;
         line-height: 36px;
@@ -196,7 +224,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-sm {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 24px;
         line-height: 32px;
@@ -206,7 +233,6 @@ app-onboarding-header {
 
 @media screen and (min-width: 1025px) and (max-width: 1440px) {
     .main-body-heading-2xl {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 40px;
         line-height: 48px;
@@ -214,7 +240,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-xl {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 36px;
         line-height: 44px;
@@ -222,7 +247,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-lg {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 32px;
         line-height: 40px;
@@ -230,7 +254,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-md {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 28px;
         line-height: 36px;
@@ -238,7 +261,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-sm {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 24px;
         line-height: 32px;
@@ -248,7 +270,6 @@ app-onboarding-header {
 
 @media screen and (min-width: 1441px) {
     .main-body-heading-2xl {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 40px;
         line-height: 48px;
@@ -256,7 +277,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-xl {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 36px;
         line-height: 44px;
@@ -264,7 +284,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-lg {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 32px;
         line-height: 40px;
@@ -272,7 +291,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-md {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 28px;
         line-height: 36px;
@@ -280,7 +298,6 @@ app-onboarding-header {
     }
 
     .main-body-heading-sm {
-        color: #1A1A1A;
         font-style: normal;
         font-size: 24px;
         line-height: 32px;
@@ -294,52 +311,55 @@ app-onboarding-header {
     font-style: normal;
     font-size: 20px;
     line-height: 28px;
-    letter-spacing: -0.02em;
+    // letter-spacing: -0.02em;
+}
+
+.sub-heading-xl-md {
+    font-style: normal;
+    font-size: 19.2px;
+    line-height: 29px;
+    // letter-spacing: -0.02em;
 }
 
 .sub-heading-lg {
     font-style: normal;
     font-size: 18px;
     line-height: 28px;
-    letter-spacing: -0.02em;
+    // letter-spacing: -0.02em;
 }
 
 .sub-heading-md {
     font-style: normal;
     font-size: 16px;
     line-height: 24px;
-    letter-spacing: -0.02em;
+    // letter-spacing: -0.02em;
 }
 
 .sub-heading-sm {
     font-style: normal;
     font-size: 14px;
     line-height: 20px;
-    letter-spacing: -0.02em;
+    // letter-spacing: -0.02em;
 }
 
 .sub-heading-xs {
     font-style: normal;
     font-size: 12px;
     line-height: 18px;
-    letter-spacing: -0.02em;
+    // letter-spacing: -0.02em;
 }
 
 // GENERAL STYLES
-.align-self-center {
-    align-self: center;
-}
-
-.text-align-center {
-    text-align: center;
-}
-
-.justify-content-space-between {
-    justify-content: space-between;
+.justify-content-center {
+    justify-content: center;
 }
 
 .d-flex {
     display: flex;
+}
+
+.d-contents {
+    display: contents;
 }
 
 .c-pointer {
@@ -364,8 +384,56 @@ app-onboarding-header {
 
 ion-footer {
     bottom: 0px;
-    min-height: 98px;
+    min-height: 64px;
     padding: 16px 16px 0px 16px;
     background: #fff;
     border: 1px solid #E8E8E8;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+ion-chip {
+    border-radius: 32px;
+    background: #E8E8E8;
+    padding: 4px 12px;
+}
+
+.custom-loader {
+    .loading-wrapper {
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+}
+
+.refresher-refreshing-icon,
+.refresher-pulling-icon {
+    background: transparent !important;
+    padding: 0px !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.search-wrap {
+    img {
+        height: 20px !important;
+    }
+}
+
+.data-not-found-wrap {
+    background: #FFFFFF;
+    border-radius: 12px;
+    margin-inline: 0px;
+    margin-top: 0px;
+    margin: 0 16px 0 16px;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+.bottom-border {
+    border-bottom: 1px solid #E8E8E8;
 }

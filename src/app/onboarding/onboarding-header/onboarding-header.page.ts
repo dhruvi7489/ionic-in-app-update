@@ -14,29 +14,30 @@ export class OnboardingHeaderPage implements OnInit {
     {
       active: false,
       page: "PhoneNumberPage",
-      route: "/onboarding-phone-number"
+      route: "/onboarding/onboarding-phone-number"
     },
     {
       active: false,
       page: "OtpPage",
-      route: "/onboarding-otp"
+      route: "/onboarding/onboarding-otp"
     },
     {
       active: false,
       page: "PersonalInfoPage",
-      route: "/onboarding-personal-info"
+      route: "/onboarding/onboarding-personal-info"
     },
     {
       active: false,
       page: "ProfilePicturePage",
-      route: "/onboarding-profile-picture"
+      route: "/onboarding/onboarding-profile-picture"
     },
     {
       active: false,
       page: "JobTypePage",
-      route: "/onboarding-job-type"
+      route: "/onboarding/onboarding-job-type"
     }
   ];
+  @Input() headerTitle?: '';
 
   constructor(
     public onboardingService: OnboardingService,

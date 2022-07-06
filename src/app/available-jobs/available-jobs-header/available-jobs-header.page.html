@@ -1,0 +1,45 @@
+<ion-header class="c-header-wrapper pb-5">
+  <ion-toolbar>
+    <ion-row class="d-flex bottom-border" *ngIf="showBackBtn">
+      <ion-col class="d-flex pb-0 pt-0 pl-16 pr-16" size="12">
+        <ion-row class="d-contents">
+          <ion-col size="3" class="logo-title ion-align-self-center pr-0 pb-0 pt-0">
+            <div class="img-wrapper d-flex">
+              <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" (click)="back()">
+              <div class="header-title ion-align-self-center ml-8">
+                <div class="sub-heading-md secondary fw-400">Back</div>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col size="6" class="ion-text-align-center pl-0 pr-0 pb-0 pt-0 ion-text-center">
+            <div class="main-body-heading-sm fw-600 secondary mt-14 mb-14 mr-8 ml-0">{{headerTitle}}</div>
+          </ion-col>
+          <ion-col size="3" class="pl-0 pr-0 pb-0 pt-0">
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="d-flex h-56" *ngIf="!showBackBtn">
+      <ion-col class="d-flex" size="12">
+        <div>
+          <div class="main-body-heading-sm fw-600 secondary mt-14 mb-14 mr-8 ml-16">{{headerTitle}}</div>
+        </div>
+        <div *ngIf="counts" class="counter-bedge ion-align-self-center primary mt-14 mb-14">
+          <div class="pt-4 pb-4 pl-12 pr-12 fw-400">{{counts}}</div>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="showSearch">
+      <ion-col size="12">
+        <div class="ml-16 mr-16 mb-8 search-wrap">
+          <custom-input [inputType]="'text'" [placeholder]="'Search'" [ngModelData]="search"
+            (keyUp)="searchKeyUp($event)" [iconPosition]="'left'" [id]="'search'"
+            [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/search-normal-1.svg'">
+          </custom-input>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>

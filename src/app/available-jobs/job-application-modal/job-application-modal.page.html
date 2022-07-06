@@ -1,0 +1,58 @@
+<ion-content>
+  <div>
+    <div class="bottom-border">
+      <div class="m-16 ion-text-end" (click)="closeBtnClick()">
+        <img src="../../../assets/imgs/Iconsax/Svg/All/outline/close.svg">
+      </div>
+    </div>
+    <div class="c-container-wrap">
+      <div class="c-card-wrap">
+        <div class="pb-0">
+          <ion-row class="c-card-header-wrap">
+            <ion-col size="12">
+              <img [src]="navParams.get('img')">
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="c-card-header-wrap">
+            <ion-col size="12">
+              <div class="secondary fw-600 sub-heading-xl">{{navParams.get('title')}}</div>
+            </ion-col>
+          </ion-row>
+        </div>
+
+        <div>
+          <ion-row>
+            <ion-col size="12">
+              <div class="fw-400 sub-heading-sm ternary">{{navParams.get('message')}}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="navParams.get('success')">
+            <ion-col size="12" class="custom-button-primary">
+              <ion-button class="w-100" (click)="okBtnClick()">{{navParams.get('okBtnText')}}</ion-button>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="navParams.get('success')">
+            <ion-col size="12" class="custom-button-secondary">
+              <ion-button class="w-100" (click)="closeBtnClick()">{{navParams.get('cancelBtnText')}}</ion-button>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="!navParams.get('success')">
+            <ion-col size="12">
+              <div class="d-flex justify-content-center c-pointer" (click)="okBtnClick()">
+                <div class="ion-align-self-center mt-4">
+                  <img src="../../assets/imgs/Iconsax/Svg/All/outline/rotate-right.svg" width="20px">
+                </div>
+                <div class="ion-align-self-center fw-500 sub-heading-md primary ml-10">Try again</div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

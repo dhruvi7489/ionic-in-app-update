@@ -4,7 +4,7 @@ import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
   {
-    path: 'tabs',
+    path: '',
     component: TabsPage,
     children: [
       {
@@ -18,6 +18,14 @@ const routes: Routes = [
       {
         path: 'tab3',
         loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+      },
+      {
+        path: 'available-jobs',
+        loadChildren: () => import('../available-jobs/available-jobs.module').then(m => m.AvailableJobsPageModule)
+      },
+      {
+        path: 'active-job',
+        loadChildren: () => import('../active-job/active-job.module').then(m => m.ActiveJobPageModule)
       },
       {
         path: '',
@@ -36,4 +44,4 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }

@@ -1,17 +1,17 @@
 <app-onboarding-header></app-onboarding-header>
 
-<ion-content class="container m-10">
-  <div class="c-container-body mt-20 ml-15 mr-15">
-    <div class="main-body-heading-sm bold-graphik-font fw-600">Upload your profile picture</div>
-    <div class="text-align-center">
+<ion-content class="container">
+  <div class="c-container-body mt-24 ml-16 mr-16">
+    <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Upload your profile picture</div>
+    <div class="ion-text-center mt-24">
       <div class="custom-file-upload">
         <div class="camera_outine">
-          <img [src]="onboardingService.profile_picture" alt="" onerror="this.src='../../assets/imgs/camera.png'"
+          <img [src]="onboardingService.profile_picture" alt="" onerror="this.src='../../assets/imgs/Iconsax/Svg/All/outline/avatar_vector.svg'"
             (click)="uploadPicture()">
         </div>
       </div>
     </div>
-    <div class="text-align-center fw-400 sub-heading-sm secondary graphik-font">Ideally, it is good to have professional
+    <div class="ion-text-center fw-400 sub-heading-sm secondary graphik-font mt-24">Ideally, it is good to have professional
       picture which can help our team to see you in
       a professional environment. </div>
   </div>

@@ -1,0 +1,26 @@
+#order-stepper {
+    .ml-52 {
+        margin-left: 52px;
+    }
+
+    .process-main .data-3:not(:first-child):before {
+        content: "";
+        margin-left: 5%;
+        border: 1px solid #080A52;
+        transition: 0.4s;
+    }
+
+    .process-step-cont {
+        display: flex;
+        align-self: center;
+    }
+
+    .process-step {
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        display: flex;
+        width: 35px;
+        height: 35px;
+    }
+}

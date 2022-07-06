@@ -1,40 +1,44 @@
 <app-onboarding-header></app-onboarding-header>
 
-<ion-content class="container m-10" id="personal-info">
-  <div class="c-container-body mt-20 ml-15 mr-15 mb-15">
-    <div class="main-body-heading-sm bold-graphik-font fw-600">Provide your personal information</div>
-    <div class="c-button-wrapper">
+<ion-content class="container" id="personal-info">
+  <div class="c-container-body mt-24 ml-16 mr-16 mb-16">
+    <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Provide your personal information</div>
+
+    <div class="c-button-wrapper mt-24">
       <custom-button [title]="'Continue with Facebook'" (btnClick)="goToFacebook()" [button]="'secondary'"
         [image]="'../../assets/imgs/facebook.png'"></custom-button>
     </div>
-    <div class="c-input-label">
+
+    <div class="mt-16">
+      <div class="ternary sub-heading-sm fw-400 ion-text-center">Or</div>
+    </div>
+
+    <div class="secondary fw-500 sub-heading-sm secondary mt-24 mb-8">
       <ion-label>Your name*</ion-label>
     </div>
     <custom-input [inputType]="'text'" [placeholder]="'Full name'" [ngModelData]="onboardingService.full_name"
       [id]="'full_name'" (keyUp)="gtFullName($event)">
     </custom-input>
 
-    <div class="c-input-label">
+    <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
       <ion-label>Date of birth*</ion-label>
     </div>
-    <custom-input [inputType]="'date'" [placeholder]="'Email Address'" [ngModelData]="onboardingService.dob"
-      (dateChange)="getDOB($event)" [id]="'dob'" (dateChange)="onDateChange($event)"
-      [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg'">
+    <custom-input [inputType]="'date'" [placeholder]="'DOB'" [ngModelData]="onboardingService.dob"
+      (dateChange)="getDOB($event)" [id]="'dob'" [name]="'dob'" (dateChange)="onDateChange($event)"
+      [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg'" [for]="true">
     </custom-input>
 
-    <div class="c-input-label">
+    <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
       <ion-label>Email address*</ion-label>
     </div>
-
     <custom-input [inputType]="'email'" [placeholder]="'Email Address'" [ngModelData]="onboardingService.email_address"
       [id]="'email_address'" (keyUp)="getEmailAddress($event)">
     </custom-input>
-    <!-- <input (click)="focus()" id="iddata"> -->
 
-    <div class="c-input-label">
+    <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
       <ion-label>Gender*</ion-label>
     </div>
-    <div class="d-flex justify-content-space-between">
+    <div class="d-flex ion-justify-content-between">
       <custom-input [inputType]="'radio'" [ngModelData]="onboardingService.gender" [id]="'male'" [value]="'Male'"
         [name]="'gender'" (radioChange)="getGender($event)">
       </custom-input>
@@ -46,7 +50,7 @@
       </custom-input>
     </div>
 
-    <div class="c-input-label">
+    <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
       <ion-label>Referral code</ion-label>
     </div>
     <custom-input [inputType]="'text'" [placeholder]="'Referral code'" [ngModelData]="onboardingService.referral_code"

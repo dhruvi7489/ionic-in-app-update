@@ -1,6 +1,6 @@
 {
-	"appId": "io.ionic.starter",
-	"appName": "hour4u",
+	"appId": "com.hour4u.app",
+	"appName": "Hour4U",
 	"webDir": "www",
 	"bundledWebRuntime": false
 }

@@ -41,14 +41,11 @@ export class OnboardingPersonalInfoPage implements OnInit {
   }
 
   openProfilePictureUploadPage() {
-    // if (this.onboardingService.id == null) {
-    //   this.onboardingService.savePersonalInfo();
-    // } else {
-    //   this.onboardingService.updatePersonalInfo();
-    // }
-    this.openOnboardingProfilePicturePage.emit();
-
-    this.router.navigateByUrl('onboarding-profile-picture');
+    if (this.onboardingService.id == null) {
+      this.onboardingService.savePersonalInfo();
+    } else {
+      this.onboardingService.updatePersonalInfo();
+    }
   }
 
   getGender(event) {

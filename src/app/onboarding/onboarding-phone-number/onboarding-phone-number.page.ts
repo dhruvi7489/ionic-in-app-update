@@ -15,28 +15,29 @@ export class OnboardingPhoneNumberPage implements OnInit {
     private toastService: ToastService,
     public onboardingService: OnboardingService,
     public router: Router
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
   }
 
   onKeyUp(event) {
-    this.onboardingService.phone_no = event.ngModelData;
+    this.onboardingService.mobile = event.ngModelData;
   }
 
   openOTPPage() {
     const phoneno = /^\d{10}$/;
-    if (!this.onboardingService.phone_no.match(phoneno)) {
+    if (!this.onboardingService.mobile.match(phoneno)) {
       this.toastService.showMessage('Please enter a valid mobile number');
       return false;
     } else {
-      this.router.navigateByUrl('onboarding-otp');
+      this.router.navigateByUrl('onboarding/onboarding-otp');
       this.onboardingService.sendOtp().then(res => {
         console.log(res)
       }).catch(err => {
 
       });
-      this.openOnboardingOtpPage.emit(this.onboardingService.phone_no);
+      this.openOnboardingOtpPage.emit(this.onboardingService.mobile);
     }
   }
 }

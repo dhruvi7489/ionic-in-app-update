@@ -4,7 +4,7 @@
 <app-onboarding-phone-number *ngIf="onboardingService.isPhoneNumberPage"
   (openOnboardingOtpPage)="openOnboardingOtpPage($event)">
 </app-onboarding-phone-number>
-<app-onboarding-otp *ngIf="onboardingService.isOtpPage" [phone_no]="onboardingService.phone_no"
+<app-onboarding-otp *ngIf="onboardingService.isOtpPage" [mobile]="onboardingService.mobile"
   (openOnboardingPersonalInfoPage)="openOnboardingPersonalInfoPage()">
 </app-onboarding-otp>
 <ion-content>

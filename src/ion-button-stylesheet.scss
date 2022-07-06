@@ -1,0 +1,97 @@
+.custom-button-primary {
+    ion-button {
+        height: 48px !important;
+        width: 100% !important;
+        text-align: center !important;
+        font-size: 16px !important;
+        background: #080A52 !important;
+        --background: #080A52 !important;
+        color: #fff !important;
+        border-radius: 12px !important;
+        --border-radius: 12px !important;
+        border: 1px solid #080A52 !important;
+        text-transform: none !important;
+    }
+
+    ion-button:hover:enabled {
+        background: #060845 !important;
+        color: #FFFFFF !important;
+        border: 1px solid #060845 !important;
+    }
+
+    // .title-wrap {
+    //     text-align: center;
+    //     justify-content: center;
+
+    //     .title {
+    //         align-self: center;
+    //         font-weight: 500;
+    //     }
+
+    //     .mr-10 {
+    //         margin-right: 10px;
+    //     }
+
+    //     .ml-10 {
+    //         margin-left: 10px;
+    //     }
+    // }
+}
+
+
+
+.custom-button-secondary {
+    ion-button {
+        height: 48px !important;
+        width: 100% !important;
+        text-align: center !important;
+        font-size: 16px !important;
+        background: #fff !important;
+        --background: #fff !important;
+        color: #080A52 !important;
+        border-radius: 12px !important;
+        --border-radius: 12px !important;
+        border: 1px solid #fff !important;
+        text-transform: none !important;
+    }
+
+    ion-button:hover:enabled {
+        background: #E6E7EE !important;
+        color: #060845 !important;
+        border: 1px solid #E6E7EE !important;
+    }
+
+}
+
+.custom-button-ternary {
+    ion-button {
+        height: 48px !important;
+        width: 100% !important;
+        text-align: center !important;
+        font-size: 16px !important;
+        background: #E6E7EE !important;
+        --background: #E6E7EE !important;
+        color: #080A52 !important;
+        border-radius: 12px !important;
+        --border-radius: 12px !important;
+        border: 1px solid #E6E7EE !important;
+        text-transform: none !important;
+        box-shadow: 0px 1px 2px rgba(26, 26, 26, 0.04) !important;
+    }
+
+    ion-button:hover:enabled {
+        background: #E6E7EE !important;
+        color: #060845 !important;
+        border: 1px solid #E6E7EE !important;
+    }
+}
+
+
+button[disabled] {
+    background: #EBEBF1 !important;
+    color: #B2B3CB !important;
+    border: 1px solid #EBEBF1 !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: 0px 1px 2px rgba(26, 26, 26, 0.04);
+}

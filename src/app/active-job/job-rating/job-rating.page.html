@@ -1,0 +1,87 @@
+<app-active-job-header [headerTitle]="'Rate this job'" [showBackBtn]="true"></app-active-job-header>
+
+<ion-content>
+  <div class="content-wrap">
+    <div class="ml-16 mr-16 mt-24">
+      <div class="content-header-wrap">
+        <div class="fw-600 secondary sub-heading-xl">
+          How was your experience?
+        </div>
+        <div class="fw-400 secondary sub-heading-sm mt-8 pb-16">
+          Please rate your overall experience of working for this shift and what did you like/dislike about your
+          supervisor.
+        </div>
+      </div>
+
+      <div class="mt-24">
+        <ion-row>
+          <ion-col size="2" class="pl-0">
+            <div class="fw-500 sub-heading-sm secondary">{{activeJobService?.selectedJobRating | number:'1.1-2'}}</div>
+            <ion-row>
+              <ion-col size="12" class="pl-0">
+                <div class="fw-400 sub-heading-sm ternary">Rating</div>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+          <ion-col size="10" class="pl-12">
+            <div class="d-flex">
+              <div class="mr-12">
+                <img *ngIf="activeJobService?.selectedJobRating != 1"
+                  src="../../../assets/imgs/Rates/smile-rate-1-inactive.svg" (click)="addRate(1)">
+                <img *ngIf="activeJobService?.selectedJobRating == 1"
+                  src="../../../assets/imgs/Rates/smile-rate-1-active.svg" (click)="removeRate()">
+              </div>
+              <div class="mr-12">
+                <img *ngIf="activeJobService?.selectedJobRating != 2"
+                  src="../../../assets/imgs/Rates/smile-rate-2-inactive.svg" (click)="addRate(2)">
+                <img *ngIf="activeJobService?.selectedJobRating == 2"
+                  src="../../../assets/imgs/Rates/smile-rate-2-active.svg" (click)="removeRate()">
+              </div>
+              <div class="mr-12">
+                <img *ngIf="activeJobService?.selectedJobRating != 3"
+                  src="../../../assets/imgs/Rates/smile-rate-3-inactive.svg" (click)="addRate(3)">
+                <img *ngIf="activeJobService?.selectedJobRating == 3"
+                  src="../../../assets/imgs/Rates/smile-rate-3-active.svg" (click)="removeRate()">
+              </div>
+              <div class="mr-12">
+                <img *ngIf="activeJobService?.selectedJobRating != 4"
+                  src="../../../assets/imgs/Rates/smile-rate-4-inactive.svg" (click)="addRate(4)">
+                <img *ngIf="activeJobService?.selectedJobRating == 4"
+                  src="../../../assets/imgs/Rates/smile-rate-4-active.svg" (click)="removeRate()">
+              </div>
+              <div>
+                <img *ngIf="activeJobService?.selectedJobRating != 5"
+                  src="../../../assets/imgs/Rates/smile-rate-5-inactive.svg" (click)="addRate(5)">
+                <img *ngIf="activeJobService?.selectedJobRating == 5"
+                  src="../../../assets/imgs/Rates/smile-rate-5-active.svg" (click)="removeRate()">
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="mt-24">
+        <ion-row>
+          <ion-col size="12" class="pl-0 pt-0">
+            <div class="fw-500 sub-heading-sm secondary">Write your feedback</div>
+          </ion-col>
+        </ion-row>
+        <custom-input [inputType]="'textarea'" [placeholder]="'Type a feedback here'"
+          [ngModelData]="onboardingService.description" [id]="'description'" [rows]="'5'"
+          (keyUp)="addDescription($event)" [maxlength]="onboardingService.maxlengthDescription">
+        </custom-input>
+        <div class="sub-heading-sm ternary fw-400 mt-8 ml-4">
+          {{onboardingService.leftCharacters}} characters left</div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-row>
+    <ion-col size="12" class="pl-0 pr-0">
+      <custom-button [title]="'Submit your feedback'" (btnClick)="submitFeedback()" [button]="'primary'">
+      </custom-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

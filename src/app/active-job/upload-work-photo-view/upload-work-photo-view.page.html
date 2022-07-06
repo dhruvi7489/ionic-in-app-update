@@ -1,0 +1,36 @@
+<app-active-job-header [headerTitle]="'Upload photo'" [showBackBtn]="true"></app-active-job-header>
+
+<ion-content>
+  <div class="content-wrap">
+    <div class="ion-text-center">
+      <img [src]="activeJobService.selectedImg" onerror="this.src='../../../assets/imgs/Rectangle 12men.svg'" height="617px" width="360px">
+    </div>
+
+    <div class="content-wrap-inner">
+      <div class="ml-16 mr-16 pt-16">
+        <custom-input [inputType]="'textarea'" [placeholder]="'Description'"
+          [ngModelData]="onboardingService.description" [id]="'description'" [rows]="'5'"
+          (keyUp)="addDescription($event)" [maxlength]="onboardingService.maxlengthDescription">
+        </custom-input>
+        <div class="sub-heading-sm ternary fw-400 mt-8 ml-4">
+          {{onboardingService.leftCharacters}} characters left</div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-row>
+    <ion-col size="6">
+      <custom-button [title]="'Retake'" (btnClick)="retake()" [button]="'secondary'" class="ion-float-left w-118">
+      </custom-button>
+    </ion-col>
+    <ion-col size="6">
+      <custom-button [title]="'Use photo'" (btnClick)="usePhoto()" [button]="'primary'" class="ion-float-right w-118">
+      </custom-button>
+    </ion-col>
+  </ion-row>
+  <!-- <div class="img-outer-wrap ion-text-center">
+        <img class="img-wrapper" src="../../assets/imgs/thick-active-line.png">
+      </div> -->
+</ion-footer>

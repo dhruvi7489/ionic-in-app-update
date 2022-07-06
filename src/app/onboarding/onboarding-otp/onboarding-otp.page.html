@@ -1,24 +1,24 @@
 <app-onboarding-header></app-onboarding-header>
 
-<ion-content class="container m-10">
-  <div class="c-container-body mt-20 ml-15 mr-15">
-    <div class="main-body-heading-sm bold-graphik-font fw-600">Please enter the code sent via SMS at {{onboardingService.phone_no}}</div>
-    <div class="c-input-label">
-      <ion-label>Enter the code</ion-label>
+<ion-content class="container">
+  <div class="c-container-body mt-24 ml-16 mr-16">
+    <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Please enter the code sent via SMS at
+      {{onboardingService.mobile}}</div>
+    <div class="mt-24 mb-8">
+      <ion-label class="fw-500 sub-heading-sm secondary">Enter the code</ion-label>
     </div>
     <custom-otp (enteredOtp)="otpEnter($event)" [placeholder]="'0'" [otp_input_1]="onboardingService.otp_input_1"
       [otp_input_2]="onboardingService.otp_input_2" [otp_input_3]="onboardingService.otp_input_3"
       [otp_input_4]="onboardingService.otp_input_4" [otp_input_5]="onboardingService.otp_input_5"
       [otp_input_6]="onboardingService.otp_input_6"></custom-otp>
 
-    <div class="d-flex">
+    <div class="d-flex mt-16">
       <p class="sub-heading-md fw-400 secondary">Didn't get a code? </p>
-      <div class="d-flex resend_code c-pointer">
-        <div class="align-self-center mt-4">
-          <ion-icon name="refresh"></ion-icon>
-          <!-- <img class="img-wrapper" src="../../assets/imgs/resend.png"> -->
+      <div class="d-flex c-pointer">
+        <div class="ion-align-self-center mt-4 pl-10-77">
+          <img class="img-wrapper" src="../../assets/imgs/Iconsax/Svg/All/outline/rotate-left.svg" width="20px">
         </div>
-        <div class="align-self-center resend_link">
+        <div class="ion-align-self-center sub-heading-md primary fw-500 pl-10-78" (click)="sendOtp()">
           Resend
         </div>
       </div>
@@ -27,13 +27,13 @@
 </ion-content>
 
 <!-- <ion-footer class="footer">
-  <custom-button [title]="'Next'" (btnClick)="openPersonalInfoPage()" [disabled]="onboardingService.otp.length != 6"
+  <custom-button [title]="'Next'" (btnClick)="sendOtp()" [disabled]="onboardingService.otp.length != 6"
     [button]="'primary'">
   </custom-button>
 </ion-footer> -->
 
 <ion-footer>
-  <custom-button [title]="'Next'" (btnClick)="openPersonalInfoPage()" [disabled]="onboardingService.otp.length != 6"
+  <custom-button [title]="'Next'" (btnClick)="sendOtp()" [disabled]="onboardingService.otp.length != 6"
     [button]="'primary'">
   </custom-button>
 </ion-footer>

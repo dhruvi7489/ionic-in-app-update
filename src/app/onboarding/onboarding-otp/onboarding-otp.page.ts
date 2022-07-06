@@ -9,8 +9,7 @@ import { OnboardingService } from '../onboarding.service';
 })
 export class OnboardingOtpPage implements OnInit {
 
-  @Input() phone_no = null;
-  @Output() openOnboardingPersonalInfoPage = new EventEmitter();
+  @Input() mobile = null;
 
   constructor(
     public onboardingService: OnboardingService,
@@ -32,9 +31,7 @@ export class OnboardingOtpPage implements OnInit {
 
   }
 
-  async openPersonalInfoPage() {
+  async sendOtp() {
     await this.onboardingService.login();
-    this.openOnboardingPersonalInfoPage.emit();
-    this.router.navigateByUrl('onboarding-personal-info');
   }
 }

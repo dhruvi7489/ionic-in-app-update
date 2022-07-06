@@ -1,0 +1,48 @@
+.c-container-wrap {
+  .c-card-wrap {
+    background: #FFFFFF;
+    border-radius: 12px;
+    margin-inline: 0px;
+    margin-top: 0px;
+  }
+
+  .job-description {
+    height: 75px;
+    overflow: hidden;
+  }
+
+  .h-auto {
+    height: auto !important;
+  }
+
+  .show {
+    overflow: visible;
+    height: auto;
+  }
+
+  .counter-bedge {
+    background: #E6E7EE;
+    border-radius: 32px;
+  }
+
+  .card-wrap {
+    img {
+      max-width: none;
+    }
+  }
+}
+
+ion-footer {
+  .bookmark-wrap {
+    gap: 8px;
+    width: 48px;
+    height: 48px;
+    background: #FFFFFF;
+    border: 1px solid #E8E8E8;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}

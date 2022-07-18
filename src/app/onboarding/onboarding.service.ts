@@ -355,7 +355,6 @@ export class OnboardingService {
     })
     let params = [{ "links": links, "summary": this.description, "workLink": workLink }]
     await this.commonProvider.PutMethod(Apiurl.SaveExperience + localStorage.getItem('loginUserId'), params).then(async (res: any) => {
-      console.log(res)
       this.getProfileData();
       this.router.navigateByUrl('tabs/available-jobs');
       if (res) {

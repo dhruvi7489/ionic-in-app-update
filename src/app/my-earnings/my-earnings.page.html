@@ -1,0 +1,209 @@
+<app-my-earnings-header [headerTitle]="'My earnings'" [showBackBtn]="false" [showContactIcon]="true">
+</app-my-earnings-header>
+
+<ion-content>
+    <div class="content-wrap">
+        <div class="top-content-wrap" [ngClass]="{'pb-16': myEarningsService.noEarningFound}">
+            <div class="pl-16 pt-16 pr-16 inner-wrap" *ngIf="myEarningsService.earningStatus">
+                <div>
+                    <ion-row>
+                        <ion-col class="p-0" size="8">
+                            <div class="d-flex">
+                                <div class="fw-400 ternary sub-heading-sm">
+                                    Your balance
+                                </div>
+                                <div class="ml-4">
+                                    <img src="../../assets/imgs/Iconsax/Svg/All/outline/help-question-circle.svg">
+                                </div>
+                            </div>
+                            <ion-row class="pt-8">
+                                <ion-col class="p-0">
+                                    <div class="primary fw-600 main-body-heading-lg">
+                                        &#x20b9;{{myEarningsService.earningStatus?.totalEarning?.toFixed(2)}}
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                        </ion-col>
+                        <ion-col class="p-0" size="4">
+                            <custom-button [title]="'Withdraw'" [button]="'secondary'" [disabled]="false"
+                                (btnClick)="withdrawAmount()">
+                            </custom-button>
+                        </ion-col>
+                    </ion-row>
+
+                    <ion-row class="mt-16">
+                        <ion-col size="5.4" class="count-card-wrap p-12 ml-0 mt-0 mb-0 mr-16">
+                            <div class="d-flex">
+                                <div class="fw-400 ternary sub-heading-sm">
+                                    Paid out
+                                </div>
+                                <div class="ml-4">
+                                    <img src="../../assets/imgs/Iconsax/Svg/All/outline/help-question-circle.svg">
+                                </div>
+                            </div>
+                            <ion-row class="pt-8">
+                                <ion-col class="p-0">
+                                    <div class="primary fw-600 sub-heading-md">
+                                        &#x20b9;{{myEarningsService.earningStatus?.approved ?
+                                        myEarningsService.earningStatus?.approved?.toFixed(2) : 00}}
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                        </ion-col>
+                        <ion-col size="6" class="count-card-wrap p-12 ml-0 mt-0 mb-0">
+                            <div class="d-flex">
+                                <div class="fw-400 ternary sub-heading-sm">
+                                    Awaiting approval
+                                </div>
+                                <div class="ml-4">
+                                    <img src="../../assets/imgs/Iconsax/Svg/All/outline/help-question-circle.svg">
+                                </div>
+                            </div>
+                            <ion-row class="pt-8">
+                                <ion-col class="p-0">
+                                    <div class="primary fw-600 sub-heading-md">
+                                        &#x20b9;{{myEarningsService.earningStatus?.unapproved ?
+                                        myEarningsService.earningStatus?.unapproved?.toFixed(2): 00}}
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                        </ion-col>
+                    </ion-row>
+                </div>
+            </div>
+
+            <ion-segment [(ngModel)]="myEarningsService.selectedTab" scrollable mode="md" class="custom-icon"
+                (ionChange)="handleTabChange()" value="All">
+                <ion-segment-button class="segment ml-16" value="Unapproved">
+                    <ion-label class="fw-500 ion-text-none sub-heading-sm d-flex"
+                        [ngClass]="{'primary':selectedTab == 'Unapproved'}">
+                        <div class="ion-align-self-center pr-4">Awaiting approval</div>
+                        <div class="counter-bedge ion-align-self-center primary"
+                            *ngIf="myEarningsService.selectedTab == 'Unapproved'">
+                            <div class="pt-4 pb-4 pl-12 pr-12 fw-400 sub-heading-sm">
+                                {{myEarningsService.earningRecords?.length}}</div>
+                        </div>
+                    </ion-label>
+                </ion-segment-button>
+                <ion-segment-button class="segment" value="Approved">
+                    <ion-label class="fw-500 ion-text-none sub-heading-sm d-flex"
+                        [ngClass]="{'primary':selectedTab == 'Approved'}">
+                        <div class="ion-align-self-center pr-4">Approved</div>
+                        <div class="counter-bedge ion-align-self-center primary"
+                            *ngIf="myEarningsService.selectedTab == 'Approved'">
+                            <div class="pt-4 pb-4 pl-12 pr-12 fw-400 sub-heading-sm">
+                                {{myEarningsService.earningRecords?.length}}</div>
+                        </div>
+                    </ion-label>
+                </ion-segment-button>
+                <ion-segment-button class="segment mr-16" value="Paid">
+                    <ion-label class="fw-500 ion-text-none sub-heading-sm d-flex"
+                        [ngClass]="{'primary':selectedTab == 'Paid'}">
+                        <div class="ion-align-self-center pr-4">Paid out</div>
+                        <div class="counter-bedge ion-align-self-center primary"
+                            *ngIf="myEarningsService.selectedTab == 'Paid'">
+                            <div class="pt-4 pb-4 pl-12 pr-12 fw-400 sub-heading-sm">
+                                {{myEarningsService.earningRecords?.length}}</div>
+                        </div>
+                    </ion-label>
+                </ion-segment-button>
+            </ion-segment>
+        </div>
+        <div *ngIf="myEarningsService.earningRecords?.length != 0">
+            <div class="pr-16 pl-16 mt-8 inner-wrap">
+                <div class="bottom-border pb-12" *ngFor="let earning of myEarningsService.earningRecords">
+                    <div class="c-card-wrap">
+                        <div class="pt-16 pb-0 card-wrap-header">
+                            <ion-row class="pb-8">
+                                <ion-col size="8" class="pl-0 pr-0 pt-0 pb-0 ion-align-self-center">
+                                    <div
+                                        class="secondary fw-500 sub-heading-sm ion-text-capitalize ion-align-self-center">
+                                        {{earning.employmentTitle ? earning.employmentTitle : earning.title}}</div>
+                                </ion-col>
+                                <ion-col size="4" class="pl-0 pr-0 pt-0 pb-0">
+                                    <div class="d-flex ion-float-right">
+                                        <div class="primary fw-500 ion-align-self-center">
+                                            <img src="../../assets/imgs/Iconsax/Svg/All/outline/add-warn.svg">
+                                        </div>
+                                        <div class="ion-align-self-center warning fw-500 sub-heading-sm">
+                                            &#x20b9;{{earning.status == 'Paid' || earning.status == 'Approved'?
+                                            (earning?.settledAmount ? earning?.settledAmount?.toFixed(0) : 0) :
+                                            (earning?.amount? earning?.amount?.toFixed(0) : 0)}}
+                                        </div>
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                        </div>
+                    </div>
+                    <div>
+                        <ion-row>
+                            <ion-col size="7.5" class="p-0">
+                                <div class="d-flex">
+                                    <div class="pr-8 ion-align-self-center">
+                                        <img src="../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg">
+                                    </div>
+                                    <div class="ternary sub-heading-xs fw-400 ion-align-self-center">
+                                        {{earning?.date | formatDate | date: 'MMM dd, yyyy'}}
+                                        <!-- {{earning?.date[0].timeFrom | formatTime | date: 'hh:mm a' }} to
+                                        {{earning?.date[0].timeTo |
+                                        formatTime | date: 'hh:mm a'}} -->
+                                    </div>
+                                </div>
+                            </ion-col>
+                            <ion-col size="4.5" class="p-0">
+                                <div class="d-flex">
+                                    <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
+                                    <div class="ion-align-self-center">
+                                        <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/clock.svg">
+                                    </div>
+                                    <div class="primary fw-400 sub-heading-xs ion-align-self-center">
+                                        {{earning.hours}} hours </div>
+                                </div>
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-row class="pt-8">
+                            <ion-col size="12" class="p-0">
+                                <div class="d-flex">
+                                    <div class="pr-8">
+                                        <img src="../../assets/imgs/Iconsax/Svg/All/outline/location.svg">
+                                    </div>
+                                    <div class="ternary sub-heading-xs fw-400 ion-align-self-center">
+                                        Hotel Ramada Plaza, National games park, Pune
+                                    </div>
+                                </div>
+                            </ion-col>
+                        </ion-row>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ml-16 mr-16"
+            *ngIf="!myEarningsService.earningStatus && myEarningsService.earningRecords?.length == 0">
+            <div class="data-not-found-wrap">
+                <div class="pb-0">
+                    <ion-row>
+                        <ion-col size="12">
+                            <img src="../../assets/imgs/no-earnings.svg">
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="12" class="p-0">
+                            <div class="secondary fw-600 sub-heading-xl">No earnings available yet</div>
+                        </ion-col>
+                    </ion-row>
+                </div>
+                <div class="mt-12">
+                    <ion-row>
+                        <ion-col size="12" class="p-0">
+                            <div class="fw-400 sub-heading-sm ternary">As soon as job completed and approved,you will be
+                                able to see them here.</div>
+                        </ion-col>
+                    </ion-row>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</ion-content>

@@ -1,0 +1,36 @@
+
+<ion-header class="container">
+  <div class="mt-16 ml-16 mr-16">
+    <div class="logo-title w-100" *ngIf="router.url.includes('onboarding-phone-number')">
+      <div>
+        <img src="../../assets/imgs/logo.svg">
+      </div>
+      <div class="ion-align-self-center">
+        <div class="header-title d-flex ml-10">
+          <div class="main-body-heading-sm fw-500 secondary">hour</div>
+          <div class="main-body-heading-sm fw-400 secondary">4u</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-title w-100 pt-7 pb-7" *ngIf="!router.url.includes('onboarding-phone-number')">
+      <div class="ion-align-self-center">
+        <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" (click)="back()">
+      </div>
+      <div class="ion-align-self-center">
+        <div class="header-title d-flex">
+          <div class="sub-heading-md secondary fw-400 pl-11-5">Back</div>
+        </div>
+      </div>
+      <div class="pl-41" *ngIf="headerTitle">
+        <div class="main-body-heading-sm fw-600 secondary">{{headerTitle}}</div>
+      </div>
+    </div>
+    <div class="d-flex step-wrap">
+      <div *ngFor="let step of counter;let i = index;" class="mr-8">
+        <img class="img-wrapper" *ngIf="!step.active" src="../../assets/imgs/inactive-line.png">
+        <img class="img-wrapper" *ngIf="step.active" src="../../assets/imgs/active-line.png">
+      </div>
+    </div>
+  </div>
+</ion-header>

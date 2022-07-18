@@ -1,5 +1,8 @@
 export class Attendance {
-    
+    content: AttendanceBody[];
+}
+
+export class AttendanceBody {
     checkIn: Date;
     checkOut: Date;
     createdBy: string;
@@ -18,5 +21,4 @@ export class Attendance {
     // for req
     checkInTime: Date
     checkOutTime: Date
-
 }

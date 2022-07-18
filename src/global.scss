@@ -69,7 +69,8 @@ ion-header,
 ion-footer,
 app-onboarding-header,
 ion-toolbar,
-ion-tab-bar {
+ion-tab-bar,
+ion-segment {
     font-family: "Graphik" !important;
     --background: #fff !important;
     background: #fff !important;
@@ -95,6 +96,10 @@ ion-tab-bar {
 
 .ternary {
     color: var(--ion-color-ternary);
+}
+
+.warning {
+    color: var(--ion-color-warning);
 }
 
 .backgroud-color {
@@ -436,4 +441,135 @@ ion-chip {
 
 .bottom-border {
     border-bottom: 1px solid #E8E8E8;
+}
+
+// Segment css
+ion-segment-button {
+    .segment-button-checked {
+        border-bottom: 2px solid #080A52;
+    }
+
+    border-bottom: none;
+
+    ion-label {
+        text-transform: none;
+        letter-spacing: normal;
+        color: var(--ion-color-ternary);
+    }
+}
+
+
+// Bedge css
+.completed-bedge {
+    padding: 2px 8px;
+    height: 22px;
+    background: var(--ion-color-success-shade);
+    border-radius: 32px;
+
+    label {
+        color: var(--ion-color-success);
+    }
+}
+
+.upcoming-bedge {
+    padding: 2px 8px;
+    height: 22px;
+    background: var(--ion-color-primary-shade);
+    border-radius: 32px;
+
+    label {
+        color: var(--ion-color-primary);
+    }
+}
+
+// Custom Select
+.my-custom-interface .select-interface-option {
+    --button-color: #971e49;
+    --button-color-hover: #79193b;
+}
+
+.action-sheet-group {
+    margin: 0px 16px 16px 16px;
+    padding: 8px 0px 8px 0px;
+    background: #FFFFFF;
+    border: 1px solid #E8E8E8;
+    box-shadow: 0px 4px 8px -2px rgb(26 26 26 / 10%), 0px 2px 4px -2px rgb(26 26 26 / 6%);
+    border-radius: 8px;
+
+    .action-sheet-button {
+        padding: 12px 20px 12px 20px;
+    }
+
+    .action-sheet-button-inner {
+        color: var(--ion-color-secondary);
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    .action-sheet-selected {
+        .action-sheet-button-inner {
+            color: var(--ion-color-primary);
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        .action-sheet-button-inner::after {
+            content: "";
+            display: block;
+            width: 5px;
+            height: 13px;
+            border: 1.5px solid var(--ion-color-primary);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            margin-left: auto;
+        }
+    }
+}
+
+.action-sheet-group-cancel {
+    margin: 0px 16px 16px 16px;
+    padding: unset;
+    border: 1px solid #E6E7EE;
+    border-radius: 12px;
+
+    .action-sheet-cancel {
+        .action-sheet-button-inner {
+            justify-content: center;
+            background: #FFFFFF;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+            color: var(--ion-color-secondary);
+        }
+    }
+}
+
+ion-select::part(icon) {
+    content: url('./assets/icon/arrow-down.png');
+    margin-left: 8px;
+}
+
+ion-backdrop {
+    backdrop-filter: blur(8px);
+}
+
+.select-text {
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    line-height: 20px !important;
+    color: var(--ion-color-primary) !important;
+    --color: var(--ion-color-primary) !important;
+}
+
+
+#custom-select {
+    .select-text {
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        line-height: 20px !important;
+        color: var(--ion-color-primary) !important;
+        --color: var(--ion-color-primary) !important;
+    }
 }

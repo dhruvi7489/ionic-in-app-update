@@ -26,26 +26,23 @@ export class ActiveJobPage implements OnInit {
 
   async getActiveJob() {
     await this.activeJobService.GetActiveJob();
-    setInterval(async () => {
-      if (this.activeJobService.activeJob == null && !this.activeJobService.jobCompleted) {
-        await this.activeJobService.GetActiveJob();
-      }
-    }, 5000)
-    if (this.activeJobService.activeJob?.attendanceLocationTrackerRequired) {
-
-    }
+    // setInterval(async () => {
+    //   if (this.activeJobService?.activeJob?.job == null && !this.activeJobService.jobCompleted) {
+    //     await this.activeJobService.GetActiveJob();
+    //   }
+    // }, 5000)
   }
 
-  async applyForJob() {
-    this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
-  }
+  // async applyForJob() {
+  //   this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
+  // }
 
   enableLocation() {
-
+    this.activeJobService.checkLocationEnable();
   }
 
   navigateLocation() {
-
+    this.activeJobService.navigateToMap();
   }
 
   checkIn() {
@@ -65,7 +62,6 @@ export class ActiveJobPage implements OnInit {
   }
 
   async checkOut() {
-    // await this.activeJobService.updateHistory();
     await this.activeJobService.checkOut();
   }
 

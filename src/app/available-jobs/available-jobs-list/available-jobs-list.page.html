@@ -9,9 +9,8 @@
         <ion-refresher-content refreshingSpinner="lines"></ion-refresher-content>
     </ion-refresher>
 
-    <div class="c-container-wrap pt-20 pb-20" [ngClass]="{'backgroud-color': availableJobsService.jobLists?.length != 0}">
-        <!-- <app-internet-connection></app-internet-connection>
-        <app-page-not-found></app-page-not-found> -->
+    <div class="c-container-wrap pt-20 pb-20"
+        [ngClass]="{'backgroud-color': availableJobsService.jobLists?.length != 0}">
         <div class="data-not-found-wrap"
             *ngIf="availableJobsService.jobLists.length == 0 && !availableJobsService.errorInApiCall">
             <div class="pb-0">
@@ -21,14 +20,14 @@
                     </ion-col>
                 </ion-row>
                 <ion-row>
-                    <ion-col size="12">
+                    <ion-col size="12" class="p-0">
                         <div class="secondary fw-600 sub-heading-xl">No jobs available yet</div>
                     </ion-col>
                 </ion-row>
             </div>
             <div class="mt-12">
                 <ion-row>
-                    <ion-col size="12">
+                    <ion-col size="12" class="p-0">
                         <div class="fw-400 sub-heading-sm ternary">As soon as new jobs are available, you will be able
                             to see them here.</div>
                     </ion-col>
@@ -44,20 +43,20 @@
                     </ion-col>
                 </ion-row>
                 <ion-row>
-                    <ion-col size="12">
+                    <ion-col size="12" class="p-0">
                         <div class="secondary fw-600 sub-heading-xl">Something went wrong</div>
                     </ion-col>
                 </ion-row>
             </div>
             <div class="mt-12">
                 <ion-row>
-                    <ion-col size="12">
+                    <ion-col size="12" class="p-0">
                         <div class="fw-400 sub-heading-sm ternary">Sorry, we couldn't load available jobs due to an
                             internal error.Please try again</div>
                     </ion-col>
                 </ion-row>
                 <ion-row>
-                    <ion-col size="12">
+                    <ion-col size="12" class="p-0">
                         <div class="d-flex justify-content-center c-pointer"
                             (click)="availableJobsService.getAllJobsList()">
                             <div class="ion-align-self-center mt-4">
@@ -71,15 +70,15 @@
             </div>
         </div>
 
-        <div *ngFor="let job of availableJobsService.jobLists">
+        <div *ngFor="let job of availableJobsService.jobLists;let i = index;" [ngClass]="{'mt-12' : i != 0}">
             <ion-card class="c-card-wrap" (click)="goToJobDetails(job)">
                 <ion-card-header class="pt-16 pb-0 pr-16 pl-16 card-wrap-header">
                     <ion-row class="bottom-border pb-12">
-                        <ion-col size="6">
+                        <ion-col size="6" class="pl-0 pr-0">
                             <div class="secondary fw-500 sub-heading-sm ion-text-capitalize">
                                 {{job.employmentTitle ? job.employmentTitle : job.title}}</div>
                         </ion-col>
-                        <ion-col size="6">
+                        <ion-col size="6" class="pl-0 pr-0">
                             <div class="d-flex ion-float-right">
                                 <div class="primary fw-500 sub-heading-sm pr-4">
                                     &#x20b9;{{job.jobSeekerPaymentInfo.minRate}} -
@@ -90,9 +89,9 @@
                     </ion-row>
                 </ion-card-header>
 
-                <ion-card-content class="pt-12 pb-16 pr-16 pl-16 card-wrap">
+                <ion-card-content class="mt-12 pb-16 pr-16 pl-16 card-wrap">
                     <ion-row>
-                        <ion-col size="12" class="pl-0">
+                        <ion-col size="12" class="p-0">
                             <div class="d-flex">
                                 <div class="pr-8">
                                     <img src="../../assets/imgs/Iconsax/Svg/All/outline/location.svg">
@@ -104,9 +103,9 @@
                         </ion-col>
                     </ion-row>
 
-                    <ion-row>
+                    <ion-row class="pt-12">
                         <!-- <ion-col size="8.5"> -->
-                        <ion-col size="12" class="pl-0">
+                        <ion-col size="12" class="p-0">
                             <div class="d-flex">
                                 <div class="pr-8">
                                     <img src="../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg">
@@ -119,11 +118,11 @@
                             </div>
                         </ion-col>
                         <!-- <ion-col size="3.5">
-                            <div class="d-flex">
-                                <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
-                                <div class="primary fw-400 sub-heading-xs"> 4km away </div>
-                            </div>
-                        </ion-col> -->
+                          <div class="d-flex">
+                              <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
+                              <div class="primary fw-400 sub-heading-xs"> 4km away </div>
+                          </div>
+                      </ion-col> -->
                     </ion-row>
                 </ion-card-content>
             </ion-card>

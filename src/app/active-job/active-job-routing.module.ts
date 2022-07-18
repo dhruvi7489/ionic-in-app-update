@@ -21,9 +21,17 @@ const routes: Routes = [
     loadChildren: () => import('./active-job-summary/active-job-summary.module').then( m => m.ActiveJobSummaryPageModule)
   },
   {
-    path: 'photo-upload',
-    loadChildren: () => import('./photo-upload/photo-upload.module').then( m => m.PhotoUploadPageModule)
-  }
+    path: 'no-active-job',
+    loadChildren: () => import('./no-active-job/no-active-job.module').then( m => m.NoActiveJobPageModule)
+  },
+  {
+    path: 'active-job-location',
+    loadChildren: () => import('./active-job-location/active-job-location.module').then( m => m.ActiveJobLocationPageModule)
+  },
+  {
+    path: 'active-job-common-header',
+    loadChildren: () => import('./active-job-common-header/active-job-common-header.module').then( m => m.ActiveJobCommonHeaderPageModule)
+  },
 ];
 
 @NgModule({

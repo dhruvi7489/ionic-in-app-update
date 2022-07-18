@@ -29,6 +29,6 @@ export class UploadWorkPhotoViewPage implements OnInit {
   }
 
   async usePhoto() {
-    await this.activeJobService.uploadAttendancePicture(this.activeJobService.blobData, this.activeJobService.enumType,true);
+    await this.activeJobService.uploadAttendancePicture(this.activeJobService.blobData, this.activeJobService.enumType, true);
   }
 }

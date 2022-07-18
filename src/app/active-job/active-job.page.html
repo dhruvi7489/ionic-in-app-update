@@ -2,7 +2,7 @@
 
 <ion-content>
   <div class="content-wrap">
-    <div class="data-not-found-wrap" *ngIf="!activeJobService.activeJob">
+    <!-- <div class="data-not-found-wrap" *ngIf="!activeJobService.activeJob?.job">
       <div class="pb-0">
         <ion-row>
           <ion-col size="12">
@@ -31,18 +31,19 @@
           </ion-col>
         </ion-row>
       </div>
-    </div>
+    </div> -->
 
     <!-- 1 -->
-    <div class="content-wrap-inner" *ngIf="activeJobService.activeJob && !activeJobService.jobCompleted">
+    <!-- <div class="content-wrap-inner" *ngIf="activeJobService.activeJob?.job && !activeJobService.jobCompleted">
       <div class="mt-16 ml-16 mr-16">
         <div class="c-card-wrap">
           <div class="pb-0 card-wrap-header">
             <ion-row class="c-card-header-wrap">
               <ion-col size="12" class="pl-0 pt-0">
                 <div class="secondary fw-500 sub-heading-md ion-text-capitalize">
-                  {{activeJobService.activeJob?.employmentTitle ? activeJobService.activeJob?.employmentTitle :
-                  activeJobService.activeJob?.title}}</div>
+                  {{activeJobService.activeJob?.job?.employmentTitle ? activeJobService.activeJob?.job?.employmentTitle
+                  :
+                  activeJobService.activeJob?.job?.title}}</div>
               </ion-col>
             </ion-row>
           </div>
@@ -55,7 +56,7 @@
                     <img src="../../assets/imgs/Iconsax/Svg/All/outline/location.svg">
                   </div>
                   <div class="ternary sub-heading-sm fw-400">
-                    {{activeJobService.activeJob?.location.address | Description : 100}}
+                    {{activeJobService.activeJob?.job?.location?.address | Description : 100}}
                   </div>
                 </div>
               </ion-col>
@@ -68,9 +69,9 @@
                     <img src="../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg">
                   </div>
                   <div class="ternary sub-heading-sm fw-400 ion-align-self-center">
-                    {{activeJobService.activeJob?.dates[0].date | formatDate | date: 'MMM dd, yyyy'}}
-                    {{activeJobService.activeJob?.dates[0].timeFrom | formatTime | date: 'hh:mm a' }} to
-                    {{activeJobService.activeJob?.dates[0].timeTo |
+                    {{activeJobService.activeJob?.job?.dates[0].date | formatDate | date: 'MMM dd, yyyy'}}
+                    {{activeJobService.activeJob?.job?.dates[0].timeFrom | formatTime | date: 'hh:mm a' }} to
+                    {{activeJobService.activeJob?.job?.dates[0].timeTo |
                     formatTime | date: 'hh:mm a'}}
                   </div>
                 </div>
@@ -79,12 +80,11 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- 2 -->
-    <div class="data-not-found-wrap enable-location-wrap"
-      *ngIf="activeJobService.activeJob?.attendanceLocationTrackerRequired && 
-    activeJobService.activeJob?.attendance?.content?.length == 0 && !activeJobService?.endBeforeFifteenMin && !activeJobService.jobCompleted">
+    <div class="data-not-found-wrap enable-location-wrap" *ngIf="activeJobService.activeJob?.job?.attendanceAtVenueRequired && !activeJobService?.endBeforeFifteenMin 
+    && !activeJobService.jobCompleted && !locationService.currentLocationFetch && !activeJobService.navigateLocation">
       <div class="pb-0">
         <ion-row>
           <ion-col size="12">
@@ -116,96 +116,65 @@
     </div>
 
     <!-- 3 -->
-    <!-- <div class="data-not-found-wrap enable-location-wrap">
-          <div class="pb-0">
-            <ion-row>
-              <ion-col size="12">
-                <img src="../../assets/imgs/fetch-location.svg">
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="12">
-                <div class="secondary fw-600 sub-heading-xl">We are fetching our location...</div>
-              </ion-col>
-            </ion-row>
-          </div>
-          <div class="mt-12">
-            <ion-row>
-              <ion-col size="12">
-                <div class="fw-400 sub-heading-sm ternary">We are looking for your location. Please ensure your location
-                  service is on and your internet connection is stable.</div>
-              </ion-col>
-            </ion-row>
-          </div>
-        </div> -->
-
-    <!-- 4 -->
-    <!-- <div class="data-not-found-wrap enable-location-wrap">
-          <div class="pb-0">
-            <ion-row>
-              <ion-col size="12">
-                <img src="../../assets/imgs/navigate-location.svg">
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="12">
-                <div class="secondary fw-600 sub-heading-xl">Navigate to your job location</div>
-              </ion-col>
-            </ion-row>
-          </div>
-          <div class="mt-12">
-            <ion-row>
-              <ion-col size="12">
-                <div class="fw-400 sub-heading-sm ternary">Seems like you are not there yet! Move to your location to
-                  kick-off the shift</div>
-              </ion-col>
-            </ion-row>
-
-            <ion-row class="mt-22">
-              <ion-col size="12">
-                <custom-button [title]="'Navigate'" [button]="'primary'" [disabled]="false" (btnClick)="navigateLocation()">
-                </custom-button>
-              </ion-col>
-            </ion-row>
-          </div>
-        </div> -->
-
-    <!-- 5 -->
-    <div class="data-not-found-wrap enable-location-wrap" *ngIf="activeJobService.activeJob && activeJobService.activeJob?.attendance?.content?.length == 0 && activeJobService.startBeforeThirtyMin 
-      && !activeJobService.showPaymentPage && !activeJobService.jobCompleted">
+    <div class="data-not-found-wrap enable-location-wrap" *ngIf="activeJobService.activeJob?.job?.attendanceAtVenueRequired && !activeJobService?.endBeforeFifteenMin 
+    && !activeJobService.jobCompleted && locationService.currentLocationFetch && !activeJobService.navigateLocation">
       <div class="pb-0">
         <ion-row>
           <ion-col size="12">
-            <img src="../../assets/imgs/mark-attendance.svg">
+            <img src="../../assets/imgs/fetch-location.svg">
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col size="12" class="p-0">
-            <div class="secondary fw-600 sub-heading-xl">Mark your attendance</div>
+          <ion-col size="12">
+            <div class="secondary fw-600 sub-heading-xl">We are fetching your location...</div>
           </ion-col>
         </ion-row>
       </div>
       <div class="mt-12">
         <ion-row>
-          <ion-col size="12" class="p-0">
-            <div class="fw-400 sub-heading-sm ternary">Congratulations! You have arrived at the location. Click on
-              Check-in to start working.</div>
+          <ion-col size="12">
+            <div class="fw-400 sub-heading-sm ternary">We are looking for your location. Please ensure your location
+              service is on and your internet connection is stable.</div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="data-not-found-wrap enable-location-wrap" *ngIf="activeJobService.activeJob?.job?.attendanceAtVenueRequired && !activeJobService?.endBeforeFifteenMin 
+    && !activeJobService.jobCompleted && activeJobService.navigateLocation">
+      <div class="pb-0">
+        <ion-row>
+          <ion-col size="12">
+            <img src="../../assets/imgs/navigate-location.svg">
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <div class="secondary fw-600 sub-heading-xl">Navigate to your job location</div>
+          </ion-col>
+        </ion-row>
+      </div>
+      <div class="mt-12">
+        <ion-row>
+          <ion-col size="12">
+            <div class="fw-400 sub-heading-sm ternary">Seems like you are not there yet! Move to your location to
+              kick-off the shift</div>
           </ion-col>
         </ion-row>
 
         <ion-row class="mt-22">
-          <ion-col size="12" class="p-0">
-            <custom-button [title]="'Check-in'" [button]="'primary'" [disabled]="false" (btnClick)="checkIn()">
+          <ion-col size="12">
+            <custom-button [title]="'Navigate'" [button]="'primary'" [disabled]="false" (btnClick)="navigateLocation()">
             </custom-button>
           </ion-col>
         </ion-row>
       </div>
     </div>
 
-
-    <!-- 6 -->
-    <div class="data-not-found-wrap enable-location-wrap"
-      *ngIf="activeJobService.activeJob && !activeJobService.startBeforeThirtyMin && !activeJobService.showPaymentPage && !activeJobService.jobCompleted">
+    <!-- 5 -->
+    <div class="data-not-found-wrap enable-location-wrap" *ngIf="activeJobService.activeJob?.job && !activeJobService.startBeforeThirtyMin && !activeJobService.showPaymentPage && !activeJobService.jobCompleted &&
+       !activeJobService.activeJob?.job?.attendanceAtVenueRequired">
       <div class="pb-0">
         <ion-row>
           <ion-col size="12">
@@ -235,10 +204,43 @@
       </div>
     </div>
 
+    <!-- 6 -->
+    <div class="data-not-found-wrap enable-location-wrap"
+      *ngIf="activeJobService.activeJob && activeJobService.activeJob?.attendance?.content?.length == 0 && activeJobService.startBeforeThirtyMin 
+      && !activeJobService.showPaymentPage && !activeJobService.jobCompleted && !activeJobService.activeJob?.job?.attendanceAtVenueRequired">
+      <div class="pb-0">
+        <ion-row>
+          <ion-col size="12">
+            <img src="../../assets/imgs/mark-attendance.svg">
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="secondary fw-600 sub-heading-xl">Mark your attendance</div>
+          </ion-col>
+        </ion-row>
+      </div>
+      <div class="mt-12">
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="fw-400 sub-heading-sm ternary">Congratulations! You have arrived at the location. Click on
+              Check-in to start working.</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-22">
+          <ion-col size="12" class="p-0">
+            <custom-button [title]="'Check-in'" [button]="'primary'" [disabled]="false" (btnClick)="checkIn()">
+            </custom-button>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
     <!-- 7 -->
-    <div class="mt-16 ml-16 mr-16"
-      *ngIf="activeJobService.activeJob && activeJobService.activeJob?.attendance?.content?.length != 0 && 
-    activeJobService.inTime.length != 0 && !activeJobService?.endBeforeFifteenMin && !activeJobService.showPaymentPage && !activeJobService.jobCompleted">
+    <div class="mt-16 ml-16 mr-16" *ngIf="activeJobService.activeJob?.job && activeJobService.activeJob?.attendance?.content?.length != 0 && 
+    activeJobService.inTime.length != 0 && !activeJobService?.endBeforeFifteenMin && !activeJobService.showPaymentPage && !activeJobService.jobCompleted &&
+    !activeJobService.activeJob?.job?.attendanceAtVenueRequired">
       <app-active-job-flow-stepper active-step="1"></app-active-job-flow-stepper>
       <div class="ternary ml-52 fw-400 sub-heading-sm">
         During your shift, you are required to upload pictures for your documentation and reports. Please keep uploading
@@ -325,7 +327,8 @@
     </div>
 
     <!-- 9 -->
-    <div class="mt-16 ml-16 mr-16" *ngIf="activeJobService.showPaymentPage && !activeJobService.jobCompleted">
+    <div class="mt-16 ml-16 mr-16"
+      *ngIf="activeJobService.showPaymentPage && !activeJobService.jobCompleted && !activeJobService.activeJob?.job?.attendanceAtVenueRequired">
       <app-active-job-summary></app-active-job-summary>
     </div>
 

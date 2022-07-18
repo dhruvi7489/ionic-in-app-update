@@ -33,6 +33,6 @@ export const Apiurl = {
     GetEmployeementHistory: JobService + 'employmentHistory',
     GetEmployeementAttendance: JobService + 'employmentAttendance',
     SaveRating: ratingService + 'employer',
-    SavePayment: jobSeekerServiceUrl + 'payment',
-    GetEarningStatus: jobSeekerServiceUrl + 'payment/earningStats/'
+    Payment: jobSeekerServiceUrl + 'payment',
+    GetEarningStatus: jobSeekerServiceUrl + 'payment/earningStats/',
 };

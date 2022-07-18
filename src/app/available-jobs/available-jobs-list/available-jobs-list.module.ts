@@ -8,8 +8,6 @@ import { AvailableJobsListPageRoutingModule } from './available-jobs-list-routin
 
 import { AvailableJobsListPage } from './available-jobs-list.page';
 import { AvailableJobsHeaderPageModule } from '../available-jobs-header/available-jobs-header.module';
-import { PageNotFoundPageModule } from 'src/app/page-not-found/page-not-found.module';
-import { InternetConnectionPageModule } from 'src/app/internet-connection/internet-connection.module';
 import { PipesModule } from 'src/app/core/pipes/pipes.module';
 
 @NgModule({
@@ -19,8 +17,6 @@ import { PipesModule } from 'src/app/core/pipes/pipes.module';
     IonicModule,
     AvailableJobsListPageRoutingModule,
     AvailableJobsHeaderPageModule,
-    PageNotFoundPageModule,
-    InternetConnectionPageModule,
     PipesModule
   ],
   declarations: [AvailableJobsListPage]

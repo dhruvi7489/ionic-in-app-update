@@ -11,7 +11,6 @@ export class TabsPage {
   constructor() { }
 
   setCurrentTab(event) {
-    console.log("333333", event)
     this.activeTab = event.tab;
   }
 }

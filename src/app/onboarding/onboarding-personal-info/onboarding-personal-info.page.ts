@@ -22,7 +22,7 @@ export class OnboardingPersonalInfoPage implements OnInit {
     this.onboardingService.getPersonalInfo();
   }
 
-  gtFullName(event) {
+  getFullName(event) {
     this.onboardingService.full_name = event.ngModelData;
   }
 

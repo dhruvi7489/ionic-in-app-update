@@ -17,7 +17,7 @@
       <ion-label>Your name*</ion-label>
     </div>
     <custom-input [inputType]="'text'" [placeholder]="'Full name'" [ngModelData]="onboardingService.full_name"
-      [id]="'full_name'" (keyUp)="gtFullName($event)">
+      [id]="'full_name'" (keyUp)="getFullName($event)">
     </custom-input>
 
     <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">

@@ -1,0 +1,109 @@
+<ion-content>
+  <div class="container w-100">
+    <div class="centered-element w-100">
+      <div class="content-wrap">
+        <div class="logo-title w-100">
+          <div class="ion-align-self-center c-pointer">
+            <ion-icon name="arrow-back" (click)="goBack()"></ion-icon>
+          </div>
+          <div>
+            <h3 class="header-title">
+              Back
+            </h3>
+          </div>
+        </div>
+
+        <div>
+          <h1 class="title">Confirm your identity</h1>
+          <p class="sub-title">Please enter the 6-digit code sent via SMS at <b>{{mobile}}</b></p>
+        </div>
+
+        <!-- <form [formGroup]="otpForm" (keyup.enter)="next()"> -->
+        <div class="c-input-label secondary">
+          <ion-label>Enter the code</ion-label>
+        </div>
+        <div>
+          <custom-otp (enteredOtp)="otpEnter($event)" [placeholder]="'0'"></custom-otp>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="2" class="ion-text-center">
+                <!-- <ion-input type="tel" #otp1 class="otp" maxlength="1" pattern="[0-9]" size="1"
+                  (keyup)="otpController($event,otp2,'')" placeholder="0" autofocus>
+                </ion-input> -->
+                <custom-input [inputType]="'text'" [maxlength]="'1'" [id]="'otp1'" [textAlign]="'center'"
+                  (keyUp)="otpController($event,otp2,'')"></custom-input>
+              </ion-col>
+              <ion-col size="2" class="ion-text-center">
+                <!-- <ion-input type="tel" #otp2 class="otp" maxlength="1" size="1" pattern="[0-9]"
+                  (keyup)="otpController($event,otp3,otp1)" placeholder="0">
+                </ion-input> -->
+                <custom-input [inputType]="'text'" [maxlength]="'1'" [id]="'otp2'" [textAlign]="'center'"
+                  (keyUp)="otpController($event,otp3,otp1)"></custom-input>
+              </ion-col>
+              <ion-col size="2" class="ion-text-center">
+                <!-- <ion-input type="tel" #otp3 class="otp" maxlength="1" size="1" pattern="[0-9]"
+                  (keyup)="otpController($event,otp4,otp2)" placeholder="0">
+                  </ion-input> -->
+                <custom-input [inputType]="'text'" [maxlength]="'1'" [id]="'otp3'" [textAlign]="'center'"
+                  (keyUp)="otpController($event,otp4,otp2)"></custom-input>
+              </ion-col>
+              <ion-col size="2" class="ion-text-center">
+                <!-- <ion-input type="tel" #otp4 class="otp" pattern="[0-9]" maxlength="1" size="1"
+                  (keyup)="otpController($event,otp5,otp3)" placeholder="0">
+                  </ion-input> -->
+                <custom-input [inputType]="'text'" [maxlength]="'1'" [id]="'otp4'" [textAlign]="'center'"
+                  (keyUp)="otpController($event,otp5,otp3)"></custom-input>
+              </ion-col>
+              <ion-col size="2" class="ion-text-center">
+                <!-- <ion-input type="tel" #otp5 class="otp" pattern="[0-9]" maxlength="1" size="1"
+                  (keyup)="otpController($event,otp6,otp4)" placeholder="0">
+                </ion-input> -->
+                <custom-input [inputType]="'text'" [maxlength]="'1'" [id]="'otp5'" [textAlign]="'center'"
+                  (keyUp)="otpController($event,otp6,otp4)"></custom-input>
+              </ion-col>
+              <ion-col size="2" class="ion-text-center">
+                <!-- <ion-input type="tel" #otp6 class="otp" pattern="[0-9]" maxlength="1" size="1"
+                  (keyup)="otpController($event,'',otp5)" placeholder="0">
+                  </ion-input> -->
+                <custom-input [inputType]="'text'" [maxlength]="'1'" [id]="'otp6'" [textAlign]="'center'"
+                  (keyUp)="otpController($event,'',otp5)"></custom-input>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+
+        <div class="d-flex">
+          <p class="sub-title">Didn't get a code? </p>
+          <div class="d-flex resend_code c-pointer">
+            <div class="ion-align-self-center">
+              <img class="img-wrapper" src="../../assets/imgs/Iconsax/Svg/All/outline/rotate-right.svg">
+            </div>
+            <div class="ion-align-self-center resend_link">
+              Resend
+            </div>
+          </div>
+        </div>
+
+        <!-- <ion-button type="button" class="c-button w-100" [disabled]="otpForm.invalid" (click)="next()">Next
+          </ion-button> -->
+
+        <custom-button [title]="'Next'" (btnClick)="next()" [disabled]="otp.length != 6" [button]="'primary'">
+        </custom-button>
+        <!-- </form> -->
+        <h5 class="or-wrapper"><span>Or</span></h5>
+
+        <div class="fb-logo-title w-100">
+          <div class="ion-align-self-center c-pointer">
+            <!-- <img class="img-wrapper" src="../../assets/imgs/call.svg"> -->
+            <ion-icon name="call" class="call_icon"></ion-icon>
+          </div>
+          <div>
+            <h5 class="fb-wrap c-pointer">
+              Give me a call
+            </h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

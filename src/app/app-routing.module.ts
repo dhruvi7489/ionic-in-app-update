@@ -54,9 +54,17 @@ const routes: Routes = [
     loadChildren: () => import('./active-job/job-rating/job-rating.module').then(m => m.JobRatingPageModule)
   },
   {
+    path: 'payment',
+    loadChildren: () => import('./my-earnings/payment/payment.module').then(m => m.PaymentPageModule)
+  },
+  {
+    path: 'set-hourly-rates',
+    loadChildren: () => import('./set-hourly-rates/set-hourly-rates.module').then( m => m.SetHourlyRatesPageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundPageModule)
-  }
+  },
 ];
 @NgModule({
   imports: [

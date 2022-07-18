@@ -13,13 +13,15 @@
       <ion-label>Active job</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="tab3">
-      <img src="../../assets/imgs/tabs/earning-inactive.svg">
+    <ion-tab-button tab="my-earnings">
+      <img *ngIf="activeTab != 'my-earnings'" src="../../assets/imgs/tabs/earning-inactive.svg">
+      <img *ngIf="activeTab == 'my-earnings'" src="../../assets/imgs/tabs/earning-active.svg">
       <ion-label>Earnings</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="tab4">
-      <ion-icon name="people"></ion-icon>
+    <ion-tab-button tab="my-jobs">
+      <img *ngIf="activeTab != 'my-jobs'" src="../../assets/imgs/tabs/my-jobs-inactive.svg">
+      <img *ngIf="activeTab == 'my-jobs'" src="../../assets/imgs/tabs/my-jobs-active.svg">
       <ion-label>My jobs</ion-label>
     </ion-tab-button>
 

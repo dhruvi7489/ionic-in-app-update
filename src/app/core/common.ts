@@ -28,21 +28,24 @@ export class CommonProvider {
         data: any,
         headers?: any
     ) {
-        this.loadingService.show();
+        // this.loadingService.show();
         const httpHeader = new HttpHeaders({
             Authorization: localStorage.getItem(TOKEN_TYPE) + " " + localStorage.getItem(TOKEN_KEY)
         });
+        // setTimeout(() => {
+        //     this.loadingService.dismiss();
+        // }, 3000);
         return new Promise(async (resolve, reject) => {
             return this.http
                 .get(Apiurl.RoutePath + url, { params: data, headers: httpHeader })
                 .subscribe(
                     (data: any) => {
                         resolve(data);
-                        this.loadingService.dismiss();
+                        // this.loadingService.dismiss();
                     },
                     (error: HttpErrorResponse) => {
                         reject(error)
-                        this.loadingService.dismiss();
+                        // this.loadingService.dismiss();
                         if (error && error.error && error.error.message) {
                             this.toastService.showMessage(error.error.message)
                         }
@@ -57,7 +60,7 @@ export class CommonProvider {
         data: any,
         headers?: any
     ) {
-        this.loadingService.show();
+        // this.loadingService.show();
         const httpHeader = new HttpHeaders({
             Authorization: localStorage.getItem(TOKEN_TYPE) + " " + localStorage.getItem(TOKEN_KEY)
         });
@@ -68,11 +71,11 @@ export class CommonProvider {
                 .subscribe(
                     (data: any) => {
                         resolve(data);
-                        this.loadingService.dismiss();
+                        // this.loadingService.dismiss();
                     },
                     (error: HttpErrorResponse) => {
                         reject(error)
-                        this.loadingService.dismiss();
+                        // this.loadingService.dismiss();
                         if (error && error.error && error.error.message) {
                             this.toastService.showMessage(error.error.message)
                         }
@@ -87,7 +90,7 @@ export class CommonProvider {
         data: any,
         headers?: any
     ) {
-        this.loadingService.show();
+        // this.loadingService.show();
         const httpHeader = new HttpHeaders({
             Authorization: localStorage.getItem(TOKEN_TYPE) + " " + localStorage.getItem(TOKEN_KEY)
         });
@@ -96,11 +99,11 @@ export class CommonProvider {
             return this.http.put(Apiurl.RoutePath + url, data, { headers: httpHeader }).subscribe(
                 (data: any) => {
                     resolve(data);
-                    this.loadingService.dismiss();
+                    // this.loadingService.dismiss();
                 },
                 (error: any) => {
                     reject(error)
-                    this.loadingService.dismiss();
+                    // this.loadingService.dismiss();
                     if (error && error.error && error.error.message) {
                         this.toastService.showMessage(error.error.message)
                     }

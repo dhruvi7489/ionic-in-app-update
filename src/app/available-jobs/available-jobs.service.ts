@@ -180,7 +180,6 @@ export class AvailableJobsService {
     application.gender = localStorage.getItem('loginUserGender');
 
     return await this.commonProvider.PostMethod(Apiurl.SubmitJobApplication, application).then(async (res: any) => {
-      console.log(res)
       if (res && res.id) {
         this.errorInApiCall = false;
         if (!isApplyLater) {

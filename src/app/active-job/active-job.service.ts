@@ -6,16 +6,18 @@ import { CommonProvider } from '../core/common';
 import { EmploymentHistoryImageProofRequest } from '../core/modal/employment-history-request.modal';
 import { Apiurl } from '../core/route';
 import { ToastService } from '../services/toast.service';
-import { PhotoUploadPage } from './photo-upload/photo-upload.page';
 import { DateTime } from 'luxon';
-import { Attendance } from '../core/modal/attendance.modal';
+import { Attendance, AttendanceBody } from '../core/modal/attendance.modal';
 import { Location } from '@angular/common';
+import { LocationService } from '../services/location.service';
+import { LaunchNavigator } from '@ionic-native/launch-navigator/ngx';
+import { ActiveJob } from '../core/modal/active-job.modal';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActiveJobService {
-  activeJob: any = null;
+  activeJob: ActiveJob = null;
   markAttendancePicture: string = null;
   isMarkDisabled: boolean = true;
   inTime: any[] = [];
@@ -30,6 +32,9 @@ export class ActiveJobService {
   totalPayment = null;
   selectedJobRating = 0;
   jobCompleted: boolean = false;
+  checkOutPage: boolean = false;
+  navigateLocation: boolean = false;
+  enableLocationClick: boolean = false;
 
   constructor(
     public commonProvider: CommonProvider,
@@ -37,104 +42,97 @@ export class ActiveJobService {
     public toastService: ToastService,
     public modalCtrl: ModalController,
     public actionSheetController: ActionSheetController,
-    public location: Location
+    public location: Location,
+    public locationService: LocationService,
+    private launchNavigator: LaunchNavigator
   ) {
+    // Location cordinates subscribe if get
+    this.locationService.getLocationCordinates().subscribe(async (res) => {
+      if (res) {
+        await this.checkLocationCordinates();
+      } else {
+        this.navigateLocation = false;
+      }
+    })
   }
 
   // Get active job data from login user id
   async GetActiveJob() {
     this.activeJob = null;
     await this.commonProvider.GetMethod(Apiurl.GetActiveJob + localStorage.getItem('loginUserId'), null).then(async (res: any) => {
-      this.activeJob = res ? res : JSON.parse(localStorage.getItem('activeJob'));
+      this.activeJob = new ActiveJob();
+      this.activeJob.job = res ? res : JSON.parse(localStorage.getItem('activeJob'));
       console.log("activeJOb-----", this.activeJob)
-      if (this.activeJob) {
-        this.activeJob.noActieJob = false;
-        localStorage.setItem('activeJob', JSON.stringify(this.activeJob))
+      if (this.activeJob?.job) {
+        localStorage.setItem('activeJob', JSON.stringify(this.activeJob?.job))
         await this.checkJobIsActive();
         await this.getPaymentInfo();
         if (!this.jobCompleted) {
           await this.getActiveJobDetails();
         }
+      } else {
+        this.router.navigateByUrl('tabs/active-job/no-active-job')
       }
     }).catch((err: any) => {
       console.log(err)
     })
   }
 
-  async checkJobIsActive() {
-    let activeDay = this.activeJob?.dates?.filter(date => date.isActive);
-    if (activeDay.length != 0) {
-      this.activeJob.activeDay = activeDay[0];
-      this.activeJob.noActieJobFound = false;
-    } else {
-      this.activeJob.noActieJobFound = true;
+  async checkLocationEnable() {
+    this.navigateLocation = false;
+    this.enableLocationClick = true;
+    this.locationService.currentLocationFetch = false;
+    if (this.activeJob?.job.attendanceAtVenueRequired) {
+      this.locationService.currentLocationFetch = true;
+      await this.locationService.requestLocationPermission();
     }
   }
 
-  async getActiveJobDetails() {
-    await this.setActiveDay();
-    await this.getEmployeementAttendance();
-    await this.getEmployeementHistory();
-    // await this.checkRedirection();
-    await this.jobEndCheck();
-  }
-
-
-  // async checkRedirection() {
-  //   if (this.activeJob) {
-  //     console.log('this.activeJob: ', this.activeJob);
-  //     //console.log('this.activeJob.attendance.id: ' , this.activeJob.attendance.id);
-  //     console.log(this.activeJob.attendance == null);
-  //     console.log(this.activeJob.attendance == undefined);
-  //     console.log(this.activeJob.attendance != null);
-
-  //     if (this.activeJob.attendance != null) {
-  //       if (this.activeJob.attendance.checkOut != null && this.activeJob.attendance.totalRecordedTime != null) {
-  //         console.log('checkRedirection# /request-payment');
-  //         // this.navCtrl.navigateForward('/request-payment', { queryParams: { activeJob: this.activeJob, jobSeeker: this.jobSeeker } });
-  //       } else {
-  //         this.activeJob.showStepperJobRunning = true;
-  //       }
-  //     }
-  //     else if (this.activeJob.attendance == undefined || this.activeJob.attendance == null) {
-  //       if (this.activeJob.attendanceAtVenueRequired) {
-  //         console.log("nj04");
-  //         // this.navCtrl.navigateRoot('tabs/navigate');
-  //       }
-  //       else {
-  //         console.log("nj05");
-  //         // this.navCtrl.navigateRoot('tabs/attendance');
-  //       }
-  //     }
-  //   }
-  // }
-
-  // Set Active Day
-  setActiveDay() {
-    const timeNow = new Date().getTime();
-    const jobStartDate = new Date();
-    jobStartDate.setHours(this.activeJob.activeDay?.timeFrom[0]);
-    jobStartDate.setMinutes(this.activeJob.activeDay?.timeFrom[1]);
-
-    // const diff = (jobStartDate.getTime() - timeNow) / 1000;
-    // console.log(diff, jobStartDate, timeNow)
-    // if (diff <= 0) {
-    //   console.log("++++++++++++++++", diff)
-    //   this.activeJob.jobStarted = true;
-    // }
-    this.isMarkDisabled = true;
-    for (let index = 0; index < this.activeJob.dates.length; index++) {
-      if (this.activeJob.dates[index].isActive == true) {
-        this.isMarkDisabled = false;
+  async checkLocationCordinates() {
+    if (this.enableLocationClick) {
+      if (this.locationService.locationCordinates && this.activeJob?.job.location) {
+        this.navigateLocation = true;
       }
     }
   }
 
+  async checkJobIsActive() {
+    let activeDay = this.activeJob?.job?.dates?.filter(date => date.isActive);
+    if (activeDay.length != 0) {
+      this.activeJob.activeDay = activeDay[0];
+      // this.activeJob.noActieJobFound = false;
+    } else {
+      this.activeJob.activeDay = null;
+      // this.activeJob.noActieJobFound = true;
+    }
+  }
+
+  async getActiveJobDetails() {
+    // await this.setActiveDay();
+    await this.getEmployeementAttendance();
+    await this.getEmployeementHistory();
+    await this.jobEndCheck();
+    console.log('checkRedirection----------', this.activeJob);
+  }
+
+  // // Set Active Day
+  // setActiveDay() {
+  //   const jobStartDate = new Date();
+  //   jobStartDate.setHours(this.activeJob.activeDay?.timeFrom[0]);
+  //   jobStartDate.setMinutes(this.activeJob.activeDay?.timeFrom[1]);
+  //   this.isMarkDisabled = true;
+  //   for (let index = 0; index < this.activeJob.dates.length; index++) {
+  //     if (this.activeJob.dates[index].isActive == true) {
+  //       this.isMarkDisabled = false;
+  //     }
+  //   }
+  // }
+
   //Get attendance
   async getEmployeementAttendance() {
     this.showPaymentPage = false;
-    let param = "?page=0&size=5&sort=createdOn,desc" + '&' + 'jobSeekerId=' + localStorage.getItem('loginUserId') + '&' + 'employmentId=' + this.activeJob.employmentId;
-    await this.commonProvider.GetMethod(Apiurl.GetEmployeementAttendance + param, null).then(async (res: any) => {
+    let param = "?page=0&size=5&sort=createdOn,desc" + '&' + 'jobSeekerId=' + localStorage.getItem('loginUserId') + '&' + 'employmentId=' + this.activeJob?.job.employmentId;
+    return await this.commonProvider.GetMethod(Apiurl.GetEmployeementAttendance + param, null).then(async (res: any) => {
       this.activeJob.attendance = res;
       if (res) {
         res.content.forEach(att => {
@@ -148,7 +146,7 @@ export class ActiveJobService {
               this.outTime[1] = att.checkOut[4];
             }
             if (att.totalRecordedTime) {
-              this.totalPayment = (att.totalRecordedTime * this.activeJob?.hourlyRate) + (localStorage.getItem('loginUserGender') == "Male" ? this.activeJob?.basePrice[0] : this.activeJob?.basePrice[1]);
+              this.totalPayment = (att.totalRecordedTime * this.activeJob?.job?.hourlyRate) + (localStorage.getItem('loginUserGender') == "Male" ? this.activeJob?.job?.basePrice[0] : this.activeJob?.job?.basePrice[1]);
               this.showPaymentPage = true;
             }
           }
@@ -161,7 +159,7 @@ export class ActiveJobService {
 
   // Get Employeement History
   async getEmployeementHistory() {
-    let param = "?page=0&size=10&sort=createdOn,desc" + '&' + 'employmentId=' + this.activeJob.employmentId + '&' + 'jobSeekerId=' + localStorage.getItem('loginUserId');
+    let param = "?page=0&size=10&sort=createdOn,desc" + '&' + 'employmentId=' + this.activeJob?.job.employmentId + '&' + 'jobSeekerId=' + localStorage.getItem('loginUserId');
     await this.commonProvider.GetMethod(Apiurl.GetEmployeementHistory + param, null).then(async (res: any) => {
       if (res) {
         res.content.forEach(hist => {
@@ -181,10 +179,10 @@ export class ActiveJobService {
               });
               this.workImages = this.activeJob.history.imageProofs.filter(ip => ip.proofEnum == 'MIDDLE');
             }
-            console.log(this.workImages, "_________")
           }
         })
       }
+      console.log(this.activeJob)
     }).catch((err: any) => {
       console.log(err)
     })
@@ -192,25 +190,24 @@ export class ActiveJobService {
 
   // Get payment details
   async getPaymentInfo() {
-    let param = "?page=0&size=5&sort=createdOn,desc" + '&' + 'jobSeekerId=' + localStorage.getItem('loginUserId') + '&' + 'employmentId=' + this.activeJob.employmentId;
-    await this.commonProvider.GetMethod(Apiurl.SavePayment + param, null).then(async (res: any) => {
+    let param = "?page=0&size=5&sort=createdOn,desc" + '&' + 'jobSeekerId=' + localStorage.getItem('loginUserId') + '&' + 'employmentId=' + this.activeJob?.job.employmentId;
+    await this.commonProvider.GetMethod(Apiurl.Payment + param, null).then(async (res: any) => {
       console.log(res)
-      const activeDay = this.activeJob.dates.filter(date => date.isActive)[0];
-      this.activeJob.payment = res;
-      if (this.activeJob.payment.content.length > 0) {
+      const activeDay = this.activeJob?.job?.dates.filter(date => date.isActive)[0];
+      // this.activeJob.payment = res;
+      if (res?.content.length > 0) {
         let dateFound = true;
-        this.activeJob.payment.content.forEach(async payment => {
+        res?.content.forEach(async payment => {
           for (let i = 0; i < 3; i++) {
             if (payment.date[i] != activeDay.date[i]) {
               dateFound = false;
             }
           }
           if (dateFound) {
-            this.toastService.showMessage('You already completed ' + this.activeJob.title + ' today.', 3000);
+            this.toastService.showMessage('You already completed ' + this.activeJob?.job?.title + ' today.', 3000);
             this.jobCompleted = true;
             this.activeJob = null;
           } else {
-            console.log("(((((((((((((((((((((((((((((((((((")
           }
         });
       }
@@ -221,8 +218,8 @@ export class ActiveJobService {
   }
 
   async jobEndCheck() {
-    console.log(this.activeJob)
-    this.checkJobStartEndDate();
+    await this.checkJobStartEndDate();
+    console.log('checkRedirection----------', this.activeJob);
     setInterval(() => {
       this.checkJobStartEndDate();
     }, 3000);
@@ -232,8 +229,7 @@ export class ActiveJobService {
     this.endBeforeFifteenMin = false;
     this.startBeforeThirtyMin = false;
 
-    this.activeJob?.dates?.forEach(dateObject => {
-      console.log("dateObject", dateObject)
+    this.activeJob?.job?.dates?.forEach(dateObject => {
       let scheduledStartDate = DateTime.local(dateObject.date[0], dateObject.date[1], dateObject.date[2], dateObject.timeFrom[0], dateObject.timeFrom[1]);
       let scheduledEndDate = DateTime.local(dateObject.date[0], dateObject.date[1], dateObject.date[2], dateObject.timeTo[0], dateObject.timeTo[1]);
       scheduledStartDate.setLocale('in-IN');
@@ -246,7 +242,6 @@ export class ActiveJobService {
         if (!this.startBeforeThirtyMin) {
           // console.log('30 min before schedule ', thirtyMinBefore.toString(), DateTime.local().toString());
           if (thirtyMinBefore.toString() < DateTime.local().toString()) {
-            // console.log("$$$$$$$$$$$$$$$$$$$$$")
             this.startBeforeThirtyMin = true;
           }
         }
@@ -255,9 +250,8 @@ export class ActiveJobService {
         });;
 
         if (!this.endBeforeFifteenMin) {
-          console.log('15 min schedule ', fifteenMinutesBefore.toString(), DateTime.local().toString());
+          // console.log('15 min schedule ', fifteenMinutesBefore.toString(), DateTime.local().toString());
           if (fifteenMinutesBefore.toString() < DateTime.local().toString()) {
-            console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
             this.endBeforeFifteenMin = true;
           }
         }
@@ -268,53 +262,13 @@ export class ActiveJobService {
   // Mark attendance(Check-in)
   async markAttendance() {
     await this.getEmployeementAttendance();
-    console.log(this.activeJob)
-    console.log(this.activeJob.attendance)
-    if (this.activeJob.attendance && this.activeJob.attendance.content.length == 0) {
-      if (this.activeJob.attendanceLogInSelfieRequired) {
-        //   let obj = {
-        //     title: "Mark Your Attendance",
-        //     message: "Make sure you upload a photo with background of banner",
-        //     okBtnText: "Lets go",
-        //     cancelBtnText: "",
-        //     img: "../../assets/imgs/Iconsax/Svg/All/outline/avatar_vector.svg"
-        //   }
-        //   const modal = await this.modalCtrl.create({
-        //     component: PhotoUploadPage,
-        //     componentProps: obj
-        //   });
-        //   await modal.present();
+    if (this.activeJob.attendance && this.activeJob.attendance.content?.length == 0) {
+      if (this.activeJob?.job.attendanceLogInSelfieRequired) {
         this.pickImage(CameraSource.Camera, "START");
       } else {
         await this.saveMarkAttendance();
       }
     }
-  }
-
-  // Upload Attendance picture options
-  async openLoginSelfiePictureUploadOptions() {
-    // const actionSheet = await this.actionSheetController.create({
-    //   header: 'Select Image source',
-    //   buttons: [
-    //     {
-    //       text: 'Use Camera',
-    //       handler: () => {
-    //         this.pickImage(CameraSource.Camera);
-    //       }
-    //     },
-    //     {
-    //       text: 'Load from Library',
-    //       handler: () => {
-    //         this.pickImage(CameraSource.Photos);
-    //       }
-    //     },
-    //     {
-    //       text: 'Cancel',
-    //       role: 'cancel'
-    //     }
-    //   ]
-    // });
-    // await actionSheet.present();
   }
 
   // After selecting img from camera and gallery
@@ -328,7 +282,6 @@ export class ActiveJobService {
       resultType: CameraResultType.DataUrl,
     });
     this.selectedImg = image.dataUrl;
-    console.log(this.selectedImg)
     this.blobData = this.b64toBlob(image.dataUrl.split('base64,')[1], `image/${image.format}`);
     this.enumType = enumType;
     if (this.selectedImg) {
@@ -377,8 +330,11 @@ export class ActiveJobService {
     this.commonProvider.PostMethod(Apiurl.UploadAttendancePicture + localStorage.getItem('loginUserId'), formData).then(res => {
       this.setAttendancePicture(res);
       this.saveImage(enumType);
-      if (redirectBack) {
+      if (redirectBack && !this.checkOutPage) {
         this.location.back();
+      }
+      if (this.checkOutPage) {
+        this.goToPaymentPage();
       }
     }).catch(err => {
       console.log(err)
@@ -394,7 +350,7 @@ export class ActiveJobService {
   async saveImage(enumType) {
     let param: EmploymentHistoryImageProofRequest = {
       imagePath: this.markAttendancePicture ? this.markAttendancePicture?.split('https://hour4u-img-data.s3.ap-south-1.amazonaws.com/')[1] : null,
-      employmentId: this.activeJob.employmentId,
+      employmentId: this.activeJob?.job?.employmentId,
       historyDate: this.activeJob.activeDay?.date,
       jobSeekerId: localStorage.getItem('loginUserId'),
       proofEnum: enumType
@@ -416,12 +372,12 @@ export class ActiveJobService {
   // Final save mark attendance
   async saveMarkAttendance() {
     let param = {
-      employmentId: this.activeJob.employmentId,
+      employmentId: this.activeJob?.job?.employmentId,
       jobSeekerId: localStorage.getItem('loginUserId'),
       jobSeekerName: JSON.parse(localStorage.getItem('loginUserInfo')).name,
       checkInTime: new Date()
     }
-    await this.commonProvider.PostMethod(Apiurl.MarkAttendance, param).then(async (res) => {
+    await this.commonProvider.PostMethod(Apiurl.MarkAttendance, param).then(async (res: any) => {
       this.activeJob.attendance = res;
       // if(res){
       await this.getEmployeementHistory();
@@ -434,7 +390,7 @@ export class ActiveJobService {
 
   async updateHistory() {
     const locationHistoryReq = {
-      employmentId: this.activeJob.employmentId,
+      employmentId: this.activeJob?.job?.employmentId,
       historyDate: this.activeJob.activeDay.date,
       jobSeekerId: localStorage.getItem('loginUserId'),
       // latitude: this.location.latitude,
@@ -443,22 +399,33 @@ export class ActiveJobService {
   }
 
   async checkOut() {
-    console.log(this.activeJob)
-    this.activeJob.activeDay.isComplete = true;
-    const att: Attendance = this.activeJob.attendance.content[0];
-    var currentTime = new Date();
-    var currentOffset = currentTime.getTimezoneOffset();
-    var ISTOffset = 330;   // IST offset UTC +5:30 
-    att.checkOutTime = new Date(currentTime.getTime() + (ISTOffset + currentOffset) * 60000);
-    //att.checkOutTime = new Date();
-
-    // if job already done
-    if (this.activeJob.attendance.content[0].totalRecordedTime == null) {
-      att.totalRecordedTime = this.getRecordedTime(DateTime.local());
-      console.log("att.totalRecordedTime", att.totalRecordedTime)
+    this.checkOutPage = true;
+    if (this.activeJob?.job.attendanceLogOutSelfieRequired) {
+      this.pickImage(CameraSource.Camera, "END");
+    } else {
+      await this.goToPaymentPage();
     }
+  }
 
-    await this.completeWork(att);
+  async goToPaymentPage() {
+    console.log(this.activeJob)
+    if (this.activeJob && this.activeJob?.activeDay && this.activeJob.attendance && this.activeJob.attendance.content.length != 0) {
+      this.activeJob.activeDay.isComplete = true;
+      const att: AttendanceBody = this.activeJob.attendance.content[0];
+      var currentTime = new Date();
+      var currentOffset = currentTime.getTimezoneOffset();
+      var ISTOffset = 330;   // IST offset UTC +5:30 
+      att.checkOutTime = new Date(currentTime.getTime() + (ISTOffset + currentOffset) * 60000);
+      //att.checkOutTime = new Date();
+
+      // if job already done
+      if (this.activeJob.attendance.content[0].totalRecordedTime == null) {
+        att.totalRecordedTime = this.getRecordedTime(DateTime.local());
+      }
+      await this.completeWork(att);
+    } else {
+      this.toastService.showMessage('You have not check-in to this job')
+    }
   }
 
   getRecordedTime(jobEndTime: DateTime): any {
@@ -484,7 +451,7 @@ export class ActiveJobService {
   async completeWork(att) {
     await this.commonProvider.PutMethod(Apiurl.GetEmployeementAttendance + '/' + att.id, att).then(async (res: any) => {
       if (res) {
-        await this.checkJobIsActive();
+        // await this.checkJobIsActive();
         await this.getActiveJobDetails();
       }
     }).catch((err: any) => {
@@ -500,8 +467,8 @@ export class ActiveJobService {
       let param = {
         "jobSeekerId": localStorage.getItem('loginUserId'),
         "jobSeekerName": JSON.parse(localStorage.getItem('loginUserInfo')).name,
-        "employmentId": this.activeJob.employmentId,
-        "employerId": this.activeJob.employmentId,
+        "employmentId": this.activeJob?.job?.employmentId,
+        "employerId": this.activeJob?.job?.employmentId,
         "rating": this.selectedJobRating
       }
       await this.commonProvider.PostMethod(Apiurl.SaveRating, param).then(async (res: any) => {
@@ -518,13 +485,13 @@ export class ActiveJobService {
     let param = {
       "amount": this.totalPayment,
       "date": this.activeJob.activeDay?.date,
-      "employmentId": this.activeJob?.employmentId,
+      "employmentId": this.activeJob?.job?.employmentId,
       "jobSeekerId": localStorage.getItem('loginUserId'),
       "hours": this.activeJob?.attendance?.content[0]?.totalRecordedTime,
-      "jobTitle": this.activeJob?.title,
-      "employmentTitle": this.activeJob?.employmentTitle
+      "jobTitle": this.activeJob?.job?.title,
+      "employmentTitle": this.activeJob?.job?.employmentTitle
     }
-    await this.commonProvider.PostMethod(Apiurl.SavePayment, param).then(async (res: any) => {
+    await this.commonProvider.PostMethod(Apiurl.Payment, param).then(async (res: any) => {
       if (res) {
         await this.getPaymentStatus();
       }
@@ -540,10 +507,16 @@ export class ActiveJobService {
         this.activeJob = null;
         this.jobCompleted = true;
         await this.GetActiveJob();
-        await this.router.navigateByUrl('tabs/tab3');
+        await this.router.navigateByUrl('tabs/my-earnings');
       }
     }).catch((err: any) => {
       console.log(err)
     })
+  }
+
+  async navigateToMap() {
+    this.launchNavigator.navigate([this.activeJob?.job?.location.latitude, this.activeJob?.job?.location.longitude], {
+      start: this.locationService.locationCordinates?.coords?.latitude + ',' + this.locationService.locationCordinates?.coords?.longitude
+    });
   }
 }

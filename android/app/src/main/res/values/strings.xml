@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Hour4U</string>
+    <string name="title_activity_main">Hour4U</string>
+    <string name="package_name">com.hour4u.app</string>
+    <string name="custom_url_scheme">com.hour4u.app</string>
+</resources>

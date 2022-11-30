@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { OnboardingService } from 'src/app/onboarding/onboarding.service';
 import { ActiveJobService } from '../active-job.service';
 
 @Component({
@@ -10,16 +9,15 @@ import { ActiveJobService } from '../active-job.service';
 export class JobRatingPage implements OnInit {
 
   constructor(
-    public onboardingService: OnboardingService,
     public activeJobService: ActiveJobService
   ) { }
 
   ngOnInit() {
   }
 
-  addDescription(event) {
-    this.onboardingService.description = event.ngModelData;
-    this.onboardingService.leftCharacters = this.onboardingService.maxlengthDescription - this.onboardingService.description.length;
+  addJobRatingDescription(event) {
+    this.activeJobService.jobRatingDescription = event.ngModelData;
+    this.activeJobService.leftCharactersForjobRatingDescription = this.activeJobService.maxlengthjobRatingDescription - this.activeJobService.jobRatingDescription.length;
   }
 
   submitFeedback() {

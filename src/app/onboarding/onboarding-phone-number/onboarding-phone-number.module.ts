@@ -18,9 +18,9 @@ import { OnboardingHeaderPageModule } from '../onboarding-header/onboarding-head
     OnboardingPhoneNumberPageRoutingModule,
     CustomButtonModule,
     CustomInputModule,
-    OnboardingHeaderPageModule
+    OnboardingHeaderPageModule,
   ],
   declarations: [OnboardingPhoneNumberPage],
-  exports: [OnboardingPhoneNumberPage]
+  exports: [OnboardingPhoneNumberPage],
 })
 export class OnboardingPhoneNumberPageModule { }

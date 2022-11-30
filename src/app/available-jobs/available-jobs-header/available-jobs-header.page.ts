@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AvailableJobsService } from '../available-jobs.service';
 
 @Component({
   selector: 'app-available-jobs-header',
@@ -13,13 +14,15 @@ export class AvailableJobsHeaderPage implements OnInit {
   @Input() showBackBtn?: boolean = false;
   @Input() showProfileLogo?: boolean = false;
   @Input() showCloseBtn?: boolean = false;
-  
+  @Input() showShareBtn?: boolean = false;
+
   search: string = "";
 
   @Output() searchData = new EventEmitter();
 
   constructor(
-    public location: Location
+    public location: Location,
+    public availableJobsService: AvailableJobsService
   ) { }
 
   ngOnInit() {
@@ -32,5 +35,9 @@ export class AvailableJobsHeaderPage implements OnInit {
 
   back() {
     this.location.back();
+  }
+
+  shareSelectedJobDetails() {
+    this.availableJobsService.shareSelectedJobDetails();
   }
 }

@@ -8,6 +8,7 @@ import { JobApplicationModalPage } from './job-application-modal/job-application
 import { ModalController } from '@ionic/angular';
 import { JobApplication } from '../core/modal/job-application.modal';
 import { JobSeeker } from '../core/modal/job-seeker.modal';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -26,14 +27,21 @@ export class AvailableJobsService {
     public commonProvider: CommonProvider,
     public router: Router,
     public toastService: ToastService,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    public storage: Storage
   ) {
-    this.jobSeeker = JSON.parse(localStorage.getItem('loginUserInfo'))
+    this.setInitialValues();
+  }
+
+  async setInitialValues() {
+    const loginUserInfo = await this.storage.get('loginUserInfo');
+    this.jobSeeker = JSON.parse(loginUserInfo)
   }
 
   async getAllJobsList(search?) {
+    const loginUserGender = await this.storage.get('loginUserGender');
     let params = '?sort=createdOn,desc&page=0&size=11000';
-    let param = { "gender": localStorage.getItem('loginUserGender'), "query": search }
+    let param = { "gender": loginUserGender, "query": search }
     return await this.commonProvider.PostMethod(Apiurl.GetJobsList + params, param).then(async (res: any) => {
       this.jobLists = [];
       if (res && res.length != 0) {
@@ -47,9 +55,11 @@ export class AvailableJobsService {
   }
 
   async getSelectedJobById() {
-    if (this.selectedJobId && localStorage.getItem('loginUserId')) {
-      let params = this.selectedJobId + '/' + localStorage.getItem('loginUserId');
-      let param = { "gender": localStorage.getItem('loginUserGender') }
+    const loginUserGender = await this.storage.get('loginUserGender');
+    const loginUserId = await this.storage.get('loginUserId');
+    if (this.selectedJobId && loginUserId) {
+      let params = this.selectedJobId + '/' + loginUserId;
+      let param = { "gender": loginUserGender }
       return await this.commonProvider.GetMethod(Apiurl.GetJobByJobId + params, param).then(async (res: any) => {
         if (res) {
           this.selectedJobDetails = res;
@@ -64,9 +74,10 @@ export class AvailableJobsService {
     }
   }
 
-  async applyForSelectedJob(isDetailPage?: boolean) {
-    let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + localStorage.getItem('loginUserId');
-    return await this.commonProvider.GetMethod(Apiurl.ApplyForSelectedJob + params, null).then(async (res: any) => {
+  async JobPreference(isDetailPage?: boolean) {
+    const loginUserId = await this.storage.get('loginUserId');
+    let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
+    return await this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
       let typeIdFound = false;
       if (res) {
         this.selectedJobPreferences = res;
@@ -126,12 +137,13 @@ export class AvailableJobsService {
 
   async betweenTimeCheck(): Promise<boolean> {
     let isFounnd = false;
+    const loginUserId = await this.storage.get('loginUserId');
     const jobDates = this.selectedJobDetails.dates.map(date => ({
       timeFrom: DateTime.local(date.date[0], date.date[1], date.date[2], date.timeFrom[0], date.timeFrom[1]),
       timeTo: DateTime.local(date.date[0], date.date[1], date.date[2], date.timeTo[0], date.timeTo[1])
     }));
-    let params = localStorage.getItem('loginUserId') + '?sort=createdOn,desc&page=0&size=10000&status=APPROVED'
-    await this.commonProvider.GetMethod(Apiurl.GetMyJobsByLoginUserId + params, null).then(async (res: any) => {
+    let params = loginUserId + '?sort=createdOn,desc&page=0&size=10000&status=APPROVED'
+    await this.commonProvider.GetMethod(Apiurl.GetMyJobs + params, null).then(async (res: any) => {
       await res.forEach(job => {
         job.dates.forEach(date => {
           const jobDateStart = DateTime.local(date.date[0], date.date[1], date.date[2], date.timeFrom[0], date.timeFrom[1]);
@@ -163,12 +175,14 @@ export class AvailableJobsService {
   }
 
   async submitJobApplication(hourlyRate, isApplyLater) {
+    const loginUserId = await this.storage.get('loginUserId');
+    const loginUserGender = await this.storage.get('loginUserGender');
     let application: JobApplication = new JobApplication();
     application.employmentId = this.selectedJobId
-    application.jobSeekerId = localStorage.getItem('loginUserId');
+    application.jobSeekerId = loginUserId;
     application.isApplyLater = isApplyLater;
     application.hourlyRate = hourlyRate;
-    application.gender = localStorage.getItem('loginUserGender');
+    application.gender = loginUserGender;
 
     return await this.commonProvider.PostMethod(Apiurl.SubmitJobApplication, application).then(async (res: any) => {
       if (res && res.id) {

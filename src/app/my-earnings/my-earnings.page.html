@@ -7,7 +7,7 @@
             <div class="pl-16 pt-16 pr-16 inner-wrap" *ngIf="myEarningsService.earningStatus">
                 <div>
                     <ion-row>
-                        <ion-col class="p-0" size="8">
+                        <ion-col class="count-card-wrap p-12 ml-0 mt-0 mb-0 mr-16" size="8">
                             <div class="d-flex">
                                 <div class="fw-400 ternary sub-heading-sm">
                                     Your balance
@@ -24,11 +24,11 @@
                                 </ion-col>
                             </ion-row>
                         </ion-col>
-                        <ion-col class="p-0" size="4">
+                        <!-- <ion-col class="p-0" size="4">
                             <custom-button [title]="'Withdraw'" [button]="'secondary'" [disabled]="false"
                                 (btnClick)="withdrawAmount()">
                             </custom-button>
-                        </ion-col>
+                        </ion-col> -->
                     </ion-row>
 
                     <ion-row class="mt-16">
@@ -73,44 +73,44 @@
             </div>
 
             <ion-segment [(ngModel)]="myEarningsService.selectedTab" scrollable mode="md" class="custom-icon"
-                (ionChange)="handleTabChange()" value="All">
-                <ion-segment-button class="segment ml-16" value="Unapproved">
+                (ionChange)="handleTabChange($event)">
+                <ion-segment-button class="segment ml-16" value="Unapproved" id="Unapproved">
                     <ion-label class="fw-500 ion-text-none sub-heading-sm d-flex"
                         [ngClass]="{'primary':selectedTab == 'Unapproved'}">
                         <div class="ion-align-self-center pr-4">Awaiting approval</div>
                         <div class="counter-bedge ion-align-self-center primary"
                             *ngIf="myEarningsService.selectedTab == 'Unapproved'">
                             <div class="pt-4 pb-4 pl-12 pr-12 fw-400 sub-heading-sm">
-                                {{myEarningsService.earningRecords?.length}}</div>
+                                {{myEarningsService.totalEarningRecords}}</div>
                         </div>
                     </ion-label>
                 </ion-segment-button>
-                <ion-segment-button class="segment" value="Approved">
+                <ion-segment-button class="segment" value="Approved" id="Approved">
                     <ion-label class="fw-500 ion-text-none sub-heading-sm d-flex"
                         [ngClass]="{'primary':selectedTab == 'Approved'}">
                         <div class="ion-align-self-center pr-4">Approved</div>
                         <div class="counter-bedge ion-align-self-center primary"
                             *ngIf="myEarningsService.selectedTab == 'Approved'">
                             <div class="pt-4 pb-4 pl-12 pr-12 fw-400 sub-heading-sm">
-                                {{myEarningsService.earningRecords?.length}}</div>
+                                {{myEarningsService.totalEarningRecords}}</div>
                         </div>
                     </ion-label>
                 </ion-segment-button>
-                <ion-segment-button class="segment mr-16" value="Paid">
+                <ion-segment-button class="segment" value="Paid" id="Paid">
                     <ion-label class="fw-500 ion-text-none sub-heading-sm d-flex"
                         [ngClass]="{'primary':selectedTab == 'Paid'}">
                         <div class="ion-align-self-center pr-4">Paid out</div>
                         <div class="counter-bedge ion-align-self-center primary"
                             *ngIf="myEarningsService.selectedTab == 'Paid'">
                             <div class="pt-4 pb-4 pl-12 pr-12 fw-400 sub-heading-sm">
-                                {{myEarningsService.earningRecords?.length}}</div>
+                                {{myEarningsService.totalEarningRecords}}</div>
                         </div>
                     </ion-label>
                 </ion-segment-button>
             </ion-segment>
         </div>
         <div *ngIf="myEarningsService.earningRecords?.length != 0">
-            <div class="pr-16 pl-16 mt-8 inner-wrap">
+            <div class="pr-16 pl-16 inner-wrap">
                 <div class="bottom-border pb-12" *ngFor="let earning of myEarningsService.earningRecords">
                     <div class="c-card-wrap">
                         <div class="pt-16 pb-0 card-wrap-header">
@@ -127,8 +127,9 @@
                                         </div>
                                         <div class="ion-align-self-center warning fw-500 sub-heading-sm">
                                             &#x20b9;{{earning.status == 'Paid' || earning.status == 'Approved'?
-                                            (earning?.settledAmount ? earning?.settledAmount?.toFixed(0) : 0) :
-                                            (earning?.amount? earning?.amount?.toFixed(0) : 0)}}
+                                            (earning?.settledAmount ? earning?.settledAmount?.toFixed(2) : 0) :
+                                            (earning?.expectedAmount? earning?.expectedAmount?.toFixed(2):
+                                            (earning?.amount? earning?.amount?.toFixed(2) : 0))}}
                                         </div>
                                     </div>
                                 </ion-col>
@@ -137,21 +138,29 @@
                     </div>
                     <div>
                         <ion-row>
-                            <ion-col size="7.5" class="p-0">
+                            <ion-col size="12" class="p-0">
                                 <div class="d-flex">
                                     <div class="pr-8 ion-align-self-center">
                                         <img src="../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg">
                                     </div>
-                                    <div class="ternary sub-heading-xs fw-400 ion-align-self-center">
+                                    <div class="ternary sub-heading-xs fw-400 ion-align-self-center mr-4">
                                         {{earning?.date | formatDate | date: 'MMM dd, yyyy'}}
                                         <!-- {{earning?.date[0].timeFrom | formatTime | date: 'hh:mm a' }} to
                                         {{earning?.date[0].timeTo |
                                         formatTime | date: 'hh:mm a'}} -->
                                     </div>
+                                    <div class="d-flex ion-float-right">
+                                        <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
+                                        <div class="ion-align-self-center">
+                                            <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/clock.svg">
+                                        </div>
+                                        <div class="primary fw-400 sub-heading-xs ion-align-self-center">
+                                            {{earning.hours}} hours </div>
+                                    </div>
                                 </div>
                             </ion-col>
-                            <ion-col size="4.5" class="p-0">
-                                <div class="d-flex">
+                            <!-- <ion-col size="6" class="p-0">
+                                <div class="d-flex ion-float-right">
                                     <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
                                     <div class="ion-align-self-center">
                                         <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/clock.svg">
@@ -159,10 +168,10 @@
                                     <div class="primary fw-400 sub-heading-xs ion-align-self-center">
                                         {{earning.hours}} hours </div>
                                 </div>
-                            </ion-col>
+                            </ion-col> -->
                         </ion-row>
 
-                        <ion-row class="pt-8">
+                        <!-- <ion-row class="pt-8">
                             <ion-col size="12" class="p-0">
                                 <div class="d-flex">
                                     <div class="pr-8">
@@ -173,11 +182,15 @@
                                     </div>
                                 </div>
                             </ion-col>
-                        </ion-row>
+                        </ion-row> -->
                     </div>
                 </div>
             </div>
         </div>
+
+        <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="myEarningsService.earningRecords?.length != 0">
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        </ion-infinite-scroll>
 
         <div class="ml-16 mr-16"
             *ngIf="!myEarningsService.earningStatus && myEarningsService.earningRecords?.length == 0">

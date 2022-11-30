@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage';
+import { OnboardingService } from '../onboarding/onboarding.service';
 
 @Component({
   selector: 'app-tabs',
@@ -6,11 +9,28 @@ import { Component } from '@angular/core';
   styleUrls: ['tabs.page.scss']
 })
 export class TabsPage {
-  activeTab: string = '';
+  initial: string = null;
 
-  constructor() { }
+  constructor(
+    public router: Router,
+    public storage: Storage,
+    public onboardingService: OnboardingService
+  ) {
+    this.setInitialValues();
+  }
+
+  async setInitialValues() {
+    const loginUserInitial = await this.storage.get('loginUserInitial');
+    this.initial = loginUserInitial;
+  }
 
   setCurrentTab(event) {
-    this.activeTab = event.tab;
+    console.log(event.tab)
+    this.onboardingService.activeTab = event.tab;
+  }
+
+  goToRoute(route) {
+    console.log("+++++++++", route)
+    this.router.navigateByUrl(route)
   }
 }

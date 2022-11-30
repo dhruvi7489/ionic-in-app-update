@@ -265,6 +265,7 @@
 .mb-24 {
     margin-bottom: 24px !important;
 }
+
 .ml-0 {
     margin-left: 0px !important;
 }
@@ -349,6 +350,10 @@
     margin-left: 20px !important;
 }
 
+.ml-24 {
+    margin-left: 24px !important;
+}
+
 .mr-0 {
     margin-right: 0px !important;
 }
@@ -431,4 +436,8 @@
 
 .mr-20 {
     margin-right: 20px !important;
+}
+
+.mr-24 {
+    margin-right: 24px !important;
 }

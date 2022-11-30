@@ -1,0 +1,86 @@
+.container {
+    .custom-file-upload {
+        display: inline-block;
+        cursor: pointer;
+
+        .camera_outine {
+            display: inline-block;
+            height: 50px;
+
+            img {
+                width: 100px;
+                height: 100px;
+                border-radius: 60px;
+            }
+        }
+    }
+
+    .c-container-body {
+        .placelist {
+            color: var(--ion-color-secondary);
+            --background: #FFFFFF;
+            border-bottom: 1px solid #E6E7EE;
+            // border-radius: 12px;
+        }
+    }
+
+    .profile-img-wrap {
+        width: 80px;
+        height: 80px;
+        background: #E8E8E8;
+        border: 1px solid #FFFFFF;
+        border-radius: 200px;
+
+        .profile-img-inner-wrap {
+            position: absolute;
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            // background: #FFFFFF;
+            // border: 2px solid #FFFFFF;
+            // box-shadow: 0px 1px 3px rgba(26, 26, 26, 0.1), 0px 1px 2px rgba(26, 26, 26, 0.06);
+            border-radius: 48px;
+            left: 180px;
+            top: 50px;
+
+            .man-pin {
+                // width: 16px;
+                // height: 16px;
+                vertical-align: bottom;
+            }
+        }
+    }
+
+    .custom-file-upload {
+        display: inline-block;
+        cursor: pointer;
+
+        .camera_outine {
+            display: inline-block;
+            height: 50px;
+
+            img {
+                width: 100px;
+                height: 100px;
+                border-radius: 200px;
+            }
+
+            .profile-img-inner-wrap {
+                position: absolute;
+                width: 24px;
+                height: 24px;
+                background: #E9E9FE;
+                border: 2px solid #FFFFFF;
+                border-radius: 48px;
+                left: 200px;
+                top: 98px;
+
+                .man-pin {
+                    width: 16px;
+                    height: 16px;
+                    vertical-align: bottom;
+                }
+            }
+        }
+    }
+}

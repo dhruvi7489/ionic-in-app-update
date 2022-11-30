@@ -35,9 +35,9 @@
               <div class="fw-500 sub-heading-md secondary">&#x20b9;{{hourlyRate || 0}}</div>
             </ion-col>
             <ion-col size="6" class="pt-0 pb-0">
-              <div class="fw-400 sub-heading-sm ternary">Hourly rate range</div>
-              <div class="fw-500 sub-heading-md secondary"> &#x20b9;{{minTotal}} -
-                &#x20b9;{{maxTotal}}</div>
+              <div class="fw-400 sub-heading-sm ternary">Estimated payments</div>
+              <div class="fw-500 sub-heading-md secondary"> &#x20b9;{{getMinTotal()}} -
+                &#x20b9;{{getMaxTotal()}}</div>
             </ion-col>
           </ion-row>
         </div>
@@ -102,7 +102,7 @@
         </custom-button>
       </ion-col>
       <ion-col class="m-0" size="6">
-        <custom-button [title]="'Submit'" [button]="'primary'" (btnClick)="submitJob()">
+        <custom-button [title]="'Submit'" [button]="'primary'" (btnClick)="submitJob()" [disabled]="diableSubmitBtn">
         </custom-button>
       </ion-col>
     </ion-row>

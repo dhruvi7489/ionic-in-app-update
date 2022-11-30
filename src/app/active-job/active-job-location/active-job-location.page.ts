@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { LocationService } from 'src/app/services/location.service';
+import { ActiveJobService } from '../active-job.service';
 
 @Component({
   selector: 'app-active-job-location',
@@ -7,9 +10,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ActiveJobLocationPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    public activeJobService: ActiveJobService,
+    public locationService: LocationService,
+    public router: Router
+  ) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
+    if (!this.activeJobService.activeJob?.job) {
+      this.router.navigateByUrl('tabs/active-job')
+    }
+  }
+
+  //enable location
+  enableLocation() {
+    this.activeJobService.checkLocationEnable();
+  }
+
+  navigateLocation() {
+    this.activeJobService.navigateToMap();
   }
 
 }

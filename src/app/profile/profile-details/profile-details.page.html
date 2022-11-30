@@ -1,0 +1,600 @@
+<div class="content-wrap backgroud-color">
+  <div class="header-content-wrap bottom-border">
+    <ion-row class="mt-20">
+      <ion-col size="12" class="p-0">
+        <div class="d-flex justify-content-center">
+          <div class="fw-600 secondary sub-heading-xl">
+            {{profileService?.loginUserName}}
+          </div>
+          <div class="pl-8 ion-align-self-center" *ngIf="profileService?.profileData?.status == 'Active'">
+            <img src="../../../assets/imgs/Iconsax/Svg/All/outline/verify-bedge.svg">
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row class="mt-12">
+      <ion-col size="12" class="p-0">
+        <div class="ion-text-center fw-400 ternary sub-heading-sm">
+          {{profileService?.loginUserAddress}}
+        </div>
+      </ion-col>
+    </ion-row>
+    <div class="mt-20 mb-20 ml-16 mr-16">
+      <ion-row>
+        <ion-col class="p-0" size="8">
+          <custom-button [title]="'Edit profile'" [button]="'primary'" [disabled]="false" (btnClick)="editProfile()"
+            [showLogoOnEnd]="false" [image]="'../../../assets/imgs/Iconsax/Svg/All/outline/edit-1.svg'">
+          </custom-button>
+        </ion-col>
+        <ion-col class="pl-12 p-0" size="4">
+          <custom-button [title]="'More'" [button]="'ternary'" [disabled]="false" (btnClick)="profileMoreOptions()"
+            [color]="true" [showLogoOnEnd]="false" [image]="'../../../assets/imgs/Iconsax/Svg/All/outline/more-3.svg'">
+          </custom-button>
+        </ion-col>
+      </ion-row>
+    </div>
+    <div class="mb-16 ml-16 mr-16">
+      <ion-row>
+        <ion-col class="p-0 ion-text-center" size="4">
+          <img src="../../../assets/imgs/hours-worked.svg">
+          <ion-row>
+            <ion-col class="p-0">
+              <div class="fw-400 ternary sub-heading-sm">Hours worked</div>
+              <ion-row>
+                <ion-col class="p-0">
+                  <div class="fw-500 secondary sub-heading-md">{{profileService?.profileData?.hoursWorked || 0 | number
+                    :
+                    '1.0-0'}}</div>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col class="p-0 ion-text-center" size="4">
+          <img src="../../../assets/imgs/job-done.svg">
+          <ion-row>
+            <ion-col class="p-0">
+              <div class="fw-400 ternary sub-heading-sm">Jobs done</div>
+              <ion-row>
+                <ion-col class="p-0">
+                  <div class="fw-500 secondary sub-heading-md">{{profileService?.profileData?.jobsDone || 0 | number :
+                    '1.0-0'}}</div>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col class="p-0 ion-text-center" size="4">
+          <div class="rating-wrap">
+            <div class="rating-inner-wrap rate-1" *ngIf="!profileService?.profileData?.averageRating">
+              <img src="../../../assets/imgs/Rates/smile-rate-1-active.svg" height="20px" width="20px" class="mt-8">
+            </div>
+            <div class="rating-inner-wrap rate-1" *ngIf="profileService?.profileData?.averageRating == 1">
+              <img src="../../../assets/imgs/Rates/smile-rate-1-active.svg" height="20px" width="20px" class="mt-8">
+            </div>
+            <div class="rating-inner-wrap rate-2"
+              *ngIf="profileService?.profileData?.averageRating > 1 && profileService?.profileData?.averageRating <= 2">
+              <img src="../../../assets/imgs/Rates/smile-rate-2-active.svg" height="20px" width="20px" class="mt-8">
+            </div>
+            <div class="rating-inner-wrap rate-3"
+              *ngIf="profileService.profileData?.averageRating > 2 && profileService?.profileData?.averageRating <= 3">
+              <img src="../../../assets/imgs/Rates/smile-rate-3-active.svg" height="20px" width="20px" class="mt-8">
+            </div>
+            <div class="rating-inner-wrap rate-4"
+              *ngIf="profileService.profileData?.averageRating > 3 && profileService?.profileData?.averageRating <= 4">
+              <img src="../../../assets/imgs/Rates/smile-rate-4-active.svg" height="20px" width="20px" class="mt-8">
+            </div>
+            <div class="rating-inner-wrap rate-5"
+              *ngIf="profileService.profileData?.averageRating > 4 && profileService?.profileData?.averageRating <= 5">
+              <img src="../../../assets/imgs/Rates/smile-rate-5-active.svg" height="20px" width="20px" class="mt-8">
+            </div>
+          </div>
+          <ion-row>
+            <ion-col class="p-0 pt-4">
+              <div class="fw-400 ternary sub-heading-sm">Average ratings</div>
+              <ion-row>
+                <ion-col class="p-0">
+                  <div class="fw-500 secondary sub-heading-md">{{profileService.profileData?.averageRating || 0 | number
+                    :
+                    '1.0-0'}}</div>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+
+  <!-- <div class="mt-8 header-content-wrap bottom-border">
+    <div class="mt-8 ml-16 mr-16 pt-20 pb-20">
+      <ion-row>
+        <ion-col class="p-0" size="10">
+          <div class="fw-600 secondary sub-heading-lg">Introduction</div>
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="2">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="introductionVideoEdit()">
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-20">
+        <div class="intro-video-wrap">
+          <img src="../../../assets/imgs/video.svg" style="filter: drop-shadow(0px 0.956268px 1.91254px rgba(26, 26, 26, 0.04));
+          border-radius: 7.65015px;">
+        </div>
+      </ion-row>
+    </div>
+  </div> -->
+
+  <!-- <div class="mt-8 header-content-wrap bottom-border">
+    <div class="mt-8 ml-16 mr-16 pt-20 pb-20">
+      <div>
+        <ion-row>
+          <ion-col class="p-0">
+            <div class="d-flex ion-align-self-center">
+              <div class="secondary fw-600 sub-heading-lg">Rating received</div>
+              <div class="counter-bedge ion-align-self-center primary ml-8">
+                <div class="pt-4 pb-4 pl-12 pr-12 fw-400">10
+                </div>
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div>
+        <ion-row class="mt-20">
+          <ion-col size="10" class="p-0">
+            <div class="fw-400 secondary sub-heading-md">Fast worker</div>
+          </ion-col>
+          <ion-col size="1" class="p-0 ion-text-center">
+            <img src="../../../assets/imgs/Rates/smile-rate-1-active.svg">
+          </ion-col>
+          <ion-col size="1" class="p-0 ion-text-center ion-align-self-center">
+            <div class="fw-500 secondary sub-heading-md">1</div>
+          </ion-col>
+        </ion-row>
+        <ion-row class="mt-16">
+          <ion-col size="10" class="p-0">
+            <div class="fw-400 secondary sub-heading-md">Fast worker</div>
+          </ion-col>
+          <ion-col size="1" class="p-0 ion-text-center">
+            <img src="../../../assets/imgs/Rates/smile-rate-1-active.svg">
+          </ion-col>
+          <ion-col size="1" class="p-0 ion-text-center ion-align-self-center">
+            <div class="fw-500 secondary sub-heading-md">1</div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="">
+        <div class="pb-16 bottom-border">
+          <ion-row class="mt-20">
+            <ion-col size="12" class="p-0">
+              <div class="fw-500 secondary sub-heading-md">Jio Fiber promotion</div>
+            </ion-col>
+          </ion-row>
+          <ion-row class="mt-12">
+            <ion-col size="1" class="p-0 ion-align-self-center">
+              <img src="../../../assets/imgs/Rates/smile-rate-1-active.svg">
+            </ion-col>
+            <ion-col size="1" class="p-0 ion-align-self-center ion-text-center">
+              <div class="fw-500 secondary sub-heading-sm">1</div>
+            </ion-col>
+            <ion-col size="4" class="p-0 ion-align-self-center">
+              <div class="d-flex">
+                <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
+                <div class="fw-400 secondary sub-heading-sm">Anmol Pathak</div>
+              </div>
+            </ion-col>
+            <ion-col size="6" class="p-0 ion-align-self-center">
+              <div class="d-flex">
+                <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
+                <div class="fw-400 ternary sub-heading-sm">Aug 20, 2021</div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row class="mt-12">
+            <ion-col size="12" class="p-0 ion-align-self-center">
+              <div class="fw-400 secondary sub-heading-md">
+                Maharana worked very hard during our BharatPe QR installation event. He has worked for 3 days and has
+                always
+                been on time and put his best efforts to finish the job. I would highly recommend to work with him.
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+        <div class="pb-16">
+          <ion-row class="mt-20">
+            <ion-col size="12" class="p-0">
+              <div class="fw-500 secondary sub-heading-md">Jio Fiber promotion</div>
+            </ion-col>
+          </ion-row>
+          <ion-row class="mt-12">
+            <ion-col size="1" class="p-0 ion-align-self-center">
+              <img src="../../../assets/imgs/Rates/smile-rate-1-active.svg">
+            </ion-col>
+            <ion-col size="1" class="p-0 ion-align-self-center ion-text-center">
+              <div class="fw-500 secondary sub-heading-sm">1</div>
+            </ion-col>
+            <ion-col size="4" class="p-0 ion-align-self-center">
+              <div class="d-flex">
+                <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
+                <div class="fw-400 secondary sub-heading-sm">Anmol Pathak</div>
+              </div>
+            </ion-col>
+            <ion-col size="6" class="p-0 ion-align-self-center">
+              <div class="d-flex">
+                <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
+                <div class="fw-400 ternary sub-heading-sm">Aug 20, 2021</div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row class="mt-12">
+            <ion-col size="12" class="p-0 ion-align-self-center">
+              <div class="fw-400 secondary sub-heading-md">
+                Maharana worked very hard during our BharatPe QR installation event. He has worked for 3 days and has
+                always
+                been on time and put his best efforts to finish the job. I would highly recommend to work with him.
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+        <div>
+          <ion-row>
+            <ion-col class="p-0" size="12">
+              <custom-button [title]="'View All'" [button]="'secondary'" [disabled]="false"
+                (btnClick)="viewAllRatings()">
+              </custom-button>
+            </ion-col>
+          </ion-row>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <div class="mt-8 header-content-wrap bottom-border">
+    <div class="mt-8 ml-16 mr-16 pt-20 pb-20">
+      <ion-row>
+        <ion-col class="p-0" [size]="profileService?.jobPreferences?.jobTypePreferences?.length != 0 ? 10 : 12">
+          <div class="fw-600 secondary sub-heading-lg">Job preferences</div>
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="2"
+          *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length != 0 && showPreferencesEdit()">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="addJobPreferences()">
+        </ion-col>
+      </ion-row>
+
+      <div *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length != 0"
+        [ngClass]="{'content-preference-wrap-scroll':profileService?.jobPreferences?.jobTypePreferences?.length > 3}">
+        <div class="mb-16" *ngFor="let jobType of profileService?.jobPreferences?.jobTypePreferences;let i=index;"
+          [ngClass]="{'mt-16': i == 0, 'mt-12': i != 0}">
+          <ion-row>
+            <ion-col class="p-0" size="12">
+              <div class="fw-600 secondary sub-heading-md">{{ jobType.typeName }}</div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="mt-12">
+            <ion-col class="p-0 ion-align-self-center" size="4">
+              <div class="fw-400 secondary sub-heading-md">{{ jobType.level ? jobType.level : jobType.status || '-' }}
+              </div>
+            </ion-col>
+            <ion-col class="p-0 ion-align-self-center" size="8">
+              <div class="d-flex">
+                <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot-grey.svg">
+                <div class="fw-500 secondary sub-heading-md mr-4"> &#8377;{{ jobType.maxHourlyRate || '0' }}</div>
+                <div class="fw-400 ternary sub-heading-sm ion-align-self-center">/hour</div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+      </div>
+      <div class="mt-16" *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length == 0">
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="fw-400 ternary sub-heading-sm ion-text-center">Please add the types of jobs you would like to do
+              and respective
+              hourly rate.</div>
+          </ion-col>
+        </ion-row>
+        <ion-row class="mt-16">
+          <ion-col size="12" class="p-0">
+            <div class="fw-500 primary sub-heading-md ion-text-center" (click)="addJobPreferences()">Add job preferences
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="mt-8 header-content-wrap bottom-border">
+    <div class="mt-8 ml-16 mr-16 pt-20 pb-20">
+      <ion-row>
+        <ion-col class="p-0" size="9">
+          <div class="d-flex ion-align-self-center">
+            <div class="secondary fw-600 sub-heading-lg">Skills</div>
+            <div class="counter-bedge ion-align-self-center primary ml-8"
+              *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length != 0">
+              <div class="pt-4 pb-4 pl-12 pr-12 fw-400">{{profileService?.jobPreferences?.jobTypePreferences?.length ||
+                0}}
+              </div>
+            </div>
+          </div>
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="1.5"
+          *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length != 0">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/add-primary.svg" (click)="addSkill()">
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="1.5"
+          *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length != 0">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="editSkill()">
+        </ion-col>
+      </ion-row>
+
+      <div class="mt-20" *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length != 0">
+        <ion-row>
+          <ion-col class="p-0">
+            <ion-chip class="in-active-chip"
+              *ngFor="let jobType of profileService?.jobPreferences?.jobTypePreferences;let i=index;">
+              <ion-label class="sub-heading-md fw-400 ternary">{{ jobType.typeName }}</ion-label>
+            </ion-chip>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="mt-16" *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length == 0">
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="fw-400 ternary sub-heading-sm ion-text-center">Add the skills you have - it will help the
+              companies to hire you quickly</div>
+          </ion-col>
+        </ion-row>
+        <ion-row class="mt-16">
+          <ion-col size="12" class="p-0">
+            <div class="fw-500 primary sub-heading-md ion-text-center" (click)="addSkill()">Add skills</div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="mt-8 header-content-wrap bottom-border">
+    <div class="mt-8 ml-16 mr-16 pt-20 pb-20">
+      <ion-row>
+        <ion-col class="p-0" size="9">
+          <div class="secondary fw-600 sub-heading-lg">Related work experience</div>
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="profileService.profileData?.workExperiences?.length != 0">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/add-primary.svg" (click)="addWorkExperience()">
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="1.5"
+          *ngIf="profileService.profileData?.workExperiences && profileService.profileData?.workExperiences?.length != 0">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="editWorkExperience()">
+        </ion-col>
+      </ion-row>
+
+      <div *ngIf="profileService.profileData?.workExperiences?.length != 0"
+        [ngClass]="{'content-wrap-scroll':profileService.profileData?.workExperiences?.length > 2}">
+        <div *ngFor="let experience of profileService.profileData?.workExperiences">
+          <ion-row class="mt-20 mb-8" *ngIf="experience.summary">
+            <ion-col class="p-0" size="12">
+              <div class="fw-500 secondary sub-heading-md">{{experience.summary}}</div>
+            </ion-col>
+          </ion-row>
+          <ion-row class="mt-12 mb-12" *ngIf="experience.workLink?.length">
+            <ion-col class="p-0" size="12">
+              <div class="d-flex">
+                <div>
+                  <img src="../../../assets/imgs/Iconsax/Svg/All/outline/paperclip-1.svg">
+                </div>
+                <div class="fw-500 primary sub-heading-md ml-8">{{experience.workLink?.length && experience.workLink[0]
+                  != "" ? experience.workLink?.length : 0}} Attachments</div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="experience.workLink?.length">
+            <ion-col class="p-0">
+              <ion-chip *ngFor="let link of experience?.workLink" [ngClass]="{'white-chip' : link , 'd-none': !link}">
+                <ion-label class="sub-heading-md fw-400 ternary" *ngIf="link">{{link}}</ion-label>
+              </ion-chip>
+            </ion-col>
+          </ion-row>
+        </div>
+      </div>
+
+      <div class="mt-16" *ngIf="profileService.profileData?.workExperiences?.length == 0">
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="fw-400 ternary sub-heading-sm ion-text-center">Add your related and relevant experience
+              regarding different jobs you might have done. This would increase your credibility to the companies.</div>
+          </ion-col>
+        </ion-row>
+        <ion-row class="mt-16">
+          <ion-col size="12" class="p-0">
+            <div class="fw-500 primary sub-heading-md ion-text-center" (click)="addWorkExperience()">Add work
+              experience
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="mt-8 header-content-wrap bottom-border">
+    <div class="mt-8 ml-16 mr-16 pt-20 pb-20">
+      <ion-row>
+        <ion-col class="p-0" size="9">
+          <div class="secondary fw-600 sub-heading-lg">Languages</div>
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="false">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/add-primary.svg">
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="false">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg">
+        </ion-col>
+      </ion-row>
+
+      <div *ngIf="false">
+        <ion-row class="mt-20">
+          <ion-col class="p-0">
+            <div class="d-flex">
+              <div class="fw-500 secondary sub-heading-md mr-4">
+                English
+              </div>
+              <div class="fw-400 secondary sub-heading-md">
+                – Conversational
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-16">
+          <ion-col class="p-0">
+            <div class="d-flex">
+              <div class="fw-500 secondary sub-heading-md mr-4">
+                English
+              </div>
+              <div class="fw-400 secondary sub-heading-md">
+                – Conversational
+              </div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="mt-16">
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="fw-400 ternary sub-heading-sm ion-text-center">Add the languages you speak - your chances of
+              getting different types of jobs in different cities can be increased with this.</div>
+          </ion-col>
+        </ion-row>
+        <ion-row class="mt-16">
+          <ion-col size="12" class="p-0">
+            <div class="fw-500 primary sub-heading-md ion-text-center">Add languages</div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- <div class="mt-8 header-content-wrap bottom-border">
+    <div class="mt-8 ml-16 mr-16 pt-20 pb-20">
+      <ion-row>
+        <ion-col class="p-0" size="9">
+          <div class="d-flex ion-align-self-center">
+            <div class="secondary fw-600 sub-heading-lg">Photos and videos</div>
+            <div class="counter-bedge ion-align-self-center primary ml-8" *ngIf="false">
+              <div class="pt-4 pb-4 pl-12 pr-12 fw-400">4
+              </div>
+            </div>
+          </div>
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="false">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/add-primary.svg">
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="false">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg">
+        </ion-col>
+      </ion-row>
+
+      <div *ngIf="false">
+        <ion-row class="mt-20">
+          <ion-col class="p-0" size="6">
+            <div class="video-photo-wrap">
+              <img src="../../../assets/imgs/female_avatar.svg">
+            </div>
+          </ion-col>
+          <ion-col class="p-0" size="6">
+            <div class="video-photo-wrap ml-4">
+              <img src="../../../assets/imgs/female_avatar.svg">
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="p-0" size="6">
+            <div class="video-photo-wrap">
+              <img src="../../../assets/imgs/female_avatar.svg">
+            </div>
+          </ion-col>
+          <ion-col class="p-0" size="6">
+            <div class="video-photo-wrap ml-4">
+              <img src="../../../assets/imgs/female_avatar.svg">
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="mt-16">
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="fw-400 ternary sub-heading-sm ion-text-center">Add your professional pictures and videos to
+              increase your visibility towards companies</div>
+          </ion-col>
+        </ion-row>
+        <ion-row class="mt-16">
+          <ion-col size="12" class="p-0">
+            <div class="fw-500 primary sub-heading-md ion-text-center" (click)="addPhotosAndVideos()">Add pictures and
+              videos</div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div> -->
+
+
+  <!-- <div class="mt-8 header-content-wrap bottom-border">
+    <div class="mt-8 ml-16 mr-16 pt-20"
+      [ngClass]="{'pb-20': !profileService?.profileData?.photos || profileService?.profileData?.photos?.length == 0}">
+      <ion-row>
+        <ion-col class="p-0" size="9">
+          <div class="d-flex ion-align-self-center">
+            <div class="secondary fw-600 sub-heading-lg">Photos and videos</div>
+            <div class="counter-bedge ion-align-self-center primary ml-8"
+              *ngIf="profileService?.profileData?.photos?.length != 0">
+              <div class="pt-4 pb-4 pl-12 pr-12 fw-400">{{profileService?.profileData?.photos?.length || 0}}
+              </div>
+            </div>
+          </div>
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="profileService?.profileData?.photos?.length != 0">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/add-primary.svg" (click)="addPhotosAndVideos()">
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="profileService?.profileData?.photos?.length != 0">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="addPhotosAndVideos()">
+        </ion-col>
+      </ion-row>
+
+      <div *ngIf="profileService?.profileData?.photos?.length != 0" class="picture-video-wrap"
+        [ngClass]="{'content-wrap-scroll':profileService.profileData?.photos?.length > 4}">
+        <ion-row class="mt-20 mb-8">
+          <ion-col size="5.8" *ngFor="let photo of profileService?.profileData?.photos;let i= index;"
+            [ngClass]="{'mr-8' : ((i+1)%2) != 0}">
+            <img src="../../../assets/imgs/camera_placeholder.svg" *ngIf="!photo" class="img-wrap"
+              (click)="uploadPictures()">
+            <img [src]="photo" *ngIf="photo" class="img-wrap">
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="mt-16"
+        *ngIf="!profileService?.profileData?.photos || profileService?.profileData?.photos?.length == 0">
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="fw-400 ternary sub-heading-sm ion-text-center">Add your professional pictures and videos to
+              increase your visibility towards companies</div>
+          </ion-col>
+        </ion-row>
+        <ion-row class="mt-16">
+          <ion-col size="12" class="p-0">
+            <div class="fw-500 primary sub-heading-md ion-text-center" (click)="addPhotosAndVideos()">Add pictures and
+              videos</div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div> -->
+</div>

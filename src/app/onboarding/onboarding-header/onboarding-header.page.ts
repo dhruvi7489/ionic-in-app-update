@@ -60,11 +60,14 @@ export class OnboardingHeaderPage implements OnInit {
     })
   }
 
-  back() {
+  async back() {
     if (!this.onboardingService.showExperience) {
       this.location.back();
     } else {
       this.onboardingService.showExperience = false;
+      this.onboardingService.jobCategories = [];
+      await this.onboardingService.getJobCategory();
+      await this.onboardingService.checkCounterActive();
     }
     setTimeout(() => {
       this.activeLineSet();

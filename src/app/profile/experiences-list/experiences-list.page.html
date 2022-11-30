@@ -1,0 +1,27 @@
+<app-profile-header [headerTitle]="'Experiences'" [showBackBtn]="true" [isModal]="true"></app-profile-header>
+
+<ion-content>
+  <div class="mt-20">
+    <div class="ml-16 mr-16" *ngFor="let experience of profileService.profileData?.workExperiences;let i = index;">
+      <ion-row class="mb-12" *ngIf="experience?.summary">
+        <ion-col class="p-0" size="10">
+          <div class="fw-400 secondary sub-heading-md">{{experience?.summary || ' '}}</div>
+        </ion-col>
+        <ion-col class="p-0 ion-text-end" size="2">
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="editExperience(i)">
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="experience?.workLink">
+        <ion-col class="p-0" *ngFor="let link of experience?.workLink">
+          <div class="d-flex">
+            <div>
+              <img src="../../../assets/imgs/Iconsax/Svg/All/outline/paperclip-1.svg">
+            </div>
+            <div class="fw-500 primary sub-heading-md ml-8">{{link || ''}}</div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { JobUtilervice } from 'src/app/core/util/job-util.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { AvailableJobsService } from '../available-jobs.service';
 import { JobApplicationModalPage } from '../job-application-modal/job-application-modal.page';
 
@@ -18,13 +19,15 @@ export class SetHourlyRatePage implements OnInit {
   btnTitle = 'Apply';
   updatedRate: any = 0;
   estimatedIncome: any = 0;
+  diableSubmitBtn: boolean = false;
 
   constructor(
     public modalCtrl: ModalController,
     public availableJobsService: AvailableJobsService,
     public jobUtilService: JobUtilervice,
     public location: Location,
-    public router: Router
+    public router: Router,
+    public toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -32,12 +35,12 @@ export class SetHourlyRatePage implements OnInit {
   }
 
   async ionViewWillEnter() {
-    await this.getTotal();
+    // this.availableJobsService.getSelectedJobById();
     if (this.availableJobsService.selectedJobDetails) {
       if (this.availableJobsService.selectedJobPreferences) {
         await this.calculateRatePerHour();
       } else {
-        await this.availableJobsService.applyForSelectedJob(false);
+        await this.availableJobsService.JobPreference(false);
         await this.calculateRatePerHour();
       }
     } else {
@@ -45,30 +48,44 @@ export class SetHourlyRatePage implements OnInit {
     }
   }
 
-  getTotal() {
+  getMinTotal() {
     this.minTotal = 0;
+    this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
+      const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
+      this.minTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate * hours));
+    });
+    return this.minTotal;
+  }
+
+  getMaxTotal() {
     this.maxTotal = 0;
     this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
-      const hours = this.jobUtilService.hoursOfJob(date.timeFrom, date.timeTo);
-      this.minTotal = this.minTotal + Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate * hours));
-      this.maxTotal = this.maxTotal + Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate * hours));
+      const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
+      this.maxTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate * hours));
     });
+    return this.maxTotal;
   }
 
   async calculateRatePerHour() {
     this.availableJobsService.jobPref = this.availableJobsService.selectedJobPreferences.content[0];
     await this.availableJobsService.jobPref.jobTypePreferences.forEach(async prefType => {
       if (this.availableJobsService.selectedJobDetails?.jobTypeId == prefType.typeId) {
-        this.estimatedIncome = 0;
-        this.hourlyRate = prefType.maxHourlyRate;
-        if (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate <= prefType.maxHourlyRate) {
-          this.updatedRate = 0;
-        } else {
-          this.updatedRate = prefType.maxHourlyRate;
-          for (let date of this.availableJobsService.selectedJobDetails?.dates) {
-            let hours = this.jobUtilService.hoursOfJob(date.timeFrom, date.timeTo);
-            this.estimatedIncome = this.estimatedIncome + Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.updatedRate * hours));
+        if (prefType.status != "Pending") {
+          this.diableSubmitBtn = false;
+          this.estimatedIncome = 0;
+          this.hourlyRate = prefType.maxHourlyRate;
+          if (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate <= prefType.maxHourlyRate) {
+            this.updatedRate = 0;
+          } else {
+            this.updatedRate = prefType.maxHourlyRate;
+            for (let date of this.availableJobsService.selectedJobDetails?.dates) {
+              let hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
+              this.estimatedIncome = this.estimatedIncome + Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.updatedRate * hours));
+            }
           }
+        } else {
+          this.toastService.showMessage("You can't apply to this job now, please wait for job type approval");
+          this.diableSubmitBtn = true;
         }
       }
     });
@@ -78,23 +95,26 @@ export class SetHourlyRatePage implements OnInit {
     this.location.back();
   }
 
-  async submitJob() {
+  submitJob() {
     if (this.availableJobsService.jobPref) {
-      await this.availableJobsService.jobPref.jobTypePreferences.forEach(async prefType => {
+      this.availableJobsService.jobPref.jobTypePreferences.forEach(async prefType => {
+        prefType.maxHourlyRate = prefType.maxHourlyRate ? prefType.maxHourlyRate : 1;
+        prefType.level = prefType.level ? prefType.level : "Intermediate";
+
         if (this.availableJobsService.selectedJobDetails?.jobTypeId == prefType.typeId) {
-          prefType.maxHourlyRate = this.hourlyRate,
-            prefType.level = this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo?.level
+          prefType.maxHourlyRate = this.hourlyRate ? this.hourlyRate : 1;
+          prefType.level = this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo?.level ? this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo?.level : "";
         }
       })
     }
-    await this.availableJobsService.updateHourlyRateRange(this.hourlyRate, false);
+    this.availableJobsService.updateHourlyRateRange(this.hourlyRate, false);
   }
 
   rateSliderChanged(event) {
     this.hourlyRate = event.target.value;
     this.estimatedIncome = 0;
     for (let date of this.availableJobsService.selectedJobDetails?.dates) {
-      let hours = this.jobUtilService.hoursOfJob(date.timeFrom, date.timeTo);
+      let hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
       this.estimatedIncome = this.estimatedIncome + (this.hourlyRate * hours) + this.availableJobsService.selectedJobDetails?.basePrice;
       this.estimatedIncome = Math.round(Math.abs(this.estimatedIncome));
     }

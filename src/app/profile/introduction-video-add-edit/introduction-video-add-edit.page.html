@@ -1,0 +1,39 @@
+<app-profile-header [headerTitle]="'Add Introduction'" [showBackBtn]="true" [isModal]="true"></app-profile-header>
+
+<ion-content>
+  <div class="intro-video-wrap">
+
+    <ion-row class="mt-24 ml-16 mr-16">
+      <div class="w-100">
+        <input class="d-none" type="file" [accept]="'video/*'" (change)="fileChangeEvent($event)" autocomplete="off"
+          #inputFile />
+        <custom-button [title]="'Add media'" (btnClick)="inputFile.click()" [button]="'secondary'" [height]="'48px'"
+          class="custom-button-secondary" [image]="'../../assets/imgs/Iconsax/Svg/All/outline/add.svg'"></custom-button>
+      </div>
+    </ion-row>
+    <ion-row class="mt-24 ml-16 mr-16">
+      <div>
+        <!-- <custom-input [inputType]="'file'" [placeholder]="'select picture'" [id]="'video'" [accept]="'video/*'"
+          class="d-none" (fileChange)="changeFile($event)" #inputFile>
+        </custom-input> -->
+        <input class="d-none" type="file" [accept]="'video/*'" (change)="fileChangeEvent($event)" autocomplete="off"
+          #inputFile />
+        <img src="../../../assets/imgs/video.svg" class="img-wrap" *ngIf="!videoBase64" (click)="inputFile.click()">
+        <iframe [src]="cleanURL()" class="img-wrap" frameborder="0" *ngIf="videoBase64" width="329px"
+          height="180.34px"></iframe>
+      </div>
+      <div class="mt-4 mb-4 ml-4 mr-24 position-absolute w-88 ion-text-end">
+        <img src="../../../assets/imgs/Iconsax/Svg/All/outline/close-circle-fill.svg"
+          (click)="deleteIntroductionVideo()">
+      </div>
+    </ion-row>
+  </div>
+
+
+  <video #video class="video-wrap" autoplay playsinline muted [hidden]="!isRecording"></video>
+
+  <button ion-butoon (click)="isRecording ? stopRecord() : recordVideo1()">
+    <ion-icon [name]="isRecording ? 'stop' : 'videocam'"></ion-icon>
+  </button>
+
+</ion-content>

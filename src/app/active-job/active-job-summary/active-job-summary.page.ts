@@ -17,6 +17,12 @@ export class ActiveJobSummaryPage implements OnInit {
   ngOnInit() {
   }
 
+  ionViewWillEnter() {
+    if (!this.activeJobService.activeJob?.job) {
+      this.router.navigateByUrl('tabs/active-job')
+    }
+  }
+
   submitPayment() {
     this.router.navigateByUrl('job-rating');
   }

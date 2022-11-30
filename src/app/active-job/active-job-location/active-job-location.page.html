@@ -1,9 +1,98 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>active-job-location</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-active-job-header [headerTitle]="'Active job'"></app-active-job-header>
 
 <ion-content>
+  <div class="content-wrap">
 
+    <app-active-job-common-header></app-active-job-common-header>
+
+    <!-- 2 -->
+    <div class="data-not-found-wrap enable-location-wrap"
+      *ngIf="!locationService.currentLocationFetch && !activeJobService.navigateLocation && !locationService.locationCordinates">
+      <div class="pb-0">
+        <ion-row>
+          <ion-col size="12">
+            <img src="../../assets/imgs/enable-location.svg">
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <div class="secondary fw-600 sub-heading-xl">Enable locations</div>
+          </ion-col>
+        </ion-row>
+      </div>
+      <div class="mt-12">
+        <ion-row>
+          <ion-col size="12">
+            <div class="fw-400 sub-heading-sm ternary">Hour4u need your permission to fetch the your distance. Select
+              "Allow Always" when promoted.</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-22">
+          <ion-col size="12">
+            <custom-button [title]="'Enable location'" [button]="'primary'" [disabled]="false"
+              (btnClick)="enableLocation()">
+            </custom-button>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="data-not-found-wrap enable-location-wrap"
+      *ngIf="locationService.currentLocationFetch && !activeJobService.navigateLocation && !locationService.locationCordinates">
+      <div class="pb-0">
+        <ion-row>
+          <ion-col size="12">
+            <img src="../../assets/imgs/fetch-location.svg">
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <div class="secondary fw-600 sub-heading-xl">We are fetching your location...</div>
+          </ion-col>
+        </ion-row>
+      </div>
+      <div class="mt-12">
+        <ion-row>
+          <ion-col size="12">
+            <div class="fw-400 sub-heading-sm ternary">We are looking for your location. Please ensure your location
+              service is on and your internet connection is stable.</div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="data-not-found-wrap enable-location-wrap"
+      *ngIf="activeJobService.navigateLocation && locationService.locationCordinates">
+      <div class="pb-0">
+        <ion-row>
+          <ion-col size="12">
+            <img src="../../assets/imgs/navigate-location.svg">
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <div class="secondary fw-600 sub-heading-xl">Navigate to your job location</div>
+          </ion-col>
+        </ion-row>
+      </div>
+      <div class="mt-12">
+        <ion-row>
+          <ion-col size="12">
+            <div class="fw-400 sub-heading-sm ternary">Seems like you are not there yet! Move to your location to
+              kick-off the shift</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-22">
+          <ion-col size="12">
+            <custom-button [title]="'Navigate'" [button]="'primary'" [disabled]="false" (btnClick)="navigateLocation()">
+            </custom-button>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div>
 </ion-content>

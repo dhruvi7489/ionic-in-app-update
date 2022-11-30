@@ -1,6 +1,6 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { OnboardingService } from 'src/app/onboarding/onboarding.service';
 import { ActiveJobService } from '../active-job.service';
 
 @Component({
@@ -11,20 +11,25 @@ import { ActiveJobService } from '../active-job.service';
 export class EditPaymentPage implements OnInit {
 
   constructor(
-    public onboardingService: OnboardingService,
     public router: Router,
-    public activeJobService: ActiveJobService
+    public activeJobService: ActiveJobService,
+    public location: Location
   ) { }
 
   ngOnInit() {
   }
 
-  addDescription(event) {
-    this.onboardingService.description = event.ngModelData;
-    this.onboardingService.leftCharacters = this.onboardingService.maxlengthDescription - this.onboardingService.description.length;
+  addExpectedAmount(event) {
+    this.activeJobService.expectedAmount = event.ngModelData;
+  }
+
+  addReasonForExpectedAmount(event) {
+    this.activeJobService.reasonForExpectedAmount = event.ngModelData;
+    this.activeJobService.leftCharactersForExpectedAmount = this.activeJobService.maxlengthReasonForExpectedAmount - this.activeJobService.reasonForExpectedAmount.length;
   }
 
   submitUpdatedAmount(event) {
-    this.router.navigateByUrl('tabs/active-job');
+    // this.router.navigateByUrl('tabs/active-job');
+    this.location.back();
   }
 }

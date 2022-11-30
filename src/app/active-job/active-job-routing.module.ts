@@ -6,7 +6,7 @@ import { ActiveJobPage } from './active-job.page';
 const routes: Routes = [
   {
     path: '',
-    component: ActiveJobPage
+    component: ActiveJobPage,
   },
   {
     path: 'active-job-header',
@@ -31,6 +31,14 @@ const routes: Routes = [
   {
     path: 'active-job-common-header',
     loadChildren: () => import('./active-job-common-header/active-job-common-header.module').then( m => m.ActiveJobCommonHeaderPageModule)
+  },
+  {
+    path: 'active-job-mark-attendance',
+    loadChildren: () => import('./active-job-mark-attendance/active-job-mark-attendance.module').then( m => m.ActiveJobMarkAttendancePageModule)
+  },
+  {
+    path: 'active-job-end',
+    loadChildren: () => import('./active-job-end/active-job-end.module').then( m => m.ActiveJobEndPageModule)
   },
 ];
 

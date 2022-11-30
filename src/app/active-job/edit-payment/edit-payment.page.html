@@ -33,8 +33,9 @@
         </ion-row>
         <ion-row>
           <ion-col size="12" class="pl-0">
-            <custom-input [inputType]="'text'" [placeholder]="'Description'"
-              [ngModelData]="onboardingService.description" [id]="'description'" (keyUp)="addDescription($event)">
+            <custom-input [inputType]="'tel'" [placeholder]="'&#x20b9; 0'"
+              [ngModelData]="activeJobService.expectedAmount" [id]="'expectedAmount'"
+              (keyUp)="addExpectedAmount($event)">
             </custom-input>
           </ion-col>
         </ion-row>
@@ -47,11 +48,13 @@
           </ion-col>
         </ion-row>
         <custom-input [inputType]="'textarea'" [placeholder]="'Type a reason here'"
-          [ngModelData]="onboardingService.description" [id]="'description'" [rows]="'5'"
-          (keyUp)="addDescription($event)" [maxlength]="onboardingService.maxlengthDescription">
+          [ngModelData]="activeJobService.reasonForExpectedAmount" [id]="'reasonForExpectedAmount'" [rows]="'5'"
+          (keyUp)="addReasonForExpectedAmount($event)" [maxlength]="activeJobService.maxlengthReasonForExpectedAmount">
         </custom-input>
         <div class="sub-heading-sm ternary fw-400 mt-8 ml-4">
-          {{onboardingService.leftCharacters}} characters left</div>
+          {{activeJobService.leftCharactersForExpectedAmount}} characters left</div>
+        <div *ngIf="!activeJobService.reasonForExpectedAmount" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Enter
+          reason to change the expected payment </div>
       </div>
     </div>
   </div>
@@ -61,7 +64,9 @@
 <ion-footer>
   <ion-row>
     <ion-col size="12" class="pl-0 pr-0">
-      <custom-button [title]="'Submit updated amount'" (btnClick)="submitUpdatedAmount()" [button]="'primary'">
+      <custom-button [title]="'Submit updated amount'"
+        [disabled]="!activeJobService.reasonForExpectedAmount || !activeJobService.expectedAmount"
+        (btnClick)="submitUpdatedAmount()" [button]="'primary'">
       </custom-button>
     </ion-col>
   </ion-row>

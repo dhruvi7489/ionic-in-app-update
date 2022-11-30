@@ -1,4 +1,4 @@
-<app-my-earnings-header [headerTitle]="'Payment'" [showBackBtn]="true" [showContactIcon]="false">
+<app-my-earnings-header [headerTitle]="'Payment'" [showBackBtn]="true" [showContactIcon]="false" [isModal]="true">
 </app-my-earnings-header>
 
 <ion-content>
@@ -13,41 +13,44 @@
       <ion-label>Account number*</ion-label>
     </div>
     <custom-input [inputType]="'text'" [placeholder]="'Enter your account number'"
-      [ngModelData]="myEarningsService.account_number" [id]="'account_number'" (keyUp)="getAccountNumber($event)">
+      [ngModelData]="myEarningsService.accountNumber" [id]="'accountNumber'" (keyUp)="getAccountNumber($event)">
     </custom-input>
 
     <div class="secondary fw-500 sub-heading-sm secondary mt-16 mb-8">
       <ion-label>Confirm account number*</ion-label>
     </div>
     <custom-input [inputType]="'text'" [placeholder]="'Confirm your account number'"
-      [ngModelData]="myEarningsService.confirm_account_number" [id]="'confirm_account_number'"
+      [ngModelData]="myEarningsService.confirm_accountNumber" [id]="'confirm_accountNumber'"
       (keyUp)="getConfirmAccountNumber($event)">
     </custom-input>
+    <div *ngIf="myEarningsService.confirm_accountNumber != myEarningsService.accountNumber"
+      class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Account number not match </div>
 
     <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
       <ion-label>IFSC Code*</ion-label>
     </div>
     <custom-input [inputType]="'text'" [placeholder]="'Enter IFSC code of your bank branch'"
-      [ngModelData]="myEarningsService.ifsc_code" [id]="'ifsc_code'" (keyUp)="getIFSCCode($event)">
+      [ngModelData]="myEarningsService.ifscCode" [id]="'ifscCode'" (keyUp)="getIFSCCode($event)">
     </custom-input>
 
     <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
       <ion-label>Name on account*</ion-label>
     </div>
     <custom-input [inputType]="'text'" [placeholder]="'Enter your full name'"
-      [ngModelData]="myEarningsService.accountent_name" [id]="'accountent_name'" (keyUp)="getAccountentName($event)">
+      [ngModelData]="myEarningsService.nameOnAccount" [id]="'nameOnAccount'" (keyUp)="getAccountentName($event)">
     </custom-input>
 
     <div class="mt-24">
-      <custom-input [inputType]="'checkbox'" [ngModelData]="myEarningsService.authorize_bank_details"
+      <custom-input [inputType]="'checkbox'" [ngModelData]="myEarningsService.authorizeBankDetails"
         [value]="'I attest that I am the owner and have full authorization to this bank account.'"
-        [id]="'authorize_bank_details'" (checkboxChange)="authorizeBankDetails($event)">
+        [id]="'authorizeBankDetails'" (checkboxChange)="authorizeBankDetails($event)">
       </custom-input>
     </div>
   </div>
 </ion-content>
 
 <ion-footer>
-  <custom-button [title]="'Save'" (btnClick)="savePaymentAccountForm()" [disabled]="disable()" [button]="'primary'">
+  <custom-button [title]="myEarningsService?.accountId ? 'Update' : 'Save'" (btnClick)="saveAccountFormDetails()"
+    [disabled]="disable()" [button]="'primary'">
   </custom-button>
 </ion-footer>

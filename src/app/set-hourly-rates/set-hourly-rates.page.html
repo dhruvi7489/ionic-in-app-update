@@ -25,11 +25,11 @@
 
 <ion-content>
   <div>
-    <ion-card class="p-16 m-16 c-card-wrap">
+    <ion-card class="p-16 m-16 c-card-wrap" *ngFor="let jobType of setHourlyRatesService?.jobPreferences;let i=index;">
       <ion-card-content class="p-0">
         <ion-row>
           <ion-col size="12">
-            <div class="fw-500 secondary sub-heading-sm">Leaflet Distributor</div>
+            <div class="fw-500 secondary sub-heading-sm">{{ jobType.typeName }}</div>
           </ion-col>
         </ion-row>
 
@@ -45,10 +45,10 @@
 
           <ion-row>
             <ion-col size="6" class="pt-0 pb-0">
-              <div class="fw-500 sub-heading-md secondary"> Intermediate</div>
+              <div class="fw-500 sub-heading-md secondary"> {{ jobType.level || '-' }} </div>
             </ion-col>
             <ion-col size="6" class="pt-0 pb-0">
-              <div class="fw-500 sub-heading-md secondary">&#x20b9;100</div>
+              <div class="fw-500 sub-heading-md secondary">&#x20b9;{{ jobType.basePrice || '0' }}</div>
             </ion-col>
           </ion-row>
         </div>
@@ -56,20 +56,22 @@
         <ion-row class="pt-16 pb-12">
           <ion-col size="6" class="pt-0 pb-0">
             <p class="start_ ion-float-left ternary fw-400 sub-heading-sm">
-              &#8377;100/hr
+              &#8377;{{jobType.hourlyMinAllowed}}/hr
             </p>
           </ion-col>
           <ion-col size="6" class="pt-0 pb-0">
             <p class="end_ ion-float-right ternary fw-400 sub-heading-sm">
-              &#8377;200/hr</p>
+              &#8377;{{jobType.hourlyMaxAllowed}}/hr
+            </p>
           </ion-col>
         </ion-row>
 
         <ion-row>
           <ion-col size="12" class="p-0">
             <div class="fw-400 sub-heading-sm ternary">
-              <ion-range [(ngModel)]="hourlyRate" (ionChange)="rateSliderChanged($event)" [min]="'0'" [max]="'100'"
-                color="primary" [step]="1" pin="true" class="range-pressed ion-text-center pt-0 pl-8 pr-8">
+              <ion-range [(ngModel)]="jobType.maxHourlyRate" (ionChange)="rateSliderChanged($event,jobType)" [min]="'0'"
+                [max]="jobType.hourlyMaxAllowed" color="primary" [step]="1" pin="true"
+                class="range-pressed ion-text-center pt-0 pl-8 pr-8">
               </ion-range>
             </div>
           </ion-col>
@@ -77,16 +79,18 @@
 
         <ion-row>
           <ion-col size="12">
-            <div class="fw-400 secondary sub-heading-sm">You would make approximately &#8377;436 for an</div>
+            <div class="fw-400 secondary sub-heading-sm">You would make approximately &#8377;{{jobType.finalAmount ||
+              0}} for
+              an</div>
           </ion-col>
           <ion-col size="12">
             <div class="d-flex">
               <div>
-                <ion-select interface="action-sheet" class="p-0" id="custom-select">
-                  <ion-select-option value="2">2 hours</ion-select-option>
-                  <ion-select-option value="4">4 hours</ion-select-option>
-                  <ion-select-option value="8">8 hours</ion-select-option>
-                  <ion-select-option value="12">12 hours</ion-select-option>
+                <ion-select interface="action-sheet" class="p-0" id="custom-select" [(ngModel)]="jobType.shiftHours"
+                  (ionChange)="changeHourlyRate(jobType)">
+                  <ion-select-option *ngFor="let jobHour of setHourlyRatesService?.hoursArray" [value]="jobHour.hour">
+                    {{jobHour.displayName}}
+                  </ion-select-option>
                 </ion-select>
               </div>
               <div class="fw-400 secondary sub-heading-sm ion-align-self-center ml-8">long shift.</div>
@@ -94,77 +98,6 @@
           </ion-col>
         </ion-row>
 
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card class="p-16 m-16 c-card-wrap">
-      <ion-card-content class="p-0">
-        <ion-row>
-          <ion-col size="12">
-            <div class="fw-500 secondary sub-heading-sm">Leaflet Distributor</div>
-          </ion-col>
-        </ion-row>
-
-        <div class="pt-12 pb-16 bottom-border">
-          <ion-row>
-            <ion-col size="6" class="pt-0 pb-0">
-              <div class="fw-400 sub-heading-sm ternary"> Level</div>
-            </ion-col>
-            <ion-col size="6" class="pt-0 pb-0">
-              <div class="fw-400 sub-heading-sm ternary"> Base Pay</div>
-            </ion-col>
-          </ion-row>
-
-          <ion-row>
-            <ion-col size="6" class="pt-0 pb-0">
-              <div class="fw-500 sub-heading-md secondary"> Intermediate</div>
-            </ion-col>
-            <ion-col size="6" class="pt-0 pb-0">
-              <div class="fw-500 sub-heading-md secondary">&#x20b9;100</div>
-            </ion-col>
-          </ion-row>
-        </div>
-
-        <ion-row class="pt-16 pb-12">
-          <ion-col size="6" class="pt-0 pb-0">
-            <p class="start_ ion-float-left ternary fw-400 sub-heading-sm">
-              &#8377;100/hr
-            </p>
-          </ion-col>
-          <ion-col size="6" class="pt-0 pb-0">
-            <p class="end_ ion-float-right ternary fw-400 sub-heading-sm">
-              &#8377;200/hr</p>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col size="12" class="p-0">
-            <div class="fw-400 sub-heading-sm ternary">
-              <ion-range [(ngModel)]="hourlyRate" (ionChange)="rateSliderChanged($event)" [min]="'0'" [max]="'100'"
-                color="primary" [step]="1" pin="true" class="range-pressed ion-text-center pt-0 pl-8 pr-8">
-              </ion-range>
-            </div>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col size="12">
-            <div class="fw-400 secondary sub-heading-sm">You would make approximately &#8377;436 for an</div>
-          </ion-col>
-          <ion-col size="12">
-            <div class="d-flex">
-              <div>
-                <ion-select interface="action-sheet" class="p-0 custom-options" id="custom-select">
-                  <ion-select-option value="2">2 hours</ion-select-option>
-                  <ion-select-option value="4">4 hours</ion-select-option>
-                  <ion-select-option value="8">8 hours</ion-select-option>
-                  <ion-select-option value="12">12 hours</ion-select-option>
-                </ion-select>
-              </div>
-              <div class="fw-400 secondary sub-heading-sm ion-align-self-center ml-8">long shift.</div>
-            </div>
-          </ion-col>
-        </ion-row>
       </ion-card-content>
     </ion-card>
   </div>

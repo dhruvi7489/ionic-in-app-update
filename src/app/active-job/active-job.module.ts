@@ -10,7 +10,7 @@ import { ActiveJobPage } from './active-job.page';
 import { ActiveJobHeaderPageModule } from './active-job-header/active-job-header.module';
 import { CustomButtonModule } from 'w4u-custom-components';
 import { PipesModule } from '../core/pipes/pipes.module';
-import { ActiveJobFlowStepperPageModule } from './active-job-flow-stepper/active-job-flow-stepper.module';
+// import { ActiveJobFlowStepperPageModule } from './active-job-flow-stepper/active-job-flow-stepper.module';
 import { ActiveJobSummaryPageModule } from './active-job-summary/active-job-summary.module';
 
 @NgModule({
@@ -22,9 +22,9 @@ import { ActiveJobSummaryPageModule } from './active-job-summary/active-job-summ
     ActiveJobHeaderPageModule,
     CustomButtonModule,
     PipesModule,
-    ActiveJobFlowStepperPageModule,
+    // ActiveJobFlowStepperPageModule,
     ActiveJobSummaryPageModule
   ],
   declarations: [ActiveJobPage]
 })
-export class ActiveJobPageModule {}
+export class ActiveJobPageModule { }

@@ -1,0 +1,48 @@
+<app-active-job-header [headerTitle]="'Active job'"></app-active-job-header>
+
+<ion-content>
+  <div class="content-wrap">
+
+    <app-active-job-common-header></app-active-job-common-header>
+
+    <!-- 8 -->
+    <div class="data-not-found-wrap enable-location-wrap">
+      <!-- *ngIf="activeJobService?.endBeforeFifteenMin && !activeJobService.showPaymentPage && !activeJobService.jobCompleted" -->
+      <div class="pb-0">
+        <ion-row>
+          <ion-col size="12">
+            <img src="../../assets/imgs/mark-attendance.svg">
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <div class="secondary fw-600 sub-heading-xl">Job is about to end</div>
+          </ion-col>
+        </ion-row>
+      </div>
+      <div class="mt-12">
+        <ion-row>
+          <ion-col size="12">
+            <div class="fw-400 sub-heading-sm ternary">Congratulations! You are close to finish your job. When you
+              finish working, please click on check-out button and sign-off.</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-22">
+          <ion-col size="12">
+            <custom-button [title]="'Check-out'" [button]="'primary'" [disabled]="false" (btnClick)="checkOut()">
+            </custom-button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-12">
+          <ion-col size="12">
+            <custom-button [title]="'Upload more work pictures'" [button]="'secondary'" [disabled]="false"
+              (btnClick)="uploadMoreWorkPictures()">
+            </custom-button>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -5,9 +5,19 @@
         <div class="process-step" [ngClass]="{'select-menu': activeStep == 1}" *ngIf="activeStep == 1">
           <img src="../../../assets/imgs/Iconsax/Svg/All/outline/tick-circle-1.svg">
         </div>
-        <div class="ion-align-self-center secondary sub-heading-md fw-500 ml-16"> Checked in at: {{
+        <div *ngIf="!activeJobService?.dayChange" class="ion-align-self-center secondary sub-heading-md fw-500 ml-16">
+          Checked in at:
+          {{
           activeJobService.inTime | formatTime | date:
-          'hh:mm a' }}</div>
+          'hh:mm a' }}
+        </div>
+        <div *ngIf="activeJobService?.dayChange" class="ion-align-self-center secondary sub-heading-md fw-500 ml-16">
+          Checked in at:
+          {{activeJobService.activeJob?.job?.dates[0].date | formatDate | date: 'MMM dd, yyyy'}}
+          {{
+          activeJobService.inTime | formatTime | date:
+          'hh:mm a' }}
+        </div>
       </div>
     </div>
     <div class="data-3">

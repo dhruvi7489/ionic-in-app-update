@@ -13,5 +13,6 @@ export class EmploymentHistoryImageProofRequest {
     jobSeekerId: string;
     imagePath: string;
     proofEnum: string;
+    description: string;
 }
 

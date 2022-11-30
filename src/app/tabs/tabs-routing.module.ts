@@ -8,6 +8,10 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
+        path: 'profile',
+        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule)
+      },
+      {
         path: 'available-jobs',
         loadChildren: () => import('../available-jobs/available-jobs.module').then(m => m.AvailableJobsPageModule)
       },
@@ -23,18 +27,18 @@ const routes: Routes = [
         path: 'my-jobs',
         loadChildren: () => import('../my-jobs/my-jobs.module').then(m => m.MyJobsPageModule)
       },
-      {
-        path: '',
-        redirectTo: '/tabs/available-jobs',
-        pathMatch: 'full'
-      }
+      // {
+      //   path: '',
+      //   redirectTo: '/tabs/available-jobs',
+      //   pathMatch: 'full'
+      // }
     ]
   },
-  {
-    path: '',
-    redirectTo: '/tabs/available-jobs',
-    pathMatch: 'full'
-  }
+  // {
+  //   path: '',
+  //   redirectTo: '/tabs/available-jobs',
+  //   pathMatch: 'full'
+  // }
 ];
 
 @NgModule({

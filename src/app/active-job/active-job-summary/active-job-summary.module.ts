@@ -9,6 +9,8 @@ import { ActiveJobSummaryPageRoutingModule } from './active-job-summary-routing.
 import { ActiveJobSummaryPage } from './active-job-summary.page';
 import { CustomButtonModule } from 'w4u-custom-components';
 import { PipesModule } from 'src/app/core/pipes/pipes.module';
+import { ActiveJobHeaderPageModule } from '../active-job-header/active-job-header.module';
+import { ActiveJobCommonHeaderPageModule } from '../active-job-common-header/active-job-common-header.module';
 
 @NgModule({
   imports: [
@@ -17,7 +19,9 @@ import { PipesModule } from 'src/app/core/pipes/pipes.module';
     IonicModule,
     ActiveJobSummaryPageRoutingModule,
     CustomButtonModule,
-    PipesModule
+    PipesModule,
+    ActiveJobHeaderPageModule,
+    ActiveJobCommonHeaderPageModule
   ],
   declarations: [ActiveJobSummaryPage],
   exports: [ActiveJobSummaryPage]

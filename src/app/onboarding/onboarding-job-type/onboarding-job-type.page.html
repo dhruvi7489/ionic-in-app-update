@@ -5,42 +5,36 @@
   <div class="c-container-body mt-24 ml-16 mr-16">
     <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Select the type of jobs you are interested in
     </div>
-    <div class="sub-heading-sm bold-graphik-font secondary fw-500 mt-24 mb-8">Marketing</div>
+    <div *ngFor="let jobType of onboardingService?.jobCategories">
+      <div class="sub-heading-sm bold-graphik-font secondary fw-500 mt-24 mb-8">{{jobType.name}}</div>
 
-    <ion-chip *ngFor="let in of counter;let i=index" (click)="addMarketing(in)"
-      [ngClass]="{'active-chip' : in.active,'in-active-chip' : !in.active}">
-      <ion-label class="sub-heading-md fw-400" [ngClass]="{'ternary':!in.active}">Icon Chip</ion-label>
-      <ion-icon name="add" *ngIf="!in.active"></ion-icon>
-      <ion-icon name="close" *ngIf="in.active"></ion-icon>
-    </ion-chip>
+      <ion-chip *ngFor="let subJobTypeCategory of jobType?.jobTypes;let i=index"
+        (click)="addSubJobCategory(subJobTypeCategory)"
+        [ngClass]="{'active-chip' : subJobTypeCategory.active,'in-active-chip' : !subJobTypeCategory.active}">
+        <ion-label class="sub-heading-md fw-400" [ngClass]="{'ternary':!subJobTypeCategory.active}">
+          {{subJobTypeCategory.jobTypeName}}
+        </ion-label>
+        <ion-icon name="add" *ngIf="!subJobTypeCategory.active"></ion-icon>
+        <ion-icon name="close" *ngIf="subJobTypeCategory.active"></ion-icon>
+      </ion-chip>
 
-    <!-- <div class="d-flex mt-16">
+      <ion-chip *ngIf="jobType?.jobTypes?.length == 0" class="in-active-chip">
+        <ion-label class="sub-heading-md fw-400">No Data</ion-label>
+      </ion-chip>
+
+      <!-- <div class="d-flex mt-16">
         <div>
           <ion-icon class="add-more-icon" name="add"></ion-icon>
         </div>
         <div class="add-more">Add more</div>
       </div> -->
-
-    <div class="sub-heading-sm bold-graphik-font secondary fw-500 mt-24 mb-8 ml-6">Video production</div>
-
-    <ion-chip *ngFor="let in of counter1;let i=index" (click)="addVideoProduction(in)"
-      [ngClass]="{'active-chip' : in.active,'in-active-chip' : !in.active}">
-      <ion-label class="sub-heading-md fw-400" [ngClass]="{'ternary':!in.active}">Icon Chip data</ion-label>
-      <ion-icon name="add" *ngIf="!in.active"></ion-icon>
-      <ion-icon name="close" *ngIf="in.active"></ion-icon>
-    </ion-chip>
-
-    <!-- <div class="d-flex mt-16">
-        <div>
-          <ion-icon name="add" class="add-more-icon"></ion-icon>
-        </div>
-        <div class="add-more">Add more</div>
-      </div> -->
+    </div>
   </div>
 </ion-content>
 <ion-footer *ngIf="!onboardingService.showExperience">
   <div class="mt-10">
-    <custom-button [title]="'Next'" (btnClick)="experienceAdd()" [disabled]="disabled" [button]="'primary'">
+    <custom-button [title]="'Next'" (btnClick)="saveJobTypes()" [disabled]="onboardingService.disabled"
+      [button]="'primary'">
     </custom-button>
   </div>
   <!-- <div class="img-outer-wrap ion-text-center">
@@ -84,11 +78,13 @@
 
 <ion-footer *ngIf="onboardingService.showExperience">
   <div>
-    <custom-button [title]="'Skip'" (btnClick)="skip()" [disabled]="disabled" [button]="'ternary'">
+    <!-- [disabled]="onboardingService.disabled" -->
+    <custom-button [title]="'Skip'" (btnClick)="skip()" [button]="'ternary'">
     </custom-button>
   </div>
   <div class="mt-10">
-    <custom-button [title]="'Continue'" (btnClick)="continue()" [disabled]="disabled" [button]="'primary'">
+    <custom-button [title]="'Continue'" (btnClick)="continue()" [disabled]="onboardingService.disabled"
+      [button]="'primary'">
     </custom-button>
   </div>
   <!-- <div class="img-outer-wrap ion-text-center">

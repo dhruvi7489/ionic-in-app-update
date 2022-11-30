@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'my-earnings-header',
-    loadChildren: () => import('./my-earnings-header/my-earnings-header.module').then( m => m.MyEarningsHeaderPageModule)
+    loadChildren: () => import('./my-earnings-header/my-earnings-header.module').then(m => m.MyEarningsHeaderPageModule)
   }
 ];
 
@@ -18,4 +18,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class MyEarningsPageRoutingModule {}
+export class MyEarningsPageRoutingModule { }

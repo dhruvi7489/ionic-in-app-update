@@ -8,6 +8,12 @@ import { JobApplicationModalPage } from './job-application-modal/job-application
 import { ModalController } from '@ionic/angular';
 import { JobApplication } from '../core/modal/job-application.modal';
 import { JobSeeker } from '../core/modal/job-seeker.modal';
+import { LoadingService } from '../services/loading.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Storage } from '@ionic/storage';
+import { Share } from '@capacitor/share';
+import { Capacitor } from '@capacitor/core';
+import { JobUtilervice } from '../core/util/job-util.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,32 +23,62 @@ export class AvailableJobsService {
   jobLists: any[] = [];
   errorInApiCall: boolean = false;
   selectedJobId: string = null;
+  jobApplicationId: string = null;
   selectedJobDetails: any = null;
   selectedJobPreferences: any = null;
   jobPref: any = null;
   jobSeeker: JobSeeker;
 
+  pageSize = 10;
+  page = 0;
+  totalAvailableRecords = 0;
+  loadedMyAvailablesRecords = 0;
+
   constructor(
     public commonProvider: CommonProvider,
     public router: Router,
     public toastService: ToastService,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    public loadingService: LoadingService,
+    public storage: Storage,
+    public jobUtilService: JobUtilervice
   ) {
-    // Jobseeker data get from storage
-    this.jobSeeker = JSON.parse(localStorage.getItem('loginUserInfo'))
+    this.storage.create();
+    this.setInitialValues();
   }
 
+  // Jobseeker data get from storage
+  async setInitialValues() {
+    const loginUserInfo = await this.storage.get('loginUserInfo');
+    this.jobSeeker = loginUserInfo;
+
+  }
   // Get all jobs list
   async getAllJobsList(search?) {
-    let params = '?sort=createdOn,desc&page=0&size=11000';
-    let param = { "gender": localStorage.getItem('loginUserGender'), "query": search }
-    return await this.commonProvider.PostMethod(Apiurl.GetJobsList + params, param).then(async (res: any) => {
+    const loginUserGender = await this.storage.get('loginUserGender');
+    this.loadingService.show();
+    if (search) {
       this.jobLists = [];
-      if (res && res.length != 0) {
-        this.jobLists = res;
+      this.page = 0;
+    }
+    let params = '?sort=createdOn,desc&page=' + this.page + '&size=' + this.pageSize;
+    let param = { "gender": loginUserGender, "query": search }
+    this.commonProvider.PostMethod(Apiurl.GetJobsList + params, param).then(async (res: any) => {
+      this.loadingService.dismiss();
+      // this.jobLists = [];
+      if (res && res.content?.length != 0) {
+        // this.jobLists = res.content;
+        this.totalAvailableRecords = res?.totalElements;
+        this.loadedMyAvailablesRecords = res?.content?.length;
         this.errorInApiCall = false;
+        res.content?.forEach((element) => {
+          this.jobLists.push(element);
+        });
       }
-    }).catch((err: any) => {
+    }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
+      this.jobLists = [];
+      this.page = 0;
       this.errorInApiCall = true;
       console.log(err)
     })
@@ -50,46 +86,63 @@ export class AvailableJobsService {
 
   // Get job by job id and login user id
   async getSelectedJobById() {
-    if (this.selectedJobId && localStorage.getItem('loginUserId')) {
-      let params = this.selectedJobId + '/' + localStorage.getItem('loginUserId');
-      let param = { "gender": localStorage.getItem('loginUserGender') }
-      return await this.commonProvider.GetMethod(Apiurl.GetJobByJobId + params, param).then(async (res: any) => {
+    const loginUserId = await this.storage.get('loginUserId');
+    const loginUserGender = await this.storage.get('loginUserGender');
+    this.selectedJobId = this.router.url.split('available-job-details/')[1];
+    this.selectedJobDetails = null;
+    this.jobApplicationId = null;
+
+    this.loadingService.show();
+
+    if (this.selectedJobId && loginUserId) {
+      let params = this.selectedJobId + '/' + loginUserId;
+      let param = { "gender": loginUserGender }
+      this.commonProvider.GetMethod(Apiurl.GetJobByJobId + params, param).then(async (res: any) => {
+        this.loadingService.dismiss();
         if (res) {
           this.selectedJobDetails = res;
-          this.errorInApiCall = false;
+          this.jobApplicationId = this.selectedJobDetails.jobApplicationId;
+          await this.selectedJobDetails?.dates?.forEach(date => {
+            this.jobUtilService.shiftDayChange(date.date, date.timeFrom, date.timeTo);
+          })
         }
-      }).catch((err: any) => {
-        this.errorInApiCall = true;
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
         console.log(err)
       })
     } else {
-      this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
+      // this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
+      this.toastService.showMessage("Employment Id not found!")
+      this.loadingService.dismiss();
     }
   }
 
   // Apply for selected job
-  async applyForSelectedJob(isDetailPage?: boolean) {
-    let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + localStorage.getItem('loginUserId');
-    return await this.commonProvider.GetMethod(Apiurl.ApplyForSelectedJob + params, null).then(async (res: any) => {
+  async JobPreference(isDetailPage?: boolean) {
+    const loginUserId = await this.storage.get('loginUserId');
+    this.loadingService.show();
+    let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
+    await this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then((res: any) => {
+      this.loadingService.dismiss();
       let typeIdFound = false;
       if (res) {
         this.selectedJobPreferences = res;
         if (isDetailPage) {
-          await this.logicForValidToApplyJob(res, typeIdFound);
+          this.logicForValidToApplyJob(res, typeIdFound);
         }
       }
-    }).catch((err: any) => {
-      this.errorInApiCall = true;
+    }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
       console.log(err)
     })
   }
 
   // Login user eligible for apply job or not that logic set here
   async logicForValidToApplyJob(res, typeIdFound) {
-    for (let pref of res.content[0].jobTypePreferences) {
+    for (let pref of res.content[0]?.jobTypePreferences) {
       if (pref.typeId == this.selectedJobDetails?.jobTypeId) {
         typeIdFound = true;
-        if (this.selectedJobDetails.jobSeekerPaymentInfo.level == 'Expert') {
+        if (this.selectedJobDetails?.jobSeekerPaymentInfo?.level == 'Expert') {
           if (pref.level == 'Expert')
             this.goToSetHourlyRate();
           else {
@@ -97,7 +150,7 @@ export class AvailableJobsService {
             return;
           }
         }
-        else if (this.selectedJobDetails?.jobSeekerPaymentInfo.level == 'Intermediate') {
+        else if (this.selectedJobDetails?.jobSeekerPaymentInfo?.level == 'Intermediate') {
           if (pref.level == 'Intermediate' || pref.level == 'Expert')
             this.goToSetHourlyRate();
           else {
@@ -105,7 +158,7 @@ export class AvailableJobsService {
             return;
           }
         }
-        else if (this.selectedJobDetails?.jobSeekerPaymentInfo.level == 'Beginner') {
+        else if (this.selectedJobDetails?.jobSeekerPaymentInfo?.level == 'Beginner') {
           this.goToSetHourlyRate();
         }
         else {
@@ -132,17 +185,18 @@ export class AvailableJobsService {
 
   // Logic for start and endtime check 
   async betweenTimeCheck(): Promise<boolean> {
+    const loginUserId = await this.storage.get('loginUserId');
     let isFound = false;
-    const jobDates = this.selectedJobDetails.dates.map(date => ({
-      timeFrom: DateTime.local(date.date[0], date.date[1], date.date[2], date.timeFrom[0], date.timeFrom[1]),
-      timeTo: DateTime.local(date.date[0], date.date[1], date.date[2], date.timeTo[0], date.timeTo[1])
+    const jobDates = this.selectedJobDetails?.dates.map(date => ({
+      timeFrom: DateTime.local(date?.date[0], date?.date[1], date?.date[2], date?.timeFrom[0], date?.timeFrom[1]),
+      timeTo: DateTime.local(date?.date[0], date?.date[1], date?.date[2], date?.timeTo[0], date?.timeTo[1])
     }));
-    let params = localStorage.getItem('loginUserId') + '?sort=createdOn,desc&page=0&size=10000&status=APPROVED'
-    await this.commonProvider.GetMethod(Apiurl.GetMyJobsByLoginUserId + params, null).then(async (res: any) => {
+    let params = loginUserId + '?sort=createdOn,desc&page=0&size=10000&status=APPROVED'
+    await this.commonProvider.GetMethod(Apiurl.GetMyJobs + params, null).then(async (res: any) => {
       await res.forEach(job => {
         job.dates.forEach(date => {
-          const jobDateStart = DateTime.local(date.date[0], date.date[1], date.date[2], date.timeFrom[0], date.timeFrom[1]);
-          const jobDateEnd = DateTime.local(date.date[0], date.date[1], date.date[2], date.timeTo[0], date.timeTo[1]);
+          const jobDateStart = DateTime.local(date?.date[0], date?.date[1], date?.date[2], date?.timeFrom[0], date?.timeFrom[1]);
+          const jobDateEnd = DateTime.local(date?.date[0], date?.date[1], date?.date[2], date?.timeTo[0], date?.timeTo[1]);
           jobDates.forEach(jobDates => {
             if ((jobDateStart >= jobDates.timeFrom && jobDateStart <= jobDates.timeTo) || (jobDateEnd >= jobDates.timeFrom && jobDateEnd <= jobDates.timeTo)) {
               return isFound = true;
@@ -151,37 +205,41 @@ export class AvailableJobsService {
         });
       });
 
-    }).catch(err => {
+    }).catch((err: HttpErrorResponse) => {
 
     })
     return isFound;
   }
 
   // update hourly rates
-  async updateHourlyRateRange(hourlyRate, isApplyLater) {
-    return await this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPref.id, { jobTypeHourlyRateRequests: this.jobPref?.jobTypePreferences }).then(async (res: any) => {
+  updateHourlyRateRange(hourlyRate, isApplyLater) {
+    this.loadingService.show();
+    this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPref.id, { jobTypeHourlyRateRequests: this.jobPref?.jobTypePreferences }).then((res: any) => {
+      this.loadingService.dismiss();
       if (res) {
-        this.errorInApiCall = false;
         this.submitJobApplication(hourlyRate, isApplyLater);
       }
-    }).catch((err: any) => {
-      this.errorInApiCall = true;
+    }).catch((err: HttpErrorResponse) => {
       console.log(err)
+      this.loadingService.dismiss();
     })
   }
 
   // Apply for job & submit job application
   async submitJobApplication(hourlyRate, isApplyLater) {
+    const loginUserId = await this.storage.get('loginUserId');
+    const loginUserGender = await this.storage.get('loginUserGender');
+    this.loadingService.show();
     let application: JobApplication = new JobApplication();
     application.employmentId = this.selectedJobId
-    application.jobSeekerId = localStorage.getItem('loginUserId');
+    application.jobSeekerId = loginUserId;
     application.isApplyLater = isApplyLater;
-    application.hourlyRate = hourlyRate;
-    application.gender = localStorage.getItem('loginUserGender');
+    application.hourlyRate = hourlyRate || 0;
+    application.gender = loginUserGender;
 
-    return await this.commonProvider.PostMethod(Apiurl.SubmitJobApplication, application).then(async (res: any) => {
+    this.commonProvider.PostMethod(Apiurl.SubmitJobApplication, application).then(async (res: any) => {
+      this.loadingService.dismiss();
       if (res && res.id) {
-        this.errorInApiCall = false;
         if (!isApplyLater) {
           let obj = {
             title: "Job application successful",
@@ -216,9 +274,49 @@ export class AvailableJobsService {
           await modal.present();
         }
       }
-    }).catch((err: any) => {
-      this.errorInApiCall = true;
+    }).catch((err: HttpErrorResponse) => {
       console.log(err)
+      this.loadingService.dismiss();
     })
+  }
+
+  //Remove Bookmarked
+  removeBookMark() {
+    if (this.jobApplicationId) {
+      this.commonProvider.PutMethod(Apiurl.RemoveBookMark + this.jobApplicationId, null).then((res: any) => {
+        this.getSelectedJobById();
+      }).catch((err: HttpErrorResponse) => {
+        console.log(err)
+      })
+    } else {
+    }
+  }
+
+  // Share job details to Whatsapp
+  async shareSelectedJobDetails() {
+    let pageUrl = encodeURIComponent(this.router.url);
+    let jobType = encodeURIComponent(this.selectedJobDetails?.jobTypeName);
+
+    // send message in App whatsapp
+    // window.open("https://api.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20https%3A%2F%2Fappuat.hour4u.com" + pageUrl);
+
+    // send message in Web whatsapp
+    if (Capacitor.getPlatform() == 'web') {
+      window.open("https://web.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20https%3A%2F%2Fappuat.hour4u.com" + pageUrl);
+    }
+
+    // send message in social share
+    if (Capacitor.getPlatform() !== 'web') {
+      await Share.share({
+        title: jobType,
+        text: 'Hey! I found ' + this.selectedJobDetails?.jobTypeName + ' job on Hour4U. check it out here 👇',
+        url: 'https://appuat.hour4u.com' + this.router.url,
+        dialogTitle: 'hour4u.com',
+      }).then(res => {
+        console.log(res)
+      }).catch(err => {
+        console.log(err)
+      });
+    }
   }
 }

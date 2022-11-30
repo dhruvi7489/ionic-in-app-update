@@ -1,0 +1,34 @@
+<app-my-earnings-header [headerTitle]="'Withdraw'" [showBackBtn]="true" [showContactIcon]="false" [isModal]="true">
+</app-my-earnings-header>
+
+<ion-content>
+  <div class="c-container-body mt-24 ml-16 mr-16 mb-16">
+    <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">How much amount you would like to withdraw?
+    </div>
+
+    <div class="mb-24 mt-24">
+      <div class="secondary fw-500 sub-heading-sm secondary mt-16 mb-8">
+        <ion-label>Available amount to withdraw</ion-label>
+      </div>
+      <custom-input [inputType]="'tel'" [placeholder]="'Available amount to withdraw'"
+        [ngModelData]="myEarningsService.avilableAmountForWithdraw" [id]="'avilableAmountForWithdraw'"
+        (keyUp)="getAvilableAmount($event)">
+      </custom-input>
+    </div>
+
+    <div class="secondary fw-500 sub-heading-sm secondary mt-16 mb-8">
+      <ion-label>Amount you want to withdraw*</ion-label>
+    </div>
+    <custom-input [inputType]="'tel'" [placeholder]="'Amount you want to withdraw'"
+      [ngModelData]="myEarningsService.wantAmountForWithdraw" [id]="'wantAmountForWithdraw'"
+      (keyUp)="getWantToWithdrawAmount($event)">
+    </custom-input>
+    <div *ngIf="myEarningsService.wantAmountForWithdraw > myEarningsService.avilableAmountForWithdraw"
+      class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Account number not match </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <custom-button [title]="'Save'" (btnClick)="withdrawAmount()" [disabled]="disable()" [button]="'primary'">
+  </custom-button>
+</ion-footer>

@@ -19,6 +19,16 @@ export class OnboardingOtpPage implements OnInit {
   ngOnInit() {
   }
 
+  ionViewWillEnter() {
+    this.onboardingService.otp = null;
+    this.onboardingService.otp_input_1 = null;
+    this.onboardingService.otp_input_2 = null;
+    this.onboardingService.otp_input_3 = null;
+    this.onboardingService.otp_input_4 = null;
+    this.onboardingService.otp_input_5 = null;
+    this.onboardingService.otp_input_6 = null;
+  }
+
   otpEnter(otp) {
     this.onboardingService.otp = otp;
     let otpArray = otp.split("");

@@ -1,4 +1,5 @@
 import { Location } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Geolocation } from '@capacitor/geolocation';
@@ -21,37 +22,44 @@ export class LocationService {
     ) {
         Geolocation.checkPermissions().then(async (res) => {
             if (res.location == "denied") {
+                this.locationPermissionGranted = false;
                 await this.requestLocationPermission();
             }
             if (res.location == "granted") {
                 this.locationPermissionGranted = true;
             }
-        }).catch(err => {
-            this.toastService.showMessage(err)
+        }).catch((err: HttpErrorResponse) => {
+            this.toastService.showMessage(err.message)
         })
     }
 
-    async requestLocationPermission() {
+    async requestLocationPermission(showErrorMsg = true) {
         Geolocation.requestPermissions().then(async (res) => {
             if (res.location == 'granted') {
                 this.locationPermissionGranted = true;
-                this.getCurrentLocationPosition();
+                this.getCurrentLocationPosition(showErrorMsg);
                 setInterval(async () => {
-                    this.getCurrentLocationPosition();
+                    this.getCurrentLocationPosition(showErrorMsg);
                 }, 5000)
+            } else {
+                this.locationPermissionGranted = false;
             }
-        }).catch(err => {
-            this.toastService.showMessage(err)
+        }).catch((err: HttpErrorResponse) => {
+            this.toastService.showMessage(err.message)
         })
     }
 
-    async getCurrentLocationPosition() {
-        Geolocation.getCurrentPosition().then(res => {
+    async getCurrentLocationPosition(showErrorMsg) {
+        this.locationCordinates = null;
+        Geolocation.getCurrentPosition().then((res: any) => {
+            console.log(res)
             this.locationCordinates = res;
             this.setLocationCordinates(res);
-        }).catch(err => {
+        }).catch((err: HttpErrorResponse) => {
             this.setLocationCordinates(null);
-            this.toastService.showMessage(err)
+            if (showErrorMsg) {
+                this.toastService.showMessage(err.message)
+            }
         })
     }
 

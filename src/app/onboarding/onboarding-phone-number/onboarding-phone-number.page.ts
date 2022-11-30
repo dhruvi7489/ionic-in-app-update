@@ -1,7 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastService } from 'src/app/services/toast.service';
 import { OnboardingService } from '../onboarding.service';
+// declare var MediaRecorder: any;
+
+import { CommonProvider } from 'src/app/core/common';
+// import { Base64 } from '@ionic-native/base64';
 
 @Component({
   selector: 'app-onboarding-phone-number',
@@ -9,35 +13,39 @@ import { OnboardingService } from '../onboarding.service';
   styleUrls: ['./onboarding-phone-number.page.scss'],
 })
 export class OnboardingPhoneNumberPage implements OnInit {
-  @Output() openOnboardingOtpPage = new EventEmitter();
-
+  data = null;
   constructor(
     private toastService: ToastService,
     public onboardingService: OnboardingService,
-    public router: Router
+    public router: Router,
+    // private base64: Base64
   ) {
   }
 
   ngOnInit() {
   }
 
+  ionViewWillEnter() {
+    this.data = "All API calls mentioned in this guide must be authenticated with an access token. Developers can authenticate their API calls with the access token generated in the App Dashboard >"
+  }
+
   onKeyUp(event) {
     this.onboardingService.mobile = event.ngModelData;
   }
 
-  openOTPPage() {
+  async openOTPPage() {
+    // window.open('https://wa.me/7048450515', "_blank");
+    // window.open('https://api.whatsapp.com/send?phone=91' + this.onboardingService.mobile + '&amp;' + 'text=' + this.data, "_blank");
     const phoneno = /^\d{10}$/;
     if (!this.onboardingService.mobile.match(phoneno)) {
       this.toastService.showMessage('Please enter a valid mobile number');
       return false;
     } else {
-      this.router.navigateByUrl('onboarding/onboarding-otp');
       this.onboardingService.sendOtp().then(res => {
         console.log(res)
       }).catch(err => {
 
       });
-      this.openOnboardingOtpPage.emit(this.onboardingService.mobile);
     }
   }
 }

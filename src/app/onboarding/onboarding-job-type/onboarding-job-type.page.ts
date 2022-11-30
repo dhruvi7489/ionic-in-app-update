@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ProfileService } from 'src/app/profile/profile.service';
 import { OnboardingService } from '../onboarding.service';
 
 @Component({
@@ -8,103 +9,29 @@ import { OnboardingService } from '../onboarding.service';
   styleUrls: ['./onboarding-job-type.page.scss'],
 })
 export class OnboardingJobTypePage implements OnInit {
-  counter: any[] = [
-    {
-      active: false,
-      page: "PhoneNumberPage"
-    },
-    {
-      active: false,
-      page: "OtpPage"
-    },
-    {
-      active: false,
-      page: "PersonalInfoPage"
-    },
-    {
-      active: false,
-      page: "ProfilePicturePage"
-    },
-    {
-      active: false,
-      page: "JobTypePage"
-    }
-  ];
-
-
-  counter1: any[] = [
-    {
-      active: false,
-      page: "PhoneNumberPage"
-    },
-    {
-      active: false,
-      page: "OtpPage"
-    },
-    {
-      active: false,
-      page: "PersonalInfoPage"
-    },
-    {
-      active: false,
-      page: "ProfilePicturePage"
-    },
-    {
-      active: false,
-      page: "JobTypePage"
-    }
-  ];
-  disabled = true;
-
-
   constructor(
     public onboardingService: OnboardingService,
-    public router: Router
+    public router: Router,
+    public profileService: ProfileService
   ) { }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  async ionViewWillEnter() {
     this.onboardingService.isJobTypeFirstPage = true;
     this.onboardingService.showExperience = false;
-    this.checkCounterActive();
-    this.onboardingService.getJobCategory();
-    this.addLinks(0);
+    await this.onboardingService.getJobCategory();
+    await this.onboardingService.checkCounterActive();
+    await this.onboardingService.getPersonalInfo(0);
   }
 
-  addMarketing(data) {
+  addSubJobCategory(data) {
     data.active = !data.active;
-    this.checkCounterActive();
+    this.onboardingService.checkCounterActive();
   }
 
-  // updateMarketing(data) {
-  //   data.active = false;
-  //   this.checkCounterActive();
-  // }
-
-  addVideoProduction(data) {
-    data.active = !data.active;
-    this.checkCounterActive();
-  }
-
-  // updateVideoProduction(data) {
-  //   data.active = false;
-  //   this.checkCounterActive();
-  // }
-
-  checkCounterActive() {
-    this.disabled = true;
-    this.counter.forEach(ele => {
-      if (ele.active) {
-        this.disabled = false;
-      }
-    })
-    this.counter1.forEach(ele => {
-      if (ele.active) {
-        this.disabled = false;
-      }
-    })
-  }
-
-  experienceAdd() {
+  saveJobTypes() {
+    this.onboardingService.saveJobTypes();
     this.onboardingService.isJobTypeFirstPage = false;
     if (this.onboardingService.showExperience == false) {
       this.onboardingService.showExperience = true;
@@ -125,6 +52,7 @@ export class OnboardingJobTypePage implements OnInit {
   }
 
   addLinks(i) {
+    console.log(this.onboardingService.links)
     let obj;
     if (this.onboardingService.links.length < 3) {
       obj = {
@@ -143,6 +71,7 @@ export class OnboardingJobTypePage implements OnInit {
         }
         this.onboardingService.links[i] = obj
       }
+      console.log(this.onboardingService.links)
     }
   }
 
@@ -151,10 +80,14 @@ export class OnboardingJobTypePage implements OnInit {
   }
 
   skip() {
-    this.router.navigateByUrl('tabs/available-jobs');
+    this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
   }
 
   continue() {
-    this.onboardingService.SaveExperience();
+    if (this.onboardingService.loginUserPersonalInfo?.workExperiences && this.onboardingService.loginUserPersonalInfo?.workExperiences?.length != 0) {
+      this.onboardingService.editExperience(0);
+    } else {
+      this.onboardingService.addExperience();
+    }
   }
 }

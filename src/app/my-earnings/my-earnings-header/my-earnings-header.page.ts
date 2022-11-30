@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { MyEarningsService } from '../my-earnings.service';
 
 @Component({
@@ -12,6 +13,7 @@ export class MyEarningsHeaderPage implements OnInit {
   @Input() headerTitle?: string = "";
   @Input() showBackBtn?: boolean = false;
   @Input() showContactIcon?: boolean = false;
+  @Input() isModal?: boolean = false;
 
   search: string = "";
 
@@ -19,7 +21,8 @@ export class MyEarningsHeaderPage implements OnInit {
 
   constructor(
     public location: Location,
-    public myEarningsService: MyEarningsService
+    public myEarningsService: MyEarningsService,
+    public modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
@@ -31,7 +34,11 @@ export class MyEarningsHeaderPage implements OnInit {
   }
 
   back() {
-    this.location.back();
+    if (this.isModal) {
+      this.modalCtrl.dismiss();
+    } else {
+      this.location.back();
+    }
   }
 
   goToContact() {

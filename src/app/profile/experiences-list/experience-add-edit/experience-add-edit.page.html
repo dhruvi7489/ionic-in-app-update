@@ -1,0 +1,56 @@
+<app-profile-header [headerTitle]="profileService.editWorkExperienceFlag ? 'Edit Experience' : 'Add Experience'"
+  [showBackBtn]="true" [isModal]="true">
+</app-profile-header>
+
+<ion-content class="container">
+  <div class="c-container-body mt-24 ml-16 mr-16">
+    <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Share work experiences</div>
+    <div class="c-input-label secondary mt-24 mb-8">
+      <ion-label class="sub-heading-sm bold-graphik-font secondary fw-500">Title and description
+      </ion-label>
+    </div>
+    <custom-input [inputType]="'textarea'" [placeholder]="'Description'"
+      [ngModelData]="profileService.experienceDescription" [id]="'experienceDescription'" [rows]="'5'"
+      (keyUp)="addExperienceDescription($event)" [maxlength]="profileService.maxlengthExperienceDescription">
+    </custom-input>
+    <div class="sub-heading-sm ternary fw-400 mt-8">
+      {{profileService.leftCharactersExperienceDescription}} characters left</div>
+
+    <div class="c-input-label secondary mt-16 mb-8">
+      <ion-label class="sub-heading-sm bold-graphik-font secondary fw-500">{{profileService.editWorkExperienceFlag ?
+        'link' :
+        'Add link'}}
+      </ion-label>
+    </div>
+    <div *ngFor="let link of profileService.links; let i=index;" [ngClass]="{'mt-10': profileService.links.length > 1}">
+      <custom-input [inputType]="'text'" [placeholder]="'Link'" [ngModelData]="link.url" (keyUp)="addLink($event)"
+        [id]="link.id" [imgPath]="link.imgPath" [imgPath1]="link.imgPath1" (imgPathIconClick)="addNewLink(i)"
+        (imgPath1IconClick)="minusNewLink(i)">
+      </custom-input>
+    </div>
+    <!-- <div class="d-flex mt-10">
+        <div>
+          <ion-icon name="add" class="add-more-icon"></ion-icon>
+        </div>
+        <div class="add-more">Add more</div>
+      </div> -->
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-row class="delete-btn" *ngIf="profileService.editWorkExperienceFlag">
+    <ion-col class="p-0" size="12" (click)="deleteExperience()">
+      <div class="d-flex justify-content-center h-48">
+        <img src="../../../../assets/imgs/Iconsax/Svg/All/outline/close-red.svg" height="20px" width="20px"
+          class="ion-align-self-center">
+        <div class="ml-8 ion-align-self-center fw-500 sub-heading-md"> Delete Experience </div>
+      </div>
+    </ion-col>
+  </ion-row>
+
+  <div [ngClass]="{'mt-12': profileService.editWorkExperienceFlag}">
+    <custom-button [title]="'Save'" (btnClick)="saveExperience()" [button]="'primary'"
+      [disabled]="!profileService.experienceDescription">
+    </custom-button>
+  </div>
+</ion-footer>

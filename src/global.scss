@@ -40,6 +40,8 @@
 
 :host {
     font-family: "Graphik" !important;
+    --padding-start: 0px !important;
+    --padding-end: 0px !important;
 }
 
 html {
@@ -100,6 +102,10 @@ ion-tab-bar {
 
 .warning {
     color: var(--ion-color-warning);
+}
+
+.danger {
+    color: var(--ion-color-danger);
 }
 
 .backgroud-color {
@@ -359,6 +365,10 @@ ion-tab-bar {
     justify-content: center;
 }
 
+.justify-content-end {
+    justify-content: end;
+}
+
 .d-flex {
     display: flex;
 }
@@ -383,6 +393,10 @@ ion-tab-bar {
     position: absolute;
 }
 
+.position-relative {
+    position: relative;
+}
+
 .inner-scroll {
     height: calc(100% - 175px) !important;
 }
@@ -390,13 +404,17 @@ ion-tab-bar {
 ion-footer {
     bottom: 0px;
     min-height: 64px;
-    padding: 16px 16px 0px 16px;
+    padding: 16px 16px 16px 16px;
     background: #fff;
     border: 1px solid #E8E8E8;
 }
 
 .w-100 {
     width: 100%;
+}
+
+.h-100 {
+    height: 100%;
 }
 
 ion-chip {
@@ -471,7 +489,62 @@ ion-segment-button {
     }
 }
 
-.upcoming-bedge {
+.approved-bedge {
+    padding: 2px 8px;
+    height: 22px;
+    background: var(--ion-color-primary-shade);
+    border-radius: 32px;
+
+    label {
+        color: var(--ion-color-primary);
+    }
+}
+
+.pending-inreview-bedge {
+    padding: 2px 8px;
+    height: 22px;
+    background: var(--ion-color-warning-1-shade);
+    border-radius: 32px;
+
+    label {
+        color: var(--ion-color-warning-1);
+    }
+}
+
+.standBy-bedge {
+    padding: 2px 8px;
+    height: 22px;
+    background: var(--ion-color-primary-shade);
+    border-radius: 32px;
+
+    label {
+        color: var(--ion-color-primary);
+    }
+}
+
+.rejected-bedge {
+    padding: 2px 8px;
+    height: 22px;
+    background: var(--ion-color-primary-shade);
+    border-radius: 32px;
+
+    label {
+        color: var(--ion-color-primary);
+    }
+}
+
+.unwilling-bedge {
+    padding: 2px 8px;
+    height: 22px;
+    background: var(--ion-color-primary-shade);
+    border-radius: 32px;
+
+    label {
+        color: var(--ion-color-primary);
+    }
+}
+
+.apply-later-bedge {
     padding: 2px 8px;
     height: 22px;
     background: var(--ion-color-primary-shade);
@@ -491,10 +564,18 @@ ion-segment-button {
 .action-sheet-group {
     margin: 0px 16px 16px 16px;
     padding: 8px 0px 8px 0px;
-    background: #FFFFFF;
+    background: #FFFFFF !important;
     border: 1px solid #E8E8E8;
-    box-shadow: 0px 4px 8px -2px rgb(26 26 26 / 10%), 0px 2px 4px -2px rgb(26 26 26 / 6%);
-    border-radius: 8px;
+    box-shadow: 0px 4px 8px -2px rgba(26, 26, 26, 0.1), 0px 2px 4px -2px rgba(26, 26, 26, 0.06);
+    border-radius: 12px;
+    --background: #fff;
+
+    .action-sheet-title {
+        color: var(--ion-color-secondary);
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+    }
 
     .action-sheet-button {
         padding: 12px 20px 12px 20px;
@@ -529,10 +610,11 @@ ion-segment-button {
 }
 
 .action-sheet-group-cancel {
-    margin: 0px 16px 16px 16px;
+    margin: 0px 16px 0px 16px;
     padding: unset;
     border: 1px solid #E6E7EE;
     border-radius: 12px;
+    --background: #fff;
 
     .action-sheet-cancel {
         .action-sheet-button-inner {
@@ -572,4 +654,34 @@ ion-backdrop {
         color: var(--ion-color-primary) !important;
         --color: var(--ion-color-primary) !important;
     }
+}
+
+.button-native {
+    padding: 0px !important;
+    padding-inline-start: 0px !important;
+    padding-inline-end: 0px !important;
+    --padding-start: 0px !important;
+    --padding-end: 0px !important;
+}
+
+#custom-tab {
+    ion-tab-button {
+        a {
+            padding: 0px !important;
+            padding-inline-start: 0px !important;
+            padding-inline-end: 0px !important;
+            --padding-start: 0px !important;
+            --padding-end: 0px !important;
+        }
+    }
+}
+
+.counter-bedge {
+    background: #E6E7EE;
+    border-radius: 32px;
+}
+
+ion-tab-button::part(native) {
+    padding-inline-start: 0px !important;
+    padding-inline-end: 0px !important;
 }

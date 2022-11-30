@@ -9,11 +9,11 @@
     <div class="content-wrap-inner">
       <div class="ml-16 mr-16 pt-16">
         <custom-input [inputType]="'textarea'" [placeholder]="'Description'"
-          [ngModelData]="onboardingService.description" [id]="'description'" [rows]="'5'"
-          (keyUp)="addDescription($event)" [maxlength]="onboardingService.maxlengthDescription">
+          [ngModelData]="activeJobService.workPictureDescription" [id]="'description'" [rows]="'5'"
+          (keyUp)="addDescription($event)" [maxlength]="activeJobService.maxlengthworkPictureDescription">
         </custom-input>
         <div class="sub-heading-sm ternary fw-400 mt-8 ml-4">
-          {{onboardingService.leftCharacters}} characters left</div>
+          {{activeJobService.leftworkPictureDescriptionCharacters}} characters left</div>
       </div>
     </div>
   </div>

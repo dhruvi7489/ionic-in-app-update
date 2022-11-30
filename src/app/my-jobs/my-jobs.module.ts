@@ -9,6 +9,7 @@ import { MyJobsPageRoutingModule } from './my-jobs-routing.module';
 import { MyJobsPage } from './my-jobs.page';
 import { MyJobsHeaderPageModule } from './my-jobs-header/my-jobs-header.module';
 import { PipesModule } from '../core/pipes/pipes.module';
+import { CustomButtonModule } from 'w4u-custom-components';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { PipesModule } from '../core/pipes/pipes.module';
     IonicModule,
     MyJobsPageRoutingModule,
     MyJobsHeaderPageModule,
-    PipesModule
+    PipesModule,
+    CustomButtonModule
   ],
   declarations: [MyJobsPage]
 })

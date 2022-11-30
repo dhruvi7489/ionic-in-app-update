@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage';
 import { JobUtilervice } from 'src/app/core/util/job-util.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { AvailableJobsService } from '../available-jobs.service';
 
 @Component({
@@ -18,29 +20,53 @@ export class AvailableJobDetailsPage implements OnInit {
     public router: Router,
     public availableJobsService: AvailableJobsService,
     public jobUtilService: JobUtilervice,
+    public toastService: ToastService,
+    public storage: Storage
   ) { }
 
   ngOnInit() {
   }
 
-  async ionViewWillEnter() {
+  ionViewWillEnter() {
     this.btnTitle = "Apply";
-    await this.availableJobsService.getSelectedJobById();
-    await this.getTotal();
+    this.availableJobsService.getSelectedJobById();
   }
 
-  async getTotal() {
+  getMinTotal() {
     this.minTotal = 0;
+    this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
+      const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
+      this.minTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate * hours));
+    });
+    return this.minTotal;
+  }
+
+  getMaxTotal() {
     this.maxTotal = 0;
     this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
-      const hours = this.jobUtilService.hoursOfJob(date.timeFrom, date.timeTo);
-      this.minTotal = this.minTotal + Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate * hours));
-      this.maxTotal = this.maxTotal + Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate * hours));
+      const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
+      this.maxTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate * hours));
     });
+    return this.maxTotal;
   }
 
   async applyForJob() {
-    await this.availableJobsService.applyForSelectedJob(true);
+    const loginUserInfo = await this.storage.get('loginUserInfo');
+    console.log(JSON.parse(loginUserInfo)?.status, this.availableJobsService.selectedJobDetails)
+    if (JSON.parse(loginUserInfo)?.status != 'Active') {
+      this.toastService.showMessage(`You can't apply to this job now, please wait for approval.`)
+      return;
+    }
+    // if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
+    //   await this.availableJobsService.JobPreference(true);
+    // }
+    // else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
+    //   this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
+    //   return;
+    // }
+    else {
+      await this.availableJobsService.JobPreference(true);
+    }
   }
 
   disableApplyJobBtn() {
@@ -48,7 +74,8 @@ export class AvailableJobDetailsPage implements OnInit {
       || this.availableJobsService.selectedJobDetails?.applicationStatus == 'IN_REVIEW'
       || this.availableJobsService.selectedJobDetails?.applicationStatus == 'STAND_BY'
       || this.availableJobsService.selectedJobDetails?.applicationStatus == 'APPROVED'
-      || this.availableJobsService.selectedJobDetails?.applicationStatus == 'REJECTED') {
+      || this.availableJobsService.selectedJobDetails?.applicationStatus == 'REJECTED'
+      || this.availableJobsService.selectedJobDetails?.applicationStatus == 'COMPLETED') {
       this.btnTitle = "Applied";
       return true;
     } else {
@@ -58,13 +85,27 @@ export class AvailableJobDetailsPage implements OnInit {
   }
 
   async bookmarkJob() {
-    if (this.availableJobsService.selectedJobPreferences) {
-      await this.jobBookMark();
-    } else {
-      await this.availableJobsService.applyForSelectedJob(false);
-      await this.jobBookMark();
+    const loginUserInfo = await this.storage.get('loginUserInfo');
+    console.log(JSON.parse(loginUserInfo)?.status, this.availableJobsService.selectedJobDetails)
+    if (JSON.parse(loginUserInfo)?.status != 'Active') {
+      this.toastService.showMessage(`You can't save this job now, please wait for approval.`)
+      return;
     }
-
+    // if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
+    //   await this.availableJobsService.JobPreference(true);
+    // }
+    // else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
+    //   this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
+    //   return;
+    // }
+    else {
+      if (this.availableJobsService.selectedJobPreferences) {
+        await this.jobBookMark();
+      } else {
+        await this.availableJobsService.JobPreference(false);
+        await this.jobBookMark();
+      }
+    }
   }
 
   async jobBookMark() {
@@ -78,4 +119,7 @@ export class AvailableJobDetailsPage implements OnInit {
     })
   }
 
+  async removeBookmark() {
+    await this.availableJobsService.removeBookMark();
+  }
 }

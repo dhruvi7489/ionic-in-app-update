@@ -1,6 +1,4 @@
 ion-content {
-    background: #E8E8E8 !important;
-
     .c-container-wrap {
         .c-card-wrap {
             background: #FFFFFF;
@@ -15,5 +13,9 @@ ion-content {
                 max-width: none;
             }
         }
+    }
+
+    .h-540 {
+        height: 540px;
     }
 }

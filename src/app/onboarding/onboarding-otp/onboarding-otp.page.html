@@ -33,7 +33,7 @@
 </ion-footer> -->
 
 <ion-footer>
-  <custom-button [title]="'Next'" (btnClick)="sendOtp()" [disabled]="onboardingService.otp.length != 6"
+  <custom-button [title]="'Next'" (btnClick)="sendOtp()" [disabled]="onboardingService.otp?.length != 6"
     [button]="'primary'">
   </custom-button>
 </ion-footer>

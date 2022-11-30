@@ -16,7 +16,7 @@ export class AvailableJobsPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
+    // this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
   }
 
 }

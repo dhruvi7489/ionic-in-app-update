@@ -1,7 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CameraSource } from '@capacitor/camera';
-import { OnboardingService } from 'src/app/onboarding/onboarding.service';
 import { ActiveJobService } from '../active-job.service';
 
 @Component({
@@ -12,16 +11,19 @@ import { ActiveJobService } from '../active-job.service';
 export class UploadWorkPhotoViewPage implements OnInit {
 
   constructor(
-    public onboardingService: OnboardingService,
     public activeJobService: ActiveJobService,
   ) { }
 
   ngOnInit() {
   }
 
+  ionViewWillEnter() {
+    this.activeJobService.workPictureDescription = null;
+  }
+  
   addDescription(event) {
-    this.onboardingService.description = event.ngModelData;
-    this.onboardingService.leftCharacters = this.onboardingService.maxlengthDescription - this.onboardingService.description.length;
+    this.activeJobService.workPictureDescription = event.ngModelData;
+    this.activeJobService.leftworkPictureDescriptionCharacters = this.activeJobService.maxlengthworkPictureDescription - this.activeJobService.workPictureDescription.length;
   }
 
   async retake() {

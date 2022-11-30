@@ -1,18 +1,18 @@
 <app-available-jobs-header [showSearch]="true" [headerTitle]="'Available jobs'" [showBackBtn]="false"
-    [counts]="availableJobsService.jobLists.length" (searchData)="searchAvailableJobs($event)" [showProfileLogo]="true">
+    [counts]="availableJobsService?.totalAvailableRecords" (searchData)="searchAvailableJobs($event)"
+    [showProfileLogo]="true">
 </app-available-jobs-header>
 
 <ion-content>
-
     <ion-refresher close-duration="20ms" pullFactor="0.5" pullMin="50" pullMax="100" slot="fixed"
         (ionRefresh)="doRefresh($event)" style="position: absolute;">
         <ion-refresher-content refreshingSpinner="lines"></ion-refresher-content>
     </ion-refresher>
 
-    <div class="c-container-wrap pt-20 pb-20"
-        [ngClass]="{'backgroud-color': availableJobsService.jobLists?.length != 0}">
-        <div class="data-not-found-wrap"
-            *ngIf="availableJobsService.jobLists.length == 0 && !availableJobsService.errorInApiCall">
+    <div class="c-container-wrap"
+        [ngClass]="{'backgroud-color': availableJobsService?.jobLists?.length != 0 , 'h-540' : availableJobsService?.jobLists?.length != 0 && availableJobsService?.jobLists?.length <= 2}">
+        <div class="data-not-found-wrap pt-20 pb-20"
+            *ngIf="availableJobsService?.jobLists.length == 0 && !availableJobsService?.errorInApiCall">
             <div class="pb-0">
                 <ion-row>
                     <ion-col size="12">
@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <div class="data-not-found-wrap" *ngIf="availableJobsService.errorInApiCall">
+        <div class="data-not-found-wrap pt-20 pb-20" *ngIf="availableJobsService?.errorInApiCall">
             <div class="pb-0">
                 <ion-row>
                     <ion-col size="12">
@@ -70,62 +70,79 @@
             </div>
         </div>
 
-        <div *ngFor="let job of availableJobsService.jobLists;let i = index;" [ngClass]="{'mt-12' : i != 0}">
-            <ion-card class="c-card-wrap" (click)="goToJobDetails(job)">
-                <ion-card-header class="pt-16 pb-0 pr-16 pl-16 card-wrap-header">
-                    <ion-row class="bottom-border pb-12">
-                        <ion-col size="6" class="pl-0 pr-0">
-                            <div class="secondary fw-500 sub-heading-sm ion-text-capitalize">
-                                {{job.employmentTitle ? job.employmentTitle : job.title}}</div>
-                        </ion-col>
-                        <ion-col size="6" class="pl-0 pr-0">
-                            <div class="d-flex ion-float-right">
-                                <div class="primary fw-500 sub-heading-sm pr-4">
-                                    &#x20b9;{{job.jobSeekerPaymentInfo.minRate}} -
-                                    &#x20b9;{{job.jobSeekerPaymentInfo.maxRate}} </div>
-                                <div class="fw-400 ternary sub-heading-sm"> /hour</div>
-                            </div>
-                        </ion-col>
-                    </ion-row>
-                </ion-card-header>
+        <div class="pt-20 pb-20" *ngIf="availableJobsService?.jobLists?.length != 0">
+            <div *ngFor="let job of availableJobsService?.jobLists;let i = index;" [ngClass]="{'mt-12' : i != 0}">
+                <ion-card class="c-card-wrap" (click)="goToJobDetails(job)">
+                    <ion-card-header class="pt-16 pb-0 pr-16 pl-16 card-wrap-header">
+                        <ion-row class="bottom-border pb-12">
+                            <ion-col size="6.5" class="p-0">
+                                <div class="secondary fw-500 sub-heading-sm ion-text-capitalize">
+                                    {{job.employmentTitle ? job.employmentTitle : job.title}}</div>
+                            </ion-col>
+                            <ion-col size="5.5" class="p-0">
+                                <div class="d-flex ion-float-right">
+                                    <div class="primary fw-500 sub-heading-sm pr-4">
+                                        &#x20b9;{{job?.jobSeekerPaymentInfo?.minRate}} -
+                                        &#x20b9;{{job?.jobSeekerPaymentInfo?.maxRate}} </div>
+                                    <div class="fw-400 ternary sub-heading-sm"> /hour</div>
+                                </div>
+                            </ion-col>
+                        </ion-row>
+                    </ion-card-header>
 
-                <ion-card-content class="mt-12 pb-16 pr-16 pl-16 card-wrap">
-                    <ion-row>
-                        <ion-col size="12" class="p-0">
-                            <div class="d-flex">
-                                <div class="pr-8">
-                                    <img src="../../assets/imgs/Iconsax/Svg/All/outline/location.svg">
+                    <ion-card-content class="mt-12 pb-16 pr-16 pl-16 card-wrap">
+                        <ion-row>
+                            <ion-col size="12" class="p-0">
+                                <div class="d-flex">
+                                    <div class="pr-8">
+                                        <img src="../../assets/imgs/Iconsax/Svg/All/outline/location.svg">
+                                    </div>
+                                    <div class="ternary sub-heading-xs fw-400">
+                                        {{job?.location?.address | Description : 100}}
+                                    </div>
                                 </div>
-                                <div class="ternary sub-heading-xs fw-400">
-                                    {{job.location.address | Description : 100}}
-                                </div>
-                            </div>
-                        </ion-col>
-                    </ion-row>
+                            </ion-col>
+                        </ion-row>
 
-                    <ion-row class="pt-12">
-                        <!-- <ion-col size="8.5"> -->
-                        <ion-col size="12" class="p-0">
-                            <div class="d-flex">
-                                <div class="pr-8">
-                                    <img src="../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg">
+                        <ion-row class="pt-12">
+                            <!-- <ion-col size="8.5"> -->
+                            <ion-col size="12" class="p-0">
+                                <div class="d-flex">
+                                    <div class="pr-8">
+                                        <img src="../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg">
+                                    </div>
+                                    <div *ngIf="!jobUtilService.shiftDayChange(job?.dates[0]?.date,job?.dates[0]?.timeFrom,job?.dates[0]?.timeTo)"
+                                        class="ternary sub-heading-xs fw-400 ion-align-self-center">
+                                        {{job?.dates[0]?.date | formatDate | date: 'MMM dd, yyyy'}}
+                                        {{job?.dates[0]?.timeFrom | formatTime | date: 'hh:mm a' }} to
+                                        {{job?.dates[0]?.timeTo |
+                                        formatTime | date: 'hh:mm a'}}
+                                    </div>
+                                    <div *ngIf="jobUtilService.shiftDayChange(job?.dates[0]?.date,job?.dates[0]?.timeFrom,job?.dates[0]?.timeTo)"
+                                        class="ternary sub-heading-xs fw-400 ion-align-self-center">
+                                        {{job?.dates[0]?.date | formatDate | date: 'MMM dd, yyyy'}}
+                                        {{job?.dates[0]?.timeFrom | formatTime | date: 'hh:mm a' }} to
+                                        {{jobUtilService?.newDayDate | formatDate | date: 'MMM dd, yyyy'}}
+                                        {{job?.dates[0]?.timeTo |
+                                        formatTime | date: 'hh:mm a'}}
+                                    </div>
                                 </div>
-                                <div class="ternary sub-heading-xs fw-400 ion-align-self-center">
-                                    {{job.dates[0].date | formatDate | date: 'MMM dd, yyyy'}}
-                                    {{job.dates[0].timeFrom | formatTime | date: 'hh:mm a' }} to {{job.dates[0].timeTo |
-                                    formatTime | date: 'hh:mm a'}}
-                                </div>
-                            </div>
-                        </ion-col>
-                        <!-- <ion-col size="3.5">
+                            </ion-col>
+                            <!-- <ion-col size="3.5">
                           <div class="d-flex">
                               <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
                               <div class="primary fw-400 sub-heading-xs"> 4km away </div>
                           </div>
                       </ion-col> -->
-                    </ion-row>
-                </ion-card-content>
-            </ion-card>
+                        </ion-row>
+                    </ion-card-content>
+                </ion-card>
+            </div>
         </div>
+
+        <ion-infinite-scroll (ionInfinite)="doInfinite($event)" *ngIf="availableJobsService?.jobLists?.length != 0">
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+
     </div>
 </ion-content>

@@ -1,0 +1,122 @@
+<app-active-job-header [headerTitle]="'Active job'"></app-active-job-header>
+
+<ion-content>
+  <div class="content-wrap">
+
+    <app-active-job-common-header></app-active-job-common-header>
+
+    <!-- 5 -->
+    <div class="data-not-found-wrap mark-attendance-wrap" *ngIf="activeJobService.activeJob?.job && !activeJobService.startBeforeThirtyMin && 
+    !activeJobService.showPaymentPage && !activeJobService.jobCompleted">
+      <div class="pb-0">
+        <ion-row>
+          <ion-col size="12">
+            <img src="../../assets/imgs/mark-attendance.svg">
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="secondary fw-600 sub-heading-xl">Job is about to start</div>
+          </ion-col>
+        </ion-row>
+      </div>
+      <div class="mt-12">
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="fw-400 sub-heading-sm ternary">Congratulations! You have arrived at the location. Your job
+              is about to start and you will be able to check-in 30mins before the job start time.</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-22">
+          <ion-col size="12" class="p-0">
+            <custom-button [title]="'Check-in'" [button]="'primary'" [disabled]="true" (btnClick)="checkIn()">
+            </custom-button>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="data-not-found-wrap mark-attendance-wrap" *ngIf="activeJobService.activeJob?.job && activeJobService.activeJob?.attendance?.content?.length == 0 && activeJobService.startBeforeThirtyMin 
+     && !activeJobService.showPaymentPage && !activeJobService.jobCompleted">
+      <div class="pb-0">
+        <ion-row>
+          <ion-col size="12">
+            <img src="../../assets/imgs/mark-attendance.svg">
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="secondary fw-600 sub-heading-xl">Mark your attendance</div>
+          </ion-col>
+        </ion-row>
+      </div>
+      <div class="mt-12">
+        <ion-row>
+          <ion-col size="12" class="p-0">
+            <div class="fw-400 sub-heading-sm ternary">Congratulations! You have arrived at the location. Click on
+              Check-in to start working.</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="mt-22">
+          <ion-col size="12" class="p-0">
+            <custom-button [title]="'Check-in'" [button]="'primary'" [disabled]="false" (btnClick)="checkIn()">
+            </custom-button>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="mt-16 ml-16 mr-16"
+      *ngIf="activeJobService.activeJob?.job && activeJobService.activeJob?.attendance?.content?.length != 0 && 
+      activeJobService.inTime.length != 0 && !activeJobService?.endBeforeFifteenMin && !activeJobService.showPaymentPage && !activeJobService.jobCompleted">
+      <app-active-job-flow-stepper active-step="1"></app-active-job-flow-stepper>
+      <div class="ternary ml-52 fw-400 sub-heading-sm">
+        During your shift, you are required to upload pictures for your documentation and reports. Please keep uploading
+        the pictures.
+      </div>
+      <div class="ternary ml-52 fw-400 sub-heading-sm">
+        Please describe the pictures with regards to what kind of work you did, for whom, etc.
+      </div>
+
+      <ion-row class="mt-12 ml-45" *ngIf="activeJobService?.workImages?.length != 0">
+        <ion-col size="4">
+          <img class="work-img-wrap"
+            [src]="activeJobService?.workImages[0]?.imagePath != null ? 'https://hour4u-img-data.s3.ap-south-1.amazonaws.com/' + activeJobService?.workImages[0]?.imagePath : ''"
+            onerror="this.src='../../assets/imgs/Rectangle 12men.png'" (click)="uploadWorkPicture()">
+        </ion-col>
+        <ion-col size="4" *ngIf="activeJobService?.workImages?.length > 1">
+          <img class="work-img-wrap"
+            [src]="activeJobService?.workImages[1]?.imagePath != null ? 'https://hour4u-img-data.s3.ap-south-1.amazonaws.com/' + activeJobService?.workImages[1]?.imagePath : ''"
+            onerror="this.src='../../assets/imgs/Rectangle 12men.png'" (click)="uploadWorkPicture()">
+        </ion-col>
+        <ion-col size="4" *ngIf="activeJobService?.workImages?.length > 2">
+          <div class="work-img-wrap more-work-img-wrap secondary sub-heading-xl-md fw-500">
+            +{{activeJobService?.workImages?.length - 2}}</div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-24"
+        *ngIf="activeJobService?.workImages?.length == 0 && !activeJobService?.endBeforeFifteenMin && !activeJobService.showPaymentPage">
+        <ion-col size="12">
+          <custom-button [title]="'Upload work pictures'" [button]="'primary'" [disabled]="false"
+            (btnClick)="uploadWorkPicture()">
+          </custom-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="mt-24"
+        *ngIf="activeJobService?.workImages?.length != 0 && !activeJobService?.endBeforeFifteenMin && !activeJobService.showPaymentPage">
+        <ion-col size="12">
+          <custom-button [title]="'Upload more work pictures'" [button]="'secondary'" [disabled]="false"
+            (btnClick)="uploadMoreWorkPictures()">
+          </custom-button>
+        </ion-col>
+      </ion-row>
+    </div>
+
+  </div>
+</ion-content>

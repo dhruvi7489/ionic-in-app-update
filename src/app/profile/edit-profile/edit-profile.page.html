@@ -1,0 +1,113 @@
+<app-profile-header [headerTitle]="'Edit Profile'" [showBackBtn]="true" [isModal]="true"></app-profile-header>
+
+<ion-content class="container">
+  <div class="c-container-body mt-24 ml-16 mr-16">
+    <ion-row *ngIf="!profileService.profile_picture">
+      <ion-col size="12" class="p-0">
+        <div style="text-align: -webkit-center;">
+          <div class="profile-img-wrap ion-text-center">
+            <div class="fw-500 secondary sub-heading-xl ion-text-uppercase mt-24">AR</div>
+            <div class="profile-img-inner-wrap">
+              <img class="ion-text-center man-pin" src="../../../assets/imgs/Iconsax/Svg/All/outline/camera-add.svg">
+            </div>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <div class="ion-text-center" *ngIf="profileService.profile_picture">
+      <div class="custom-file-upload">
+        <div class="camera_outine">
+          <img [src]="profileService.profile_picture" alt="" (click)="uploadPicture()">
+          <div class="profile-img-inner-wrap">
+            <img class="ion-text-center man-pin" src="../../../assets/imgs/Iconsax/Svg/All/outline/camera-add.svg">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="c-container-body mt-24 ml-16 mr-16 mb-16">
+    <div class="secondary fw-500 sub-heading-sm secondary mt-24 mb-8">
+      <ion-label>Your name*</ion-label>
+    </div>
+    <custom-input [inputType]="'text'" [placeholder]="'Full name'" [ngModelData]="profileService.full_name"
+      [id]="'full_name'" (keyUp)="getFullName($event)">
+    </custom-input>
+
+    <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
+      <ion-label>Email address*</ion-label>
+    </div>
+    <custom-input [inputType]="'email'" [placeholder]="'Email Address'" [ngModelData]="profileService.email_address"
+      [id]="'email_address'" (keyUp)="getEmailAddress($event)">
+    </custom-input>
+
+    <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
+      <ion-label>Phone*</ion-label>
+    </div>
+    <custom-input [inputType]="'text'" [placeholder]="'Phone'" [ngModelData]="profileService.phone_no" [id]="'phone_no'"
+      (keyUp)="getPhoneNumber($event)">
+    </custom-input>
+
+    <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
+      <ion-label>Gender*</ion-label>
+    </div>
+    <div class="d-flex ion-justify-content-between">
+      <custom-input [inputType]="'radio'" [ngModelData]="profileService.gender" [id]="'male'" [value]="'Male'"
+        [name]="'gender'" (radioChange)="getGender($event)">
+      </custom-input>
+      <custom-input [inputType]="'radio'" [ngModelData]="profileService.gender" [id]="'female'" [value]="'Female'"
+        [name]="'gender'" (radioChange)="getGender($event)">
+      </custom-input>
+      <custom-input [inputType]="'radio'" [ngModelData]="profileService.gender" [id]="'other'" [value]="'Other'"
+        [name]="'gender'" (radioChange)="getGender($event)">
+      </custom-input>
+    </div>
+
+    <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
+      <ion-label>Date of birth*</ion-label>
+    </div>
+    <custom-input [inputType]="'date'" [placeholder]="'DOB'" [ngModelData]="profileService.dob"
+      (dateChange)="getDOB($event)" [id]="'dob'" [name]="'dob'"
+      [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg'" [for]="true">
+    </custom-input>
+
+    <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
+      <ion-label>Location</ion-label>
+    </div>
+    <custom-input [inputType]="'text'" [placeholder]="'Location'" [ngModelData]="profileService.autocomplete.query"
+      [id]="'location'" (keyUp)="updateSearch($event)"
+      [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/location.svg'">
+    </custom-input>
+    <div *ngIf="profileService.autocompleteItems?.length>0">
+      <div *ngFor="let item of profileService.autocompleteItems" (click)="chooseItem(item)"
+        class="pl-12 pt-8 pb-8 placelist">
+        <div class="fw-400 sub-heading-sm secondary"> {{ item }}</div>
+      </div>
+    </div>
+
+    <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
+      <ion-label>Vehicle availability</ion-label>
+    </div>
+    <div class="d-flex">
+      <custom-input [inputType]="'radio'" [ngModelData]="profileService.vehicleAvailability" [id]="'Yes'"
+        [value]="'Yes'" [name]="'vehicleAvailability'" (radioChange)="getVehicleAvailibility($event)">
+      </custom-input>
+      <custom-input [inputType]="'radio'" [ngModelData]="profileService.vehicleAvailability" [id]="'No'" [value]="'No'"
+        class="ml-24" [name]="'vehicleAvailability'" (radioChange)="getVehicleAvailibility($event)">
+      </custom-input>
+    </div>
+
+    <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
+      <ion-label>Vaccine certificate ID</ion-label>
+    </div>
+    <custom-input [inputType]="'text'" [placeholder]="'Vaccine certificate ID'"
+      [ngModelData]="profileService.vaccineCertID" [id]="'vaccineCertID'" (keyUp)="getVehicleCertificateId($event)">
+    </custom-input>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <custom-button [title]="'Save'" (btnClick)="updateProfile()" [disabled]="disable()" [button]="'primary'">
+  </custom-button>
+</ion-footer>

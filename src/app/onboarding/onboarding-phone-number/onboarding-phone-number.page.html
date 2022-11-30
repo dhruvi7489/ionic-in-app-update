@@ -13,19 +13,14 @@
 
     <div class="sub-heading-sm bold-graphik-font fw-400 ternary mt-8">You will receive a 6-digit OTP on this number to
       verify </div>
+    <!-- <a href="https://api.whatsapp.com/send?phone={{onboardingService.mobile}}&amp;text={{data}}" target="_blank">
+      <img class="mt-14 mb-14 pr-8" src="../../../assets/imgs/help-contact.svg">
+    </a> -->
   </div>
 </ion-content>
 
-<!-- <ion-footer class="footer position-fixed">
+<ion-footer>
   <custom-button [title]="'Next'" (btnClick)="openOTPPage()"
     [disabled]="!onboardingService.mobile || onboardingService.mobile.length != 10" [button]="'primary'">
   </custom-button>
-</ion-footer> -->
-
-
-
-<ion-footer>
- <custom-button [title]="'Next'" (btnClick)="openOTPPage()"
- [disabled]="!onboardingService.mobile || onboardingService.mobile.length != 10" [button]="'primary'">
-</custom-button>
 </ion-footer>

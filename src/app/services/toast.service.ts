@@ -13,7 +13,7 @@ export class ToastService {
       message: message,
       duration: duration,
       cssClass: 'my-toast',
-      color:'light'
+      color:'dark'
     });
     toast.present();
   }

@@ -9,7 +9,6 @@ android {
 
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
-    implementation project(':capacitor-community-fcm')
     implementation project(':capacitor-app')
     implementation project(':capacitor-camera')
     implementation project(':capacitor-geolocation')
@@ -17,8 +16,10 @@ dependencies {
     implementation project(':capacitor-keyboard')
     implementation project(':capacitor-network')
     implementation project(':capacitor-push-notifications')
+    implementation project(':capacitor-share')
     implementation project(':capacitor-status-bar')
     implementation "com.facebook.android:facebook-android-sdk:11.3.0"
+    implementation "androidx.webkit:webkit:1.4.0"
     implementation "com.squareup.okhttp3:okhttp:3.12.0"
 }
 

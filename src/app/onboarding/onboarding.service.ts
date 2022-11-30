@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, NgZone, SecurityContext } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, ModalController } from '@ionic/angular';
 import * as moment from 'moment';
 import { CommonProvider } from '../core/common';
 import { LoginRequest } from '../core/modal/login-request.model';
@@ -13,8 +13,12 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { S3Object } from '../core/modal/s3-object.modal';
 import { S3Util } from '../core/util/s3.util';
-import { JobTypeRequests } from '../core/modal/job-preference.modal';
+import { JobPreference, jobTypePreferencesRequests, JobTypeRequests } from '../core/modal/job-preference.modal';
 import { Router } from '@angular/router';
+import { LoadingService } from '../services/loading.service';
+import { OTPModel } from '../core/modal/otp.modal';
+import { LocationService } from '../services/location.service';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +27,7 @@ export class OnboardingService {
   isJobTypeFirstPage: boolean = false;
   showExperience: boolean = false;
 
-  mobile = null;
+  mobile: string = null;
 
   otp: string = "";
 
@@ -34,14 +38,17 @@ export class OnboardingService {
   otp_input_5: string = null;
   otp_input_6: string = null;
 
+  // otp: OTPModel;
+
   full_name: string = null;
   email_address: string = null;
   dob: any = moment(new Date()).format("YYYY-MM-DD");
-  referral_code: string = null;
+  referralCode: string = null;
   gender: any;
   id: string = null;
   loginUserPersonalInfo = null;
-
+  emailValid: any;
+  emailValidationPattern: string = `^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$`;
   profile_picture: any = null;
 
   description: string = null;
@@ -50,8 +57,14 @@ export class OnboardingService {
   leftCharacters = 0;
 
   jobTypeRequests: JobTypeRequests[];
+  jobTypePreferencesRequests: jobTypePreferencesRequests[];
 
   links: any[] = [];
+  jobCategories: any[] = [];
+  jobPreferences: JobPreference;
+  disabled = true;
+
+  activeTab: string = '';
 
   constructor(
     public commonProvider: CommonProvider,
@@ -59,39 +72,62 @@ export class OnboardingService {
     public actionSheetController: ActionSheetController,
     public sanitizer: DomSanitizer,
     public zone: NgZone,
-    public router: Router
-  ) { }
+    public router: Router,
+    public loadingService: LoadingService,
+    public locationService: LocationService,
+    public modalCtrl: ModalController,
+    public storage: Storage
+  ) {
+    this.setInitialValues();
+    this.checkRedirection();
+  }
+
+  async setInitialValues() {
+    const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
+    this.mobile = loginUserMobileNo ? loginUserMobileNo : null;
+  }
 
   // Send OTP to give mobile Number
   async sendOtp() {
-    return await this.commonProvider.GetMethod(Apiurl.SendOTPUrl + this.mobile, null).then(async (res) => {
-      localStorage.setItem('loginUserMobileNo', this.mobile);
-      if (res) {
-        this.toastService.showMessage("OTP send to" + this.mobile);
-      }
-    }).catch(err => {
+    console.log("call")
+    this.loadingService.show();
+    await this.commonProvider.GetMethod(Apiurl.SendOTPUrl + this.mobile, null).then(async (res) => {
+      this.loadingService.dismiss();
+      this.storage.set('loginUserMobileNo', this.mobile);
+      this.toastService.showMessage("OTP send to " + this.mobile);
+      this.router.navigateByUrl('onboarding/onboarding-otp');
+    }).catch(async (err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
       console.log(err)
     })
   }
 
   // Login after verifying OTP
   async login() {
-    return await this.commonProvider.PostMethod(Apiurl.LoginWithOTPUrl, new LoginRequest(this.mobile, this.otp)).then(async (res: LoginResponse) => {
-      if (res) {
-        localStorage.setItem(TOKEN_KEY, res.jwtToken)
-        localStorage.setItem(TOKEN_TYPE, res.tokentype)
-        this.toastService.showMessage("Login successfully");
-        await this.router.navigateByUrl('onboarding/onboarding-personal-info');
-        await this.getPersonalInfo();
-      }
-    }).catch((err: HttpErrorResponse) => {
+    const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
+    this.loadingService.show();
+    return await this.commonProvider.PostMethod(Apiurl.LoginWithOTPUrl, new LoginRequest(loginUserMobileNo, this.otp)).then(async (res: LoginResponse) => {
+      // if (res) {
+      this.storage.set(TOKEN_KEY, res.jwtToken)
+      this.storage.set(TOKEN_TYPE, res.tokentype)
+      this.toastService.showMessage("Login successfully");
+      // await this.router.navigateByUrl('onboarding/onboarding-personal-info');
+      await this.getPersonalInfo();
+      await this.updateToken();
+      await this.checkRedirection();
+      this.loadingService.dismiss();
+
+      // }
+    }).catch(async (err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
       console.log(err)
     })
   }
 
   // Get login user Information by Mobile Number
-  async getPersonalInfo() {
-    return await this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + localStorage.getItem('loginUserMobileNo'), null).then(async (res: any) => {
+  async getPersonalInfo(i?) {
+    const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
+    return await this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
       if (res) {
         this.loginUserPersonalInfo = res;
         this.id = this.loginUserPersonalInfo?.id;
@@ -100,25 +136,79 @@ export class OnboardingService {
         this.gender = this.loginUserPersonalInfo?.gender;
         this.mobile = this.loginUserPersonalInfo?.mobile;
         this.full_name = this.loginUserPersonalInfo?.name;
-        this.referral_code = this.loginUserPersonalInfo?.referral_code;
-        localStorage.setItem('loginUserInfo', JSON.stringify(this.loginUserPersonalInfo));
-        localStorage.setItem('loginUserId', this.id);
-        localStorage.setItem('loginUserGender', this.gender);
+        this.referralCode = this.loginUserPersonalInfo?.referralCode;
+        this.storage.set('loginUserInfo', JSON.stringify(this.loginUserPersonalInfo));
+        this.storage.set('loginUserId', this.id);
+        this.storage.set('loginUserGender', this.gender);
+        this.storage.set('loginUserInitial', this.getLoginUserNameInitial());
+        if (this.loginUserPersonalInfo?.workExperiences && this.loginUserPersonalInfo?.workExperiences?.length != 0) {
+          if (i) {
+            this.description = this.loginUserPersonalInfo?.workExperiences[i]?.summary;
+          } else {
+            this.description = this.loginUserPersonalInfo?.workExperiences[0]?.summary;
+          }
+          this.leftCharacters = this.maxlengthDescription - (this.description?.length ? this.description?.length : 0);
+          if (this.loginUserPersonalInfo?.workExperiences[0]?.workLink?.length == 0) {
+            this.links = [];
+            this.addLinks('', 0)
+          } else {
+            this.links = [];
+            if (i) {
+              this.loginUserPersonalInfo?.workExperiences[i]?.workLink?.forEach((element, index) => {
+                if (index < 3) {
+                  this.addLinks(element, index)
+                }
+              });
+            } else {
+              this.loginUserPersonalInfo?.workExperiences[0]?.workLink?.forEach((element, index) => {
+                if (index < 3) {
+                  this.addLinks(element, index)
+                }
+              })
+            }
+          }
+        } else {
+          this.links = [];
+          await this.addLinks('', 0)
+        }
+        await this.checkEmailValidation();
         await this.setProfilePicture();
+      } else {
+        this.router.navigateByUrl('onboarding/onboarding-personal-info');
       }
-    }).catch(err => {
+    }).catch(async (err: HttpErrorResponse) => {
       console.log(err)
     })
   }
 
+  // Check email validation
+  checkEmailValidation() {
+    this.emailValid = this.email_address.match(this.emailValidationPattern);
+  }
+
+  // Get Initial letter from JobSeeker name
+  getLoginUserNameInitial() {
+    let initialOfName = null;
+    if (this.full_name.split(' ').length == 1) {
+      initialOfName = this.full_name.split('')[0] + this.full_name.split('')[1]
+    }
+    if (this.full_name.split(' ').length > 1) {
+      initialOfName = this.full_name.split(' ')[0].split('')[0] + this.full_name.split(' ')[1].split('')[0]
+    }
+    return initialOfName ? initialOfName : this.full_name.split('')[0];
+  }
+
   // Save login user personal Information
   async savePersonalInfo() {
-    return await this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referral_code)).then(async (res: any) => {
+    await this.loadingService.show();
+    return await this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referralCode)).then(async (res: any) => {
+      await this.loadingService.dismiss();
       this.router.navigateByUrl('onboarding/onboarding-profile-picture');
       if (res) {
         this.toastService.showMessage("Personal information saved successfully");
       }
-    }).catch((err: HttpErrorResponse) => {
+    }).catch(async (err: HttpErrorResponse) => {
+      await this.loadingService.dismiss();
       console.log(err)
     })
   }
@@ -131,14 +221,17 @@ export class OnboardingService {
     this.loginUserPersonalInfo.gender = this.gender;
     this.loginUserPersonalInfo.mobile = this.mobile;
     this.loginUserPersonalInfo.name = this.full_name;
-    this.loginUserPersonalInfo.referral_code = this.referral_code;
-
+    this.loginUserPersonalInfo.referralCode = this.referralCode;
+    this.loginUserPersonalInfo.profilePhoto = this.profile_picture;
+    await this.loadingService.show();
     return await this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + this.id, this.loginUserPersonalInfo).then(async (res: any) => {
       this.router.navigateByUrl('onboarding/onboarding-profile-picture');
+      await this.loadingService.dismiss();
       if (res) {
         this.toastService.showMessage("Personal information updated successfully");
       }
-    }).catch((err: HttpErrorResponse) => {
+    }).catch(async (err: HttpErrorResponse) => {
+      await this.loadingService.dismiss();
       console.log(err)
     })
   }
@@ -148,12 +241,16 @@ export class OnboardingService {
     if (!this.loginUserPersonalInfo.profilePhoto) {
       this.profile_picture = '../../../../assets/imgs/';
       if (this.loginUserPersonalInfo.gender == 'Male') {
-        this.profile_picture += 'male_avatar.svg';
+        this.profile_picture += 'camera_placeholder.svg';
       } else {
-        this.profile_picture += 'female_avatar.svg';
+        this.profile_picture += 'camera_placeholder.svg';
       }
     } else {
-      this.profile_picture = this.commonProvider.ImagePath + this.loginUserPersonalInfo?.profilePhoto + "?" + new Date().getTime();
+      if (this.loginUserPersonalInfo?.profilePhoto?.includes('platform-lookaside.fbsbx.com')) {
+        this.profile_picture = this.loginUserPersonalInfo.profilePhoto
+      } else {
+        this.profile_picture = this.commonProvider.ImagePath + this.loginUserPersonalInfo?.profilePhoto + "?" + new Date().getTime();
+      }
     }
   }
 
@@ -185,13 +282,17 @@ export class OnboardingService {
 
   // After selecting img from camera and gallery
   async pickImage(source: CameraSource) {
+    let blobData = null;
     const image = await Camera.getPhoto({
       quality: 80,
+      height: 700,
+      width: 700,
       source,
       correctOrientation: true,
       resultType: CameraResultType.DataUrl,
     });
-    const blobData = this.b64toBlob(image.dataUrl.split('base64,')[1], `image/${image.format}`);
+    console.log(image)
+    blobData = this.b64toBlob(image.dataUrl.split('base64,')[1], `image/${image.format}`);
     await this.saveProfilePicture(blobData, image.format);
   }
 
@@ -235,29 +336,34 @@ export class OnboardingService {
 
   // Save profile picture
   async saveProfilePicture(blobData, format) {
+    const loginUserId = await this.storage.get('loginUserId');
     let s3Object: S3Object = null;
     const formData = new FormData();
     let filename = "IMG-" + this.rendomFileName(5) + ".jpg";
-    formData.append('id', localStorage.getItem('loginUserId'));
+    formData.append('id', loginUserId);
     formData.append('profile', blobData, filename);
-
-    await this.commonProvider.PostMethod(Apiurl.UploadProfilePicture + localStorage.getItem('loginUserId'), formData).then(async (res: S3Object) => {
+    await this.loadingService.show();
+    await this.commonProvider.PostMethod(Apiurl.UploadProfilePicture + loginUserId, formData).then(async (res: S3Object) => {
+      await this.loadingService.dismiss();
       if (res) {
         this.zone.run(() => {
           s3Object = res;
           this.profile_picture = S3Util.getFileUrl(res);
         })
-        await this.commonProvider.PutMethod(Apiurl.UpdateProfilePicture + localStorage.getItem('loginUserId'), s3Object.key).then(async (res: any) => {
-          this.loginUserPersonalInfo.profilePhoto = s3Object.key;
-          await this.getProfileData();
+        await this.commonProvider.PutMethod(Apiurl.UpdateProfilePicture + loginUserId, s3Object.key).then(async (res: any) => {
+          await this.loadingService.dismiss();
           if (res) {
+            this.loginUserPersonalInfo.profilePhoto = s3Object.key;
+            await this.getPersonalInfo();
             this.toastService.showMessage("Profile picture saved successfully");
           }
-        }).catch((err: HttpErrorResponse) => {
+        }).catch(async (err: HttpErrorResponse) => {
+          await this.loadingService.dismiss();
           console.log(err)
         })
       }
-    }).catch((err: HttpErrorResponse) => {
+    }).catch(async (err: HttpErrorResponse) => {
+      await this.loadingService.dismiss();
       console.log(err)
     })
 
@@ -265,8 +371,11 @@ export class OnboardingService {
 
   // Get profile data through login user ID
   async getProfileData() {
-    await this.commonProvider.GetMethod(Apiurl.GetPersonalInfo1 + localStorage.getItem('loginUserId'), null).then(async (res: any) => {
+    const loginUserId = await this.storage.get('loginUserId');
+    await this.loadingService.show();
+    await this.commonProvider.GetMethod(Apiurl.GetPersonalInfo1 + loginUserId, null).then(async (res: any) => {
       if (res) {
+        await this.loadingService.dismiss();
         this.loginUserPersonalInfo = res;
         this.id = this.loginUserPersonalInfo?.id;
         this.dob = moment(new Date(this.loginUserPersonalInfo?.dob)).format("YYYY-MM-DD");
@@ -274,7 +383,7 @@ export class OnboardingService {
         this.gender = this.loginUserPersonalInfo?.gender;
         this.mobile = this.loginUserPersonalInfo?.mobile;
         this.full_name = this.loginUserPersonalInfo?.name;
-        this.referral_code = this.loginUserPersonalInfo?.referral_code;
+        this.referralCode = this.loginUserPersonalInfo?.referralCode;
         if (this.loginUserPersonalInfo?.workExperiences.length != 0) {
           this.description = this.loginUserPersonalInfo?.workExperiences[0].summary;
           this.leftCharacters = this.maxlengthDescription - this.description.length;
@@ -292,6 +401,8 @@ export class OnboardingService {
         }
         this.setProfilePicture();
       }
+    }).catch(async (err: HttpErrorResponse) => {
+      await this.loadingService.dismiss();
     })
   }
 
@@ -320,47 +431,275 @@ export class OnboardingService {
 
   // Get jobs Categories
   async getJobCategory() {
+    this.jobCategories = [];
+    const loginUserId = await this.storage.get('loginUserId');
     let params = "?page=0&size=500&sort=createdOn,asc"
-    return await this.commonProvider.GetMethod(Apiurl.GetJobCategory + params, null).then(async (res) => {
-      console.log(res)
+    await this.commonProvider.GetMethod(Apiurl.GetJobCategory + params, null).then(async (res: any) => {
       if (res) {
-
+        this.jobCategories = res.content;
+        let obj = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
+        await this.commonProvider.GetMethod(Apiurl.JobPreference + obj, null).then(async (res: any) => {
+          if (res) {
+            this.jobPreferences = res.content[0];
+            this.jobCategories.forEach(ele => {
+              ele.jobTypes?.forEach(element => {
+                element.active = false;
+                this.jobPreferences?.jobTypePreferences?.forEach(e => {
+                  if (e?.typeName == element?.jobTypeName) {
+                    element.level = e.level;
+                    element.maxHourlyRate = e.maxHourlyRate;
+                    element.active = true;
+                  }
+                })
+              });
+            })
+          }
+        }).catch((err: HttpErrorResponse) => {
+          console.log(err)
+        })
       }
-    }).catch(err => {
+    }).catch(async (err: HttpErrorResponse) => {
       console.log(err)
+    })
+  }
+
+  // Check active job type
+  checkCounterActive() {
+    this.disabled = true;
+    this.jobCategories?.forEach(ele => {
+      ele.jobTypes?.forEach(element => {
+        if (element.active) {
+          this.disabled = false;
+        }
+      })
     })
   }
 
   // Save selected job types and categories
-  async saveJobTypes() {
+  async saveJobTypes(modal?) {
+    const loginUserId = await this.storage.get('loginUserId');
+    await this.loadingService.show();
     // let params:{"jobSeekerId":"6298989d3f1aa60aa83db2ab","jobTypeRequests":[{"typeId":"5fd9a452cb42211a2fd5d91e","typeName":"Product Demo Sales"},{"typeId":"5f97069ceb8c497cb290e241","typeName":"App promoter"}],"jobTypePreferences":[{"typeId":"5fd9a452cb42211a2fd5d91e","typeName":"Product Demo Sales"},{"typeId":"5f97069ceb8c497cb290e241","typeName":"App promoter"}]}
-    let params = {
-      "jobSeekerId": localStorage.getItem('loginUserId'),
-      "jobTypeRequests": this.jobTypeRequests,
-      "jobTypePreferences": this.jobTypeRequests
-    }
-    await this.commonProvider.PostMethod(Apiurl.SaveSelectedJobTypes, params).then(async (res: S3Object) => {
-    }).catch(err => {
-      console.log(err)
+    this.jobTypeRequests = [];
+    this.jobTypePreferencesRequests = [];
+    this.jobCategories.forEach(ele => {
+      let obj = {
+        "typeId": ele?.id,
+        "typeName": ele?.jobTypeName,
+      }
+      this.jobTypeRequests.push(obj);
+      ele.jobTypes?.forEach(element => {
+        let data = {
+          "typeId": element?.jobTypeId,
+          "typeName": element?.jobTypeName,
+          // "level": element?.level
+        }
+        if (element.active) {
+          this.jobTypePreferencesRequests.push(data);
+        }
+      })
     })
+
+    let params = {
+      "jobSeekerId": loginUserId,
+      // "jobTypeRequests": this.jobTypeRequests,
+      "jobTypeRequests": this.jobTypePreferencesRequests
+    }
+    if (this.jobPreferences?.id) {
+      await this.commonProvider.PutMethod(Apiurl.JobPreference + '/' + this.jobPreferences?.id, params).then(async (res: any) => {
+        if (modal) {
+          this.modalCtrl.dismiss();
+        }
+        await this.loadingService.dismiss();
+      }).catch(async (err: HttpErrorResponse) => {
+        await this.loadingService.dismiss();
+        console.log(err)
+      })
+    } else {
+      await this.commonProvider.PostMethod(Apiurl.JobPreference, params).then(async (res: S3Object) => {
+        if (modal) {
+          this.modalCtrl.dismiss();
+        }
+        await this.loadingService.dismiss();
+      }).catch(async (err: HttpErrorResponse) => {
+        await this.loadingService.dismiss();
+        console.log(err)
+      })
+    }
   }
 
-  // Save login user Experience
-  async SaveExperience() {
+  // Update login user Experience
+  async editExperience(index) {
+    const loginUserId = await this.storage.get('loginUserId');
     let workLink = [];
     let links = [];
     this.links.forEach(ele => {
       workLink.push(ele.url);
       links.push({ "url": ele.url })
     })
-    let params = [{ "links": links, "summary": this.description, "workLink": workLink }]
-    await this.commonProvider.PutMethod(Apiurl.SaveExperience + localStorage.getItem('loginUserId'), params).then(async (res: any) => {
-      this.getProfileData();
-      this.router.navigateByUrl('tabs/available-jobs');
-      if (res) {
+    if (this.description) {
+      let params = {
+        "summary": this.description,
+        "workLink": workLink
       }
-    }).catch((err: HttpErrorResponse) => {
-      console.log(err)
+      await this.commonProvider.PutMethod(Apiurl.EditWorkExperience + loginUserId + '?updateIndex=' + index, params).then(async (res: any) => {
+        if (res) {
+          this.toastService.showMessage('Work Experience edited successfully')
+          this.getProfileData();
+          this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+        } else {
+          this.toastService.showMessage('Work Experience not edited')
+        }
+      }).catch((err: HttpErrorResponse) => {
+        this.toastService.showMessage('Work Experience not edited, Something went wrong...')
+        console.log(err)
+      })
+    } else {
+      // this.toastService.showMessage('Please enter valid experience and link')
+      this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+    }
+  }
+
+  // Add login user Experiences
+  async addExperience() {
+    const loginUserId = await this.storage.get('loginUserId');
+    let workLink = [];
+    let links = [];
+    this.links.forEach(ele => {
+      workLink.push(ele.url);
+      links.push({ "url": ele.url })
     })
+    if (this.description) {
+      let params = {
+        "summary": this.description,
+        "workLink": workLink
+      }
+      await this.commonProvider.PutMethod(Apiurl.SaveWorkExperience + loginUserId, params).then(async (res: any) => {
+        if (res) {
+          this.toastService.showMessage('Work Experience added successfully')
+          this.getProfileData();
+          this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+        } else {
+          this.toastService.showMessage('Work Experience not added!')
+        }
+      }).catch((err: HttpErrorResponse) => {
+        this.toastService.showMessage('Work Experience not added, Something went wrong...')
+        console.log(err)
+      })
+    } else {
+      // this.toastService.showMessage('Please enter valid experience and link')
+      this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+    }
+  }
+  // Update Token
+  async updateToken() {
+    const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
+    const FCMToken = await this.storage.get('FCMToken');
+    if (loginUserMobileNo != null) {
+      let obj = {
+        deviceToken: FCMToken,
+        mobile: loginUserMobileNo
+      }
+      await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
+        console.log(res)
+        if (res) {
+        }
+      }).catch((err: HttpErrorResponse) => {
+        console.log(err)
+      })
+    }
+  }
+
+  // Check Redirection
+  async checkRedirection() {
+    const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
+    const TokenKey = await this.storage.get(TOKEN_KEY);
+    const loginUserInfo = await this.storage.get('loginUserInfo');
+
+    if (loginUserMobileNo && TokenKey) {
+      if (loginUserInfo) {
+        await this.redirectToPage(JSON.parse(loginUserInfo));
+      } else {
+        await this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
+          if (res) {
+            await this.redirectToPage(res);
+          } else {
+            this.router.navigateByUrl('onboarding/onboarding-personal-info');
+          }
+        }).catch((err: HttpErrorResponse) => {
+          console.log(err)
+        })
+      }
+    } else {
+      //Location access permission 
+      if (!this.locationService.locationPermissionGranted) {
+        await this.locationService.requestLocationPermission(false);
+      }
+
+      if (loginUserMobileNo && !TokenKey) {
+        this.router.navigateByUrl('onboarding/onboarding-otp');
+      } else {
+        this.router.navigateByUrl('onboarding/onboarding-phone-number');
+      }
+    }
+  }
+
+  // Redirect To Page
+  async redirectToPage(res) {
+    // this.router.navigateByUrl('onboarding/onboarding-personal-info');
+    if (res && res.status != "Active") {
+      if (res != null && res.address != null && res.workExperiences != null) {
+        this.router.navigateByUrl('tabs/profile');
+      }
+      else if (res != null && res.profilePhoto == null) {
+        this.router.navigateByUrl('onboarding/onboarding-profile-picture');
+      }
+      else if (res != null && !res.workExperiences && res.workExperiences?.length != 0) {
+        this.router.navigateByUrl('onboarding/onboarding-job-type');
+      }
+      else {
+        this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+      }
+    } else {
+      if (res == null) {
+        this.router.navigateByUrl('onboarding/onboarding-personal-info');
+      } else {
+        this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+      }
+    }
+  }
+
+  // Reset Onboarding all values
+  resetOnbordingValues() {
+    this.isJobTypeFirstPage = false;
+    this.showExperience = false;
+    this.mobile = null;
+    this.otp = "";
+    this.otp_input_1 = null;
+    this.otp_input_2 = null;
+    this.otp_input_3 = null;
+    this.otp_input_4 = null;
+    this.otp_input_5 = null;
+    this.otp_input_6 = null;
+    this.full_name = null;
+    this.email_address = null;
+    this.dob = moment(new Date()).format("YYYY-MM-DD");
+    this.referralCode = null;
+    this.gender;
+    this.id = null;
+    this.loginUserPersonalInfo = null;
+    this.emailValid;
+    this.emailValidationPattern = `^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$`;
+    this.profile_picture = null;
+    this.description = null;
+    this.link = null;
+    this.maxlengthDescription = 200;
+    this.leftCharacters = 0;
+    this.jobTypeRequests = null;
+    this.jobTypePreferencesRequests = null;
+    this.links = [];
+    this.jobCategories = [];
+    this.jobPreferences = null;
+    this.disabled = true;
   }
 }

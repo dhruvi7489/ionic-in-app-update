@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ModalController, NavParams } from '@ionic/angular';
 import { SetHourlyRatesService } from './set-hourly-rates.service';
 
 @Component({
@@ -13,21 +14,36 @@ export class SetHourlyRatesPage implements OnInit {
 
   constructor(
     public location: Location,
-    public setHourlyRatesService: SetHourlyRatesService
+    public setHourlyRatesService: SetHourlyRatesService,
+    public navParams: NavParams,
+    public modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
   }
 
-  back() {
-    this.location.back();
+  ionViewWillEnter() {
+    // this.setHourlyRatesService.getJobPreference();
+    this.setHourlyRatesService.getJobPreferences();
   }
 
-  rateSliderChanged(event) {
+  back() {
+    if (this.navParams.get('modal')) {
+      this.modalCtrl.dismiss();
+    } else {
+      this.location.back();
+    }
+  }
 
+  async rateSliderChanged(event, jobType) {
+    jobType.finalAmount = await this.setHourlyRatesService.calculateFinalAmount(jobType.basePrice, jobType.maxHourlyRate, jobType.shiftHours);
   }
 
   saveHourlyRates() {
     this.setHourlyRatesService.setHourlyRates();
+  }
+
+  changeHourlyRate(jobType) {
+    jobType.finalAmount = this.setHourlyRatesService.calculateFinalAmount(jobType.basePrice, jobType.maxHourlyRate, jobType.shiftHours);
   }
 }

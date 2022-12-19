@@ -52,18 +52,17 @@ export class AvailableJobDetailsPage implements OnInit {
 
   async applyForJob() {
     const loginUserInfo = await this.storage.get('loginUserInfo');
-    console.log(JSON.parse(loginUserInfo)?.status, this.availableJobsService.selectedJobDetails)
-    if (JSON.parse(loginUserInfo)?.status != 'Active') {
-      this.toastService.showMessage(`You can't apply to this job now, please wait for approval.`)
-      return;
-    }
-    // if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
-    //   await this.availableJobsService.JobPreference(true);
-    // }
-    // else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
-    //   this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
+    // if (JSON.parse(loginUserInfo)?.status != 'Active') {
+    //   this.toastService.showMessage(`You can't apply to this job now, please wait for approval.`)
     //   return;
     // }
+    if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
+      await this.availableJobsService.JobPreference(true);
+    }
+    else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
+      this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
+      return;
+    }
     else {
       await this.availableJobsService.JobPreference(true);
     }
@@ -86,18 +85,17 @@ export class AvailableJobDetailsPage implements OnInit {
 
   async bookmarkJob() {
     const loginUserInfo = await this.storage.get('loginUserInfo');
-    console.log(JSON.parse(loginUserInfo)?.status, this.availableJobsService.selectedJobDetails)
-    if (JSON.parse(loginUserInfo)?.status != 'Active') {
-      this.toastService.showMessage(`You can't save this job now, please wait for approval.`)
-      return;
-    }
-    // if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
-    //   await this.availableJobsService.JobPreference(true);
-    // }
-    // else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
-    //   this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
+    // if (JSON.parse(loginUserInfo)?.status != 'Active') {
+    //   this.toastService.showMessage(`You can't save this job now, please wait for approval.`)
     //   return;
     // }
+    if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
+      await this.availableJobsService.JobPreference(true);
+    }
+    else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
+      this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
+      return;
+    }
     else {
       if (this.availableJobsService.selectedJobPreferences) {
         await this.jobBookMark();
@@ -114,7 +112,6 @@ export class AvailableJobDetailsPage implements OnInit {
       if (this.availableJobsService.selectedJobDetails?.jobTypeId == prefType.typeId) {
         let hourlyRate = prefType.maxHourlyRate;
         await this.availableJobsService.submitJobApplication(hourlyRate, true);
-        await this.availableJobsService.getSelectedJobById();
       }
     })
   }

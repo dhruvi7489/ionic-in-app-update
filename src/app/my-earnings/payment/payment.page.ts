@@ -41,7 +41,6 @@ export class PaymentPage implements OnInit {
   }
 
   authorizeBankDetails(event) {
-    console.log(event)
     this.myEarningsService.authorizeBankDetails = event.ngModelData;
   }
 

@@ -40,7 +40,7 @@ export class NetworkService {
     }
 
     public async getInternetConnectionStatus() {
-        const TokenKey = await this.storage.get(TOKEN_KEY);
+        const tokenKey = await this.storage.get(TOKEN_KEY);
         // Current network status get
         Network.getStatus().then(async (status: ConnectionStatus) => {
             if (!status.connected) {
@@ -51,18 +51,17 @@ export class NetworkService {
                 });
                 await modal.present();
             } else {
-                if (Capacitor.getPlatform() == 'android' || Capacitor.getPlatform() == 'ios') {
-                    if (TokenKey) {
+                if (Capacitor.getPlatform() === 'android' || Capacitor.getPlatform() === 'ios') {
+                    if (tokenKey) {
                         this.modalCtrl.dismiss();
-                        console.log("callllllllllllllllll")
-                        this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
+                        this.router.navigateByUrl("tabs/available-jobs/available-jobs-list");
                     } else {
                         this.modalCtrl.dismiss();
                     }
                 }
             }
         }).catch((err: HttpErrorResponse) => {
-            console.log(err)
-        })
+            console.log(err);
+        });
     }
 }

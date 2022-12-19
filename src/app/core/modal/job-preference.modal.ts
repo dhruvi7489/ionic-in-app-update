@@ -48,7 +48,11 @@ export class JobTypePreference {
     status: string;
     typeId: string;
     typeName: string;
-
+    shiftHours?: any;
+    finalAmount?: any;
+    hourlyMinAllowed?: any;
+    hourlyMaxAllowed?: any;
+    basePrice?: any;
     // non-api
     jobType: JobType;
 }

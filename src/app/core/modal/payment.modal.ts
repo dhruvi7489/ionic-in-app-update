@@ -1,5 +1,6 @@
 export class Payment {
 
+  title?: string;
   amount: number;
   createdBy?: string;
   createdOn?: Date;

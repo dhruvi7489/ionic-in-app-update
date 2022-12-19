@@ -17,10 +17,10 @@ export const environment = {
   log: true,
   environmentName: 'local',
   version: 1.0,
-  api_url:
+  apiUrl:
     'https://uatapi.hour4u.com/api/', // UAT Api url
   // 'https://api.hour4u.com/api/', // Production Api url
-  image_url: 'https://hour4u-img-data.s3.ap-south-1.amazonaws.com/',
+  imageUrl: 'https://hour4u-img-data.s3.ap-south-1.amazonaws.com/',
   bottomTab: [
     {
       label: 'Jobs',

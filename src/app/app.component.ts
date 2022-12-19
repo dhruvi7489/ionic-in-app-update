@@ -1,7 +1,7 @@
 import { Component, NgZone } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { AlertController, IonRouterOutlet, NavParams, Platform } from '@ionic/angular';
+import { AlertController, IonRouterOutlet, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
 import { NetworkService } from './services/network.service';
 import { PushNotificationService } from './services/push-notifications.service';
 // import { FCM } from '@capacitor-community/fcm';
@@ -16,6 +16,7 @@ import { LocationService } from './services/location.service';
 import { Storage } from '@ionic/storage';
 import { Capacitor } from '@capacitor/core';
 import { ActionPerformed, PushNotifications, PushNotificationSchema, Token } from '@capacitor/push-notifications';
+import { AppUpdateService } from './services/app-update.service';
 
 @Component({
   selector: 'app-root',
@@ -41,7 +42,10 @@ export class AppComponent {
     public storage: Storage,
     private zone: NgZone,
     // private routerOutlet: IonRouterOutlet
-    // public pushNotificationService: PushNotificationService
+    // public pushNotificationService: PushNotificationService,
+    public appUpdateService: AppUpdateService,
+    public modalCtrl: ModalController,
+    public navCtrl: NavController
   ) {
     this.initializeApp();
   }
@@ -195,42 +199,52 @@ export class AppComponent {
       this.networkService.initializeNetworkEvents();
 
       // Location acccess permission
-      if (!this.locationService.locationPermissionGranted) {
-        await this.locationService.requestLocationPermission(false);
-      }
+      // if (!this.locationService.locationPermissionGranted) {
+      //   console.log("%%%%%%%")
+      //   await this.locationService.requestLocationPermission(false);
+      // }
 
       // Device Back button logic
       App.addListener('backButton', ({ canGoBack }) => {
-        if (this.router.url.includes('/tabs')) {
-          let alert = this.alertCtrl.create({
-            header: 'Exit',
-            message: 'Are you sure you want to exit app?',
-            buttons: [
-              {
-                text: 'Cancel',
-                role: 'cancel',
-                handler: () => {
-                  console.log('Cancel clicked');
-                }
-              },
-              {
-                text: 'Exit App',
-                handler: () => {
-                  App.exitApp();
-                }
-              }
-            ]
-          });
-          alert.then(res => {
-            console.log(res)
-            res.present();
-          });
-        } else {
-          window.history.back();
-        }
+        this.modalCtrl.getTop().then((res: any) => {
+          if (res) {
+            this.modalCtrl.dismiss();
+          } else {
+            if (this.router.url.includes('/tabs')) {
+              let alert = this.alertCtrl.create({
+                header: 'Exit',
+                message: 'Are you sure you want to exit app?',
+                buttons: [
+                  {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                      console.log('Cancel clicked');
+                    }
+                  },
+                  {
+                    text: 'Exit App',
+                    handler: () => {
+                      App.exitApp();
+                    }
+                  }
+                ]
+              });
+              alert.then(res => {
+                res.present();
+              });
+            } else {
+              window.history.back();
+            }
+          }
+        }).catch((err: any) => {
+          console.log(err)
+        })
       });
 
 
+      // App Update Check
+      this.appUpdateService.checkAppUpdate();
 
 
 

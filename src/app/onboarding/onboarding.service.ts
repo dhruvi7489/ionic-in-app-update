@@ -24,6 +24,8 @@ import { Storage } from '@ionic/storage';
   providedIn: 'root'
 })
 export class OnboardingService {
+  initial: string = null;
+
   isJobTypeFirstPage: boolean = false;
   showExperience: boolean = false;
 
@@ -76,7 +78,7 @@ export class OnboardingService {
     public loadingService: LoadingService,
     public locationService: LocationService,
     public modalCtrl: ModalController,
-    public storage: Storage
+    public storage: Storage,
   ) {
     this.setInitialValues();
     this.checkRedirection();
@@ -89,14 +91,13 @@ export class OnboardingService {
 
   // Send OTP to give mobile Number
   async sendOtp() {
-    console.log("call")
     this.loadingService.show();
     await this.commonProvider.GetMethod(Apiurl.SendOTPUrl + this.mobile, null).then(async (res) => {
       this.loadingService.dismiss();
       this.storage.set('loginUserMobileNo', this.mobile);
       this.toastService.showMessage("OTP send to " + this.mobile);
       this.router.navigateByUrl('onboarding/onboarding-otp');
-    }).catch(async (err: HttpErrorResponse) => {
+    }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
       console.log(err)
     })
@@ -118,7 +119,7 @@ export class OnboardingService {
       this.loadingService.dismiss();
 
       // }
-    }).catch(async (err: HttpErrorResponse) => {
+    }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
       console.log(err)
     })
@@ -136,11 +137,13 @@ export class OnboardingService {
         this.gender = this.loginUserPersonalInfo?.gender;
         this.mobile = this.loginUserPersonalInfo?.mobile;
         this.full_name = this.loginUserPersonalInfo?.name;
+        // this.full_name = null
         this.referralCode = this.loginUserPersonalInfo?.referralCode;
         this.storage.set('loginUserInfo', JSON.stringify(this.loginUserPersonalInfo));
         this.storage.set('loginUserId', this.id);
         this.storage.set('loginUserGender', this.gender);
-        this.storage.set('loginUserInitial', this.getLoginUserNameInitial());
+        this.storage.set('loginUserInitial', await this.getLoginUserNameInitial(this.full_name));
+        this.initial = await this.storage.get('loginUserInitial');
         if (this.loginUserPersonalInfo?.workExperiences && this.loginUserPersonalInfo?.workExperiences?.length != 0) {
           if (i) {
             this.description = this.loginUserPersonalInfo?.workExperiences[i]?.summary;
@@ -176,7 +179,7 @@ export class OnboardingService {
       } else {
         this.router.navigateByUrl('onboarding/onboarding-personal-info');
       }
-    }).catch(async (err: HttpErrorResponse) => {
+    }).catch((err: HttpErrorResponse) => {
       console.log(err)
     })
   }
@@ -187,15 +190,17 @@ export class OnboardingService {
   }
 
   // Get Initial letter from JobSeeker name
-  getLoginUserNameInitial() {
+  getLoginUserNameInitial(full_name) {
     let initialOfName = null;
-    if (this.full_name.split(' ').length == 1) {
-      initialOfName = this.full_name.split('')[0] + this.full_name.split('')[1]
+    if (full_name) {
+      if (full_name.split(' ').length == 1) {
+        initialOfName = full_name.split(' ')[0].split('')[0];
+      }
+      if (full_name.split(' ').length > 1) {
+        initialOfName = full_name.split(' ')[0].split('')[0] + (full_name.split(' ')[1].split('')[0] ? full_name.split(' ')[1].split('')[0] : '')
+      }
+      return initialOfName ? initialOfName : full_name.split('')[0];
     }
-    if (this.full_name.split(' ').length > 1) {
-      initialOfName = this.full_name.split(' ')[0].split('')[0] + this.full_name.split(' ')[1].split('')[0]
-    }
-    return initialOfName ? initialOfName : this.full_name.split('')[0];
   }
 
   // Save login user personal Information
@@ -207,8 +212,8 @@ export class OnboardingService {
       if (res) {
         this.toastService.showMessage("Personal information saved successfully");
       }
-    }).catch(async (err: HttpErrorResponse) => {
-      await this.loadingService.dismiss();
+    }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
       console.log(err)
     })
   }
@@ -225,27 +230,27 @@ export class OnboardingService {
     this.loginUserPersonalInfo.profilePhoto = this.profile_picture;
     await this.loadingService.show();
     return await this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + this.id, this.loginUserPersonalInfo).then(async (res: any) => {
-      this.router.navigateByUrl('onboarding/onboarding-profile-picture');
       await this.loadingService.dismiss();
+      this.router.navigateByUrl('onboarding/onboarding-profile-picture');
       if (res) {
         this.toastService.showMessage("Personal information updated successfully");
       }
-    }).catch(async (err: HttpErrorResponse) => {
-      await this.loadingService.dismiss();
+    }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
       console.log(err)
     })
   }
 
   // Save Profile Picture
   async setProfilePicture() {
-    if (!this.loginUserPersonalInfo.profilePhoto) {
-      this.profile_picture = '../../../../assets/imgs/';
-      if (this.loginUserPersonalInfo.gender == 'Male') {
-        this.profile_picture += 'camera_placeholder.svg';
-      } else {
-        this.profile_picture += 'camera_placeholder.svg';
-      }
-    } else {
+    if (this.loginUserPersonalInfo.profilePhoto) {
+      //   this.profile_picture = '../../../../assets/imgs/';
+      //   if (this.loginUserPersonalInfo.gender == 'Male') {
+      //     this.profile_picture += 'camera_placeholder.svg';
+      //   } else {
+      //     this.profile_picture += 'camera_placeholder.svg';
+      //   }
+      // } else {
       if (this.loginUserPersonalInfo?.profilePhoto?.includes('platform-lookaside.fbsbx.com')) {
         this.profile_picture = this.loginUserPersonalInfo.profilePhoto
       } else {
@@ -291,7 +296,6 @@ export class OnboardingService {
       correctOrientation: true,
       resultType: CameraResultType.DataUrl,
     });
-    console.log(image)
     blobData = this.b64toBlob(image.dataUrl.split('base64,')[1], `image/${image.format}`);
     await this.saveProfilePicture(blobData, image.format);
   }
@@ -357,13 +361,13 @@ export class OnboardingService {
             await this.getPersonalInfo();
             this.toastService.showMessage("Profile picture saved successfully");
           }
-        }).catch(async (err: HttpErrorResponse) => {
-          await this.loadingService.dismiss();
+        }).catch((err: HttpErrorResponse) => {
+          this.loadingService.dismiss();
           console.log(err)
         })
       }
-    }).catch(async (err: HttpErrorResponse) => {
-      await this.loadingService.dismiss();
+    }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
       console.log(err)
     })
 
@@ -374,8 +378,8 @@ export class OnboardingService {
     const loginUserId = await this.storage.get('loginUserId');
     await this.loadingService.show();
     await this.commonProvider.GetMethod(Apiurl.GetPersonalInfo1 + loginUserId, null).then(async (res: any) => {
+      await this.loadingService.dismiss();
       if (res) {
-        await this.loadingService.dismiss();
         this.loginUserPersonalInfo = res;
         this.id = this.loginUserPersonalInfo?.id;
         this.dob = moment(new Date(this.loginUserPersonalInfo?.dob)).format("YYYY-MM-DD");
@@ -384,9 +388,9 @@ export class OnboardingService {
         this.mobile = this.loginUserPersonalInfo?.mobile;
         this.full_name = this.loginUserPersonalInfo?.name;
         this.referralCode = this.loginUserPersonalInfo?.referralCode;
-        if (this.loginUserPersonalInfo?.workExperiences.length != 0) {
-          this.description = this.loginUserPersonalInfo?.workExperiences[0].summary;
-          this.leftCharacters = this.maxlengthDescription - this.description.length;
+        if (this.loginUserPersonalInfo?.workExperiences && this.loginUserPersonalInfo?.workExperiences?.length != 0) {
+          this.description = this.loginUserPersonalInfo?.workExperiences[0]?.summary;
+          this.leftCharacters = this.maxlengthDescription - this.description?.length;
           if (this.loginUserPersonalInfo?.workExperiences[0].workLink.length == 0) {
             this.links = [];
             this.addLinks('', 0)
@@ -401,8 +405,9 @@ export class OnboardingService {
         }
         this.setProfilePicture();
       }
-    }).catch(async (err: HttpErrorResponse) => {
-      await this.loadingService.dismiss();
+    }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
+      console.log(err)
     })
   }
 
@@ -458,7 +463,7 @@ export class OnboardingService {
           console.log(err)
         })
       }
-    }).catch(async (err: HttpErrorResponse) => {
+    }).catch((err: HttpErrorResponse) => {
       console.log(err)
     })
   }
@@ -507,22 +512,22 @@ export class OnboardingService {
     }
     if (this.jobPreferences?.id) {
       await this.commonProvider.PutMethod(Apiurl.JobPreference + '/' + this.jobPreferences?.id, params).then(async (res: any) => {
+        await this.loadingService.dismiss();
         if (modal) {
           this.modalCtrl.dismiss();
         }
-        await this.loadingService.dismiss();
-      }).catch(async (err: HttpErrorResponse) => {
-        await this.loadingService.dismiss();
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
         console.log(err)
       })
     } else {
       await this.commonProvider.PostMethod(Apiurl.JobPreference, params).then(async (res: S3Object) => {
+        await this.loadingService.dismiss();
         if (modal) {
           this.modalCtrl.dismiss();
         }
-        await this.loadingService.dismiss();
-      }).catch(async (err: HttpErrorResponse) => {
-        await this.loadingService.dismiss();
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
         console.log(err)
       })
     }
@@ -601,7 +606,6 @@ export class OnboardingService {
         mobile: loginUserMobileNo
       }
       await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
-        console.log(res)
         if (res) {
         }
       }).catch((err: HttpErrorResponse) => {
@@ -646,27 +650,53 @@ export class OnboardingService {
 
   // Redirect To Page
   async redirectToPage(res) {
-    // this.router.navigateByUrl('onboarding/onboarding-personal-info');
+    const loginUserId = await this.storage.get('loginUserId');
+    const onboringFlowVisited = await this.storage.get('onboringFlowVisited');
     if (res && res.status != "Active") {
-      if (res != null && res.address != null && res.workExperiences != null) {
+      if (res != null && res.address != null) {
         this.router.navigateByUrl('tabs/profile');
       }
-      else if (res != null && res.profilePhoto == null) {
+      else if (res != null && res.profilePhoto == null && !onboringFlowVisited) {
         this.router.navigateByUrl('onboarding/onboarding-profile-picture');
       }
-      else if (res != null && !res.workExperiences && res.workExperiences?.length != 0) {
-        this.router.navigateByUrl('onboarding/onboarding-job-type');
-      }
       else {
-        this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+        await this.getJobCategory();
+        if (!this.jobPreferences) {
+          let obj = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
+          await this.commonProvider.GetMethod(Apiurl.JobPreference + obj, null).then(async (res: any) => {
+            if (res.content.length == 0) {
+              this.router.navigateByUrl('onboarding/onboarding-job-type');
+            } else {
+              this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+            }
+          })
+        } else {
+          if (this.jobPreferences?.jobTypePreferences.length == 0 && !onboringFlowVisited) {
+            this.router.navigateByUrl('onboarding/onboarding-job-type');
+          } else {
+            this.onbordingFlowVisited();
+            this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+          }
+        }
       }
+      // else {
+      //   this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+      // }
     } else {
       if (res == null) {
         this.router.navigateByUrl('onboarding/onboarding-personal-info');
       } else {
-        this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+        if (!this.router.url.includes('tabs')) {
+          this.onbordingFlowVisited();
+          this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+        }
       }
     }
+  }
+
+  async onbordingFlowVisited() {
+    await this.storage.set('onboringFlowVisited', true);
+    console.log(await this.storage.get('onboringFlowVisited'))
   }
 
   // Reset Onboarding all values

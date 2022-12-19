@@ -55,7 +55,7 @@ export class ProfileDetailsPage implements OnInit {
   async addSkill() {
     const obj = {
       editSkill: false
-    }
+    };
     const modal = await this.modalCtrl.create({
       component: AddSkillsPage,
       componentProps: obj
@@ -74,7 +74,7 @@ export class ProfileDetailsPage implements OnInit {
   async editSkill() {
     const obj = {
       editSkill: true
-    }
+    };
     const modal = await this.modalCtrl.create({
       component: AddSkillsPage,
       componentProps: obj
@@ -85,7 +85,7 @@ export class ProfileDetailsPage implements OnInit {
   async addWorkExperience() {
     const obj = {
       editWorkExperience: false
-    }
+    };
     const modal = await this.modalCtrl.create({
       component: ExperienceAddEditPage,
       componentProps: obj
@@ -104,7 +104,7 @@ export class ProfileDetailsPage implements OnInit {
   // disable or enable edit job preferences
   showPreferencesEdit() {
     this.preferencesEditDisabled = true;
-    if (this.profileService?.jobPreferences?.jobTypePreferences?.length != 0) {
+    if (this.profileService?.jobPreferences?.jobTypePreferences?.length !== 0) {
       for (let index = 0; index < this.profileService?.jobPreferences?.jobTypePreferences.length; index++) {
         // if (this.profileService?.jobPreferences?.jobTypePreferences[index].status != "Pending") {
         //   this.preferencesEditDisabled = true;

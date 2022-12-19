@@ -8,7 +8,7 @@ import { ActiveJobService } from '../active-job.service';
 })
 export class ActiveJobFlowStepperPage implements OnInit {
 
-  @Input('active-step') activeStep: string;
+  @Input('active-step') activeStep: any;
   @Input('label') label: any;
 
   constructor(

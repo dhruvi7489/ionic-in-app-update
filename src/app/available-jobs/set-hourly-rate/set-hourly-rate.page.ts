@@ -70,23 +70,23 @@ export class SetHourlyRatePage implements OnInit {
     this.availableJobsService.jobPref = this.availableJobsService.selectedJobPreferences.content[0];
     await this.availableJobsService.jobPref.jobTypePreferences.forEach(async prefType => {
       if (this.availableJobsService.selectedJobDetails?.jobTypeId == prefType.typeId) {
-        if (prefType.status != "Pending") {
-          this.diableSubmitBtn = false;
-          this.estimatedIncome = 0;
-          this.hourlyRate = prefType.maxHourlyRate;
-          if (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate <= prefType.maxHourlyRate) {
-            this.updatedRate = 0;
-          } else {
-            this.updatedRate = prefType.maxHourlyRate;
-            for (let date of this.availableJobsService.selectedJobDetails?.dates) {
-              let hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
-              this.estimatedIncome = this.estimatedIncome + Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.updatedRate * hours));
-            }
-          }
+        // if (prefType.status != "Pending") {
+        this.diableSubmitBtn = false;
+        this.estimatedIncome = 0;
+        this.hourlyRate = prefType.maxHourlyRate;
+        if (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate <= prefType.maxHourlyRate) {
+          this.updatedRate = 0;
         } else {
-          this.toastService.showMessage("You can't apply to this job now, please wait for job type approval");
-          this.diableSubmitBtn = true;
+          this.updatedRate = prefType.maxHourlyRate;
+          for (let date of this.availableJobsService.selectedJobDetails?.dates) {
+            let hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
+            this.estimatedIncome = this.estimatedIncome + Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.updatedRate * hours));
+          }
         }
+        // } else {
+        //   this.toastService.showMessage("You can't apply to this job now, please wait for job type approval");
+        //   this.diableSubmitBtn = true;
+        // }
       }
     });
   }
@@ -117,6 +117,7 @@ export class SetHourlyRatePage implements OnInit {
       let hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
       this.estimatedIncome = this.estimatedIncome + (this.hourlyRate * hours) + this.availableJobsService.selectedJobDetails?.basePrice;
       this.estimatedIncome = Math.round(Math.abs(this.estimatedIncome));
+      console.log(this.availableJobsService.selectedJobDetails, this.availableJobsService.selectedJobDetails?.basePrice, this.hourlyRate, hours)
     }
   }
 }

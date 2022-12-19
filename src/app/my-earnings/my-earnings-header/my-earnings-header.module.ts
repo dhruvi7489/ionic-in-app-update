@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { MyEarningsHeaderPageRoutingModule } from './my-earnings-header-routing.module';
 
 import { MyEarningsHeaderPage } from './my-earnings-header.page';
+import { CustomInputModule } from 'w4u-custom-components';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MyEarningsHeaderPageRoutingModule
+    MyEarningsHeaderPageRoutingModule,
+    CustomInputModule
   ],
   declarations: [MyEarningsHeaderPage],
   exports: [MyEarningsHeaderPage]

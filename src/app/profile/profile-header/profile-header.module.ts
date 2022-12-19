@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ProfileHeaderPageRoutingModule } from './profile-header-routing.module';
 
 import { ProfileHeaderPage } from './profile-header.page';
-import { CustomButtonModule } from 'w4u-custom-components';
+import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
 
 @NgModule({
   imports: [
@@ -15,7 +15,8 @@ import { CustomButtonModule } from 'w4u-custom-components';
     FormsModule,
     IonicModule,
     ProfileHeaderPageRoutingModule,
-    CustomButtonModule
+    CustomButtonModule,
+    CustomInputModule
   ],
   declarations: [ProfileHeaderPage],
   exports: [ProfileHeaderPage]

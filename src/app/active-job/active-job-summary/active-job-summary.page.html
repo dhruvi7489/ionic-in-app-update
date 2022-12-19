@@ -68,7 +68,9 @@
           <ion-col size="12" class="pl-0">
             <div class="d-flex">
               <div class="fw-600 main-body-heading-sm primary">&#x20b9;{{activeJobService?.expectedAmount?
-                activeJobService?.expectedAmount: activeJobService?.totalPayment || 0}}</div>
+                activeJobService?.expectedAmount: activeJobService?.totalPayment || 0 | number
+                :
+                '1.0-0'}}</div>
               <div class="ml-8">
                 <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="editPayment()">
               </div>

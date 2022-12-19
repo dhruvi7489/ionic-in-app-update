@@ -21,46 +21,47 @@ export class LocationService {
         public toastService: ToastService
     ) {
         Geolocation.checkPermissions().then(async (res) => {
-            if (res.location == "denied") {
+            if (res.location === 'denied') {
                 this.locationPermissionGranted = false;
                 await this.requestLocationPermission();
             }
-            if (res.location == "granted") {
+            if (res.location === 'granted') {
                 this.locationPermissionGranted = true;
             }
         }).catch((err: HttpErrorResponse) => {
-            this.toastService.showMessage(err.message)
-        })
+            this.toastService.showMessage(err.message);
+        });
     }
 
     async requestLocationPermission(showErrorMsg = true) {
         Geolocation.requestPermissions().then(async (res) => {
-            if (res.location == 'granted') {
+            if (res.location === 'granted') {
                 this.locationPermissionGranted = true;
                 this.getCurrentLocationPosition(showErrorMsg);
                 setInterval(async () => {
                     this.getCurrentLocationPosition(showErrorMsg);
-                }, 5000)
+                }, 5000);
             } else {
                 this.locationPermissionGranted = false;
             }
         }).catch((err: HttpErrorResponse) => {
-            this.toastService.showMessage(err.message)
-        })
+            if (err.message !== 'Not implemented on web.') {
+                this.toastService.showMessage(err.message);
+            }
+        });
     }
 
     async getCurrentLocationPosition(showErrorMsg) {
         this.locationCordinates = null;
         Geolocation.getCurrentPosition().then((res: any) => {
-            console.log(res)
             this.locationCordinates = res;
             this.setLocationCordinates(res);
         }).catch((err: HttpErrorResponse) => {
             this.setLocationCordinates(null);
             if (showErrorMsg) {
-                this.toastService.showMessage(err.message)
+                this.toastService.showMessage(err.message);
             }
-        })
+        });
     }
 
     setLocationCordinates(data: any) {

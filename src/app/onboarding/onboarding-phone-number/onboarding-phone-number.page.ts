@@ -42,7 +42,6 @@ export class OnboardingPhoneNumberPage implements OnInit {
       return false;
     } else {
       this.onboardingService.sendOtp().then(res => {
-        console.log(res)
       }).catch(err => {
 
       });

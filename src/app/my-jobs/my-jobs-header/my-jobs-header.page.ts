@@ -8,11 +8,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class MyJobsHeaderPage implements OnInit {
   @Input() headerTitle?: string = "";
-  @Input() counts?: string = "";
+  @Input() counts?: number = 0;
   @Input() showBackBtn?: boolean = false;
   @Input() showProfileLogo?: boolean = false;
   @Input() showCloseBtn?: boolean = false;
-  
+
   search: string = "";
 
   @Output() searchData = new EventEmitter();
@@ -23,7 +23,7 @@ export class MyJobsHeaderPage implements OnInit {
 
   ngOnInit() {
   }
-  
+
   back() {
     this.location.back();
   }

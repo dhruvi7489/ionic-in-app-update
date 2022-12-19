@@ -19,7 +19,7 @@
                             <ion-row class="pt-8">
                                 <ion-col class="p-0">
                                     <div class="primary fw-600 main-body-heading-lg">
-                                        &#x20b9;{{myEarningsService.earningStatus?.totalEarning?.toFixed(2)}}
+                                        &#x20b9;{{myEarningsService.earningStatus?.approved?.toFixed(2)}}
                                     </div>
                                 </ion-col>
                             </ion-row>
@@ -44,8 +44,8 @@
                             <ion-row class="pt-8">
                                 <ion-col class="p-0">
                                     <div class="primary fw-600 sub-heading-md">
-                                        &#x20b9;{{myEarningsService.earningStatus?.approved ?
-                                        myEarningsService.earningStatus?.approved?.toFixed(2) : 00}}
+                                        &#x20b9;{{myEarningsService.earningStatus?.totalEarning ?
+                                        myEarningsService.earningStatus?.totalEarning?.toFixed(2) : 00}}
                                     </div>
                                 </ion-col>
                             </ion-row>
@@ -76,7 +76,7 @@
                 (ionChange)="handleTabChange($event)">
                 <ion-segment-button class="segment ml-16" value="Unapproved" id="Unapproved">
                     <ion-label class="fw-500 ion-text-none sub-heading-sm d-flex"
-                        [ngClass]="{'primary':selectedTab == 'Unapproved'}">
+                        [ngClass]="{'primary':myEarningsService.selectedTab == 'Unapproved'}">
                         <div class="ion-align-self-center pr-4">Awaiting approval</div>
                         <div class="counter-bedge ion-align-self-center primary"
                             *ngIf="myEarningsService.selectedTab == 'Unapproved'">
@@ -87,7 +87,7 @@
                 </ion-segment-button>
                 <ion-segment-button class="segment" value="Approved" id="Approved">
                     <ion-label class="fw-500 ion-text-none sub-heading-sm d-flex"
-                        [ngClass]="{'primary':selectedTab == 'Approved'}">
+                        [ngClass]="{'primary':myEarningsService.selectedTab == 'Approved'}">
                         <div class="ion-align-self-center pr-4">Approved</div>
                         <div class="counter-bedge ion-align-self-center primary"
                             *ngIf="myEarningsService.selectedTab == 'Approved'">
@@ -98,7 +98,7 @@
                 </ion-segment-button>
                 <ion-segment-button class="segment" value="Paid" id="Paid">
                     <ion-label class="fw-500 ion-text-none sub-heading-sm d-flex"
-                        [ngClass]="{'primary':selectedTab == 'Paid'}">
+                        [ngClass]="{'primary':myEarningsService.selectedTab == 'Paid'}">
                         <div class="ion-align-self-center pr-4">Paid out</div>
                         <div class="counter-bedge ion-align-self-center primary"
                             *ngIf="myEarningsService.selectedTab == 'Paid'">
@@ -118,7 +118,7 @@
                                 <ion-col size="8" class="pl-0 pr-0 pt-0 pb-0 ion-align-self-center">
                                     <div
                                         class="secondary fw-500 sub-heading-sm ion-text-capitalize ion-align-self-center">
-                                        {{earning.employmentTitle ? earning.employmentTitle : earning.title}}</div>
+                                        {{earning.employmentTitle ? earning?.employmentTitle : earning?.title}}</div>
                                 </ion-col>
                                 <ion-col size="4" class="pl-0 pr-0 pt-0 pb-0">
                                     <div class="d-flex ion-float-right">

@@ -92,7 +92,6 @@ export class ActiveJobService {
 
     await this.commonProvider.GetMethod(Apiurl.GetActiveJob + loginUserId, null).then(async (res: any) => {
       this.activeJob = new ActiveJob();
-      console.log("cal---------", JSON.parse(activeJob), res)
       this.activeJob.job = res ? res : JSON.parse(activeJob);
       if (this.activeJob?.job) {
         this.storage.set('activeJob', JSON.stringify(this.activeJob?.job))
@@ -111,13 +110,13 @@ export class ActiveJobService {
         this.router.navigateByUrl('tabs/active-job/no-active-job')
       }
     }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
       console.log(err)
     })
   }
 
   // check if job is active
   async checkJobIsActive() {
-    console.log("this.activeJob?.job?.dates", this.activeJob?.job?.dates)
     let activeDay = this.activeJob?.job?.dates?.filter(date => date.isActive);
     if (activeDay.length != 0) {
       this.activeJob.activeDay = activeDay[0];
@@ -192,7 +191,6 @@ export class ActiveJobService {
         }
       } else {
         if (!this.endBeforeFifteenMin) {
-          console.log(this.isJobCompletedTimeGone)
           if (!this.isJobCompletedTimeGone) {
             this.router.navigateByUrl('tabs/active-job/active-job-mark-attendance');
           } else {
@@ -237,7 +235,6 @@ export class ActiveJobService {
       this.activeJob.attendance = res;
       if (res) {
         res.content.forEach(async (att) => {
-          console.log(this.activeJob.activeDay, att)
           if (this.activeJob.activeDay?.date[0] == att.checkIn[0] && this.activeJob.activeDay?.date[1] == att.checkIn[1] && this.activeJob.activeDay?.date[2] == att.checkIn[2]) {
 
             this.inTime = Object.assign(this.inTime, this.activeJob.activeDay.timeFrom);
@@ -245,13 +242,11 @@ export class ActiveJobService {
             this.inTime[1] = att.checkIn[4];
             let checkInDate: DateTime = DateTime.local(att.checkIn[0], att.checkIn[1], att.checkIn[2], att.checkIn[3], att.checkIn[4]);
             checkInDate.setLocale('in-IN');
-            console.log(checkInDate.toString())
 
             this.outTime = Object.assign(this.outTime, []);
             if (att.checkOut && att.checkOut.length != 0) {
               let checkOutDate: DateTime = DateTime.local(att.checkOut[0], att.checkOut[1], att.checkOut[2], att.checkOut[3], att.checkOut[4]);
               checkOutDate.setLocale('in-IN');
-              console.log(checkOutDate.toString())
               this.outTime[0] = att.checkOut[3];
               this.outTime[1] = att.checkOut[4];
             }
@@ -259,7 +254,6 @@ export class ActiveJobService {
             if (att.totalRecordedTime) {
               if (this.activeJob?.job?.basePrice) {
                 this.totalPayment = (att.totalRecordedTime * this.activeJob?.job?.hourlyRate) + (loginUserGender == "Male" ? this.activeJob?.job?.basePrice[0] : this.activeJob?.job?.basePrice[1]);
-                console.log(this.totalPayment)
               }
               this.showPaymentPage = true;
             }
@@ -373,10 +367,6 @@ export class ActiveJobService {
           hours: 0.25
         });
 
-        var jobEndTime: DateTime = scheduledEndDate.minus({
-          hours: 0
-        });
-
         if (!this.endBeforeFifteenMin) {
           // console.log('15 min schedule ', fifteenMinutesBefore.toString(), DateTime.local().toString());
           if (fifteenMinutesBefore.toString() < DateTime.local().toString()) {
@@ -386,8 +376,6 @@ export class ActiveJobService {
             }
           }
         }
-        console.log(scheduledStartDate.toString() > scheduledEndDate.toString())
-        // console.log("+++++++++++++", scheduledStartDate.toString(), scheduledEndDate.toString(), DateTime.local().toString())
         if (scheduledEndDate.toString() < DateTime.local().toString()) {
           this.isJobCompletedTimeGone = true;
         }
@@ -565,8 +553,8 @@ export class ActiveJobService {
       await this.getEmployeeAttendance();
       // }
     }).catch((err: HttpErrorResponse) => {
-      console.log(err)
       this.loadingService.dismiss();
+      console.log(err)
     })
   }
 
@@ -592,7 +580,6 @@ export class ActiveJobService {
 
   // Payment page redirction
   async goToPaymentPage() {
-    console.log(this.activeJob)
     if (this.activeJob && this.activeJob?.activeDay && this.activeJob.attendance && this.activeJob.attendance.content.length != 0) {
       this.activeJob.activeDay.isComplete = true;
       const att: AttendanceBody = this.activeJob.attendance.content[0];
@@ -605,7 +592,6 @@ export class ActiveJobService {
       // if job already done
       if (this.activeJob.attendance.content[0].totalRecordedTime == null) {
         att.totalRecordedTime = this.getRecordedTime(DateTime.local());
-        console.log("totalRecordedTime==========", att.totalRecordedTime)
       }
       await this.completeWork(att);
     } else {
@@ -663,11 +649,12 @@ export class ActiveJobService {
         "rating": this.selectedJobRating
       }
       await this.commonProvider.PostMethod(Apiurl.SaveRating, param).then(async (res: any) => {
+        this.loadingService.dismiss();
         if (res) {
-          this.loadingService.dismiss();
           this.savePayment();
         }
       }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
         console.log(err)
       })
     }
@@ -703,8 +690,8 @@ export class ActiveJobService {
     const loginUserId = await this.storage.get('loginUserId');
     this.loadingService.show();
     await this.commonProvider.GetMethod(Apiurl.GetEarningStatus + loginUserId, null).then(async (res: any) => {
+      this.loadingService.dismiss();
       if (res) {
-        this.loadingService.dismiss();
         this.activeJob = null;
         this.jobCompleted = true;
         await this.GetActiveJob();
@@ -766,15 +753,12 @@ export class ActiveJobService {
 
   // CheckIn-checkOut Date-Time Calculation
   checkIncheckOutDateTimeCalculation() {
-    console.log(this.activeJob)
     this.activeJob?.job?.dates?.forEach(dateObject => {
       let scheduledStartDate: DateTime = DateTime.local(dateObject.date[0], dateObject.date[1], dateObject.date[2], dateObject.timeFrom[0], dateObject.timeFrom[1]);
       let scheduledEndDate: DateTime = DateTime.local(dateObject.date[0], dateObject.date[1], dateObject.date[2], dateObject.timeTo[0], dateObject.timeTo[1]);
       scheduledStartDate.setLocale('in-IN');
       scheduledEndDate.setLocale('in-IN');
       this.dayChange = false;
-      console.log(this.activeJob?.job?.dates[0].date)
-      console.log(scheduledStartDate.toString(), scheduledEndDate.toString())
       if (scheduledStartDate.toString() > scheduledEndDate.toString()) {
         this.newDayDate[0] = dateObject.date[0];
         this.newDayDate[1] = dateObject.date[1];

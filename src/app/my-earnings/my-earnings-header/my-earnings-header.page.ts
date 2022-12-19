@@ -14,6 +14,7 @@ export class MyEarningsHeaderPage implements OnInit {
   @Input() showBackBtn?: boolean = false;
   @Input() showContactIcon?: boolean = false;
   @Input() isModal?: boolean = false;
+  @Input() showSearch?: string = "";
 
   search: string = "";
 

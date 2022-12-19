@@ -66,8 +66,8 @@ export class MyEarningsService {
     const loginUserId = await this.storage.get('loginUserId');
     this.loadingService.show();
     return await this.commonProvider.GetMethod(Apiurl.GetAllPaymentsRecords + '?' + 'jobSeekerId=' + loginUserId, null).then(async (res: any) => {
+      this.loadingService.dismiss();
       if (res) {
-        this.loadingService.dismiss();
         this.earningRecords = res.content;
       }
     }).catch((err: HttpErrorResponse) => {
@@ -83,8 +83,8 @@ export class MyEarningsService {
     let param = '?page=' + this.page + '&size=' + this.pageSize + '&sort=createdOn,desc' + '&' + 'jobSeekerId=' + loginUserId
       + '&status=' + this.selectedTab;
     return await this.commonProvider.GetMethod(Apiurl.Payment + '/' + param, null).then(async (res: any) => {
+      this.loadingService.dismiss();
       if (res) {
-        this.loadingService.dismiss();
         this.loadedMyEarningsRecords = res.numberOfElements;
         this.totalEarningRecords = res.totalElements;
         res.content?.forEach(element => {
@@ -126,8 +126,8 @@ export class MyEarningsService {
         this.authorizeBankDetails = res.authorizeBankDetails;
       }
     }).catch((err: HttpErrorResponse) => {
-      console.log(err)
       this.loadingService.dismiss();
+      console.log(err)
     })
 
   }
@@ -145,15 +145,15 @@ export class MyEarningsService {
         "jobSeekerId": loginUserId,
       }
       await this.commonProvider.PutMethod(Apiurl.UpdateAccountDetails + this.accountId, obj).then(async (res: any) => {
+        this.loadingService.dismiss();
         if (res) {
           this.getAccountDetails();
           this.modalCtrl.dismiss();
-          this.loadingService.dismiss();
           // this.withdrawAmountPage();
         }
       }).catch((err: HttpErrorResponse) => {
-        console.log(err)
         this.loadingService.dismiss();
+        console.log(err)
       })
     } else {
       let obj: JobseekerAccount = {
@@ -164,15 +164,15 @@ export class MyEarningsService {
         "jobSeekerId": loginUserId,
       }
       await this.commonProvider.PostMethod(Apiurl.SaveAccountDetails, obj).then(async (res: any) => {
+        this.loadingService.dismiss();
         if (res) {
           this.getAccountDetails();
           this.modalCtrl.dismiss();
-          this.loadingService.dismiss();
           // this.withdrawAmountPage();
         }
       }).catch((err: HttpErrorResponse) => {
-        console.log(err)
         this.loadingService.dismiss();
+        console.log(err)
       })
     }
   }

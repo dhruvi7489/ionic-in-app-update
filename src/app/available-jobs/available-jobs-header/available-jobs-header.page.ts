@@ -9,7 +9,7 @@ import { AvailableJobsService } from '../available-jobs.service';
 })
 export class AvailableJobsHeaderPage implements OnInit {
   @Input() headerTitle?: string = "";
-  @Input() counts?: string = "";
+  @Input() counts?: any = 0;
   @Input() showSearch?: boolean = false;
   @Input() showBackBtn?: boolean = false;
   @Input() showProfileLogo?: boolean = false;

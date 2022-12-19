@@ -52,7 +52,6 @@ export class OnboardingJobTypePage implements OnInit {
   }
 
   addLinks(i) {
-    console.log(this.onboardingService.links)
     let obj;
     if (this.onboardingService.links.length < 3) {
       obj = {
@@ -71,7 +70,6 @@ export class OnboardingJobTypePage implements OnInit {
         }
         this.onboardingService.links[i] = obj
       }
-      console.log(this.onboardingService.links)
     }
   }
 
@@ -80,10 +78,12 @@ export class OnboardingJobTypePage implements OnInit {
   }
 
   skip() {
+    this.onboardingService.onbordingFlowVisited();
     this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
   }
 
   continue() {
+    this.onboardingService.onbordingFlowVisited();
     if (this.onboardingService.loginUserPersonalInfo?.workExperiences && this.onboardingService.loginUserPersonalInfo?.workExperiences?.length != 0) {
       this.onboardingService.editExperience(0);
     } else {

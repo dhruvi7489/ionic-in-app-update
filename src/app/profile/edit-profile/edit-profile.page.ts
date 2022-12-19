@@ -103,7 +103,6 @@ export class EditProfilePage implements OnInit {
       input: this.profileService.autocomplete.query,
 
     }, (predictions, status) => {
-      console.log(predictions)
       me.profileService.autocompleteItems = [];
       me.ngZone.run(() => {
         if (predictions != null) {

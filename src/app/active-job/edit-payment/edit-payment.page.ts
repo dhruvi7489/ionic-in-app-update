@@ -28,7 +28,7 @@ export class EditPaymentPage implements OnInit {
     this.activeJobService.leftCharactersForExpectedAmount = this.activeJobService.maxlengthReasonForExpectedAmount - this.activeJobService.reasonForExpectedAmount.length;
   }
 
-  submitUpdatedAmount(event) {
+  submitUpdatedAmount() {
     // this.router.navigateByUrl('tabs/active-job');
     this.location.back();
   }

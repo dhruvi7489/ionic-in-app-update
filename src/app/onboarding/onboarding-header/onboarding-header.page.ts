@@ -37,7 +37,7 @@ export class OnboardingHeaderPage implements OnInit {
       route: "/onboarding/onboarding-job-type"
     }
   ];
-  @Input() headerTitle?: '';
+  @Input() headerTitle?: string = '';
 
   constructor(
     public onboardingService: OnboardingService,

@@ -1,7 +1,7 @@
 import { environment } from 'src/environments/environment';
 
-const RoutePath = environment.api_url;
-const ImagePath = environment.image_url;
+const RoutePath = environment.apiUrl;
+const ImagePath = environment.imageUrl;
 const authServiceUrl = 'auth-service/v1/';
 const jobSeekerServiceUrl = 'job-seeker-service/v1/';
 const JobService = 'job-service/v1/';

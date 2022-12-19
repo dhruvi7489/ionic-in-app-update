@@ -6,7 +6,7 @@
           <div class="fw-600 secondary sub-heading-xl">
             {{profileService?.loginUserName}}
           </div>
-          <div class="pl-8 ion-align-self-center" *ngIf="profileService?.profileData?.status == 'Active'">
+          <div class="pl-8 ion-align-self-center" *ngIf="profileService?.profileData?.status === 'Active'">
             <img src="../../../assets/imgs/Iconsax/Svg/All/outline/verify-bedge.svg">
           </div>
         </div>
@@ -28,7 +28,8 @@
         </ion-col>
         <ion-col class="pl-12 p-0" size="4">
           <custom-button [title]="'More'" [button]="'ternary'" [disabled]="false" (btnClick)="profileMoreOptions()"
-            [color]="true" [showLogoOnEnd]="false" [image]="'../../../assets/imgs/Iconsax/Svg/All/outline/more-3.svg'">
+            [color]="'black'" [showLogoOnEnd]="false"
+            [image]="'../../../assets/imgs/Iconsax/Svg/All/outline/more-3.svg'">
           </custom-button>
         </ion-col>
       </ion-row>
@@ -69,7 +70,7 @@
             <div class="rating-inner-wrap rate-1" *ngIf="!profileService?.profileData?.averageRating">
               <img src="../../../assets/imgs/Rates/smile-rate-1-active.svg" height="20px" width="20px" class="mt-8">
             </div>
-            <div class="rating-inner-wrap rate-1" *ngIf="profileService?.profileData?.averageRating == 1">
+            <div class="rating-inner-wrap rate-1" *ngIf="profileService?.profileData?.averageRating === 1">
               <img src="../../../assets/imgs/Rates/smile-rate-1-active.svg" height="20px" width="20px" class="mt-8">
             </div>
             <div class="rating-inner-wrap rate-2"
@@ -256,19 +257,19 @@
   <div class="mt-8 header-content-wrap bottom-border">
     <div class="mt-8 ml-16 mr-16 pt-20 pb-20">
       <ion-row>
-        <ion-col class="p-0" [size]="profileService?.jobPreferences?.jobTypePreferences?.length != 0 ? 10 : 12">
+        <ion-col class="p-0" [size]="profileService?.jobPreferences?.jobTypePreferences?.length !== 0 ? 10 : 12">
           <div class="fw-600 secondary sub-heading-lg">Job preferences</div>
         </ion-col>
         <ion-col class="p-0 ion-text-end" size="2"
-          *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length != 0 && showPreferencesEdit()">
+          *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length !== 0 && showPreferencesEdit()">
           <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="addJobPreferences()">
         </ion-col>
       </ion-row>
 
-      <div *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length != 0"
+      <div *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length !== 0"
         [ngClass]="{'content-preference-wrap-scroll':profileService?.jobPreferences?.jobTypePreferences?.length > 3}">
         <div class="mb-16" *ngFor="let jobType of profileService?.jobPreferences?.jobTypePreferences;let i=index;"
-          [ngClass]="{'mt-16': i == 0, 'mt-12': i != 0}">
+          [ngClass]="{'mt-16': i == 0, 'mt-12': i !== 0}">
           <ion-row>
             <ion-col class="p-0" size="12">
               <div class="fw-600 secondary sub-heading-md">{{ jobType.typeName }}</div>

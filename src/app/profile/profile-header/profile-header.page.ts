@@ -16,6 +16,7 @@ export class ProfileHeaderPage implements OnInit {
   @Input() showBackBtn?: boolean = false;
   @Input() showContactIcon?: boolean = false;
   @Input() isModal?: boolean = false;
+  @Input() showSearch?: boolean = false;
 
   search: string = "";
 

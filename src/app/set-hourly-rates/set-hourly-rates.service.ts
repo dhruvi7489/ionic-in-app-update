@@ -38,7 +38,8 @@ export class SetHourlyRatesService {
       hour: 12,
       displayName: '12 hours'
     }
-  ]
+  ];
+
   constructor(
     public commonProvider: CommonProvider,
     public loadingService: LoadingService,
@@ -54,7 +55,6 @@ export class SetHourlyRatesService {
   async getJobPreferences() {
     const loginUserId = await this.storage.get('loginUserId');
     return await this.commonProvider.GetMethod(Apiurl.GetDetailsByJobSeekerId + loginUserId, null).then(async (res: any) => {
-      console.log(res)
       if (res) {
         this.jobPreferenceId = res.jobPreferenceId;
         this.jobPreferences = [];
@@ -62,15 +62,16 @@ export class SetHourlyRatesService {
           ele.shiftHours = 8;
           ele.finalAmount = this.calculateFinalAmount(ele.basePrice, ele.maxHourlyRate, ele.shiftHours);
           this.jobPreferences.push(ele);
-        })
+        });
       }
     }).catch((err: HttpErrorResponse) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
   }
 
   // Calculate Final Amount based on selected hours
   calculateFinalAmount(basePrice, maxHourlyRate, shiftHours) {
+    console.log("++++++++", basePrice + (maxHourlyRate * shiftHours))
     return basePrice + (maxHourlyRate * shiftHours);
   }
 
@@ -86,7 +87,6 @@ export class SetHourlyRatesService {
   //         ele.finalAmount = ele.maxHourlyRate + (ele.maxHourlyRate * ele.shiftHours)
   //         this.jobPreferences.push(ele);
   //       })
-  //       console.log(this.jobPreferences)
   //     }
   //   }).catch((err: HttpErrorResponse) => {
   //     console.log(err)
@@ -94,56 +94,54 @@ export class SetHourlyRatesService {
   // }
 
   async getMinMaxFromJobType(jobType: JobType, level: string) {
-    // console.log('level ::: ', level);
     let obj;
-    //console.log('getMinMaxFromJobType::jobType ', jobType)
     if (jobType) {
       const loginUserGender = await this.storage.get('loginUserGender');
-      //console.log('iiterate prices')
       jobType.jobSeekerPrices.forEach(element => {
-        // console.log('price info::: ', element);
-        if (element.gender.toLowerCase() == loginUserGender.toLowerCase()) {
+        if (element.gender.toLowerCase() === loginUserGender.toLowerCase()) {
           element.jobTypeHourlyPriceRange.forEach(priceRange => {
-            //console.log('priceRange::: ', priceRange);
-            if (priceRange.level.toLowerCase() == level.toLowerCase()) {
+            if (priceRange.level.toLowerCase() === level.toLowerCase()) {
               obj = priceRange;
               return;
             }
-          })
+          });
         }
       });
     }
-    //console.log('obj::', obj);
     return obj;
   }
 
 
 
-  // Set Hourly Rates 
+  // Set Hourly Rates
   setHourlyRates() {
     // update hourly rates
     this.loadingService.show();
-    let typePreferences = [];
-    this.jobPreferences.forEach(hours => {
+    const typePreferences = [];
+    this.jobPreferences.forEach(pref => {
+      // if (pref.maxHourlyRate === null) {
+      //   pref.maxHourlyRate = 0;
+      // }
       typePreferences.push(
         {
-          maxHourlyRate: hours.maxHourlyRate,
-          level: hours.level,
-          status: hours.status,
-          typeId: hours.typeId,
-          typeName: hours.typeName
+          maxHourlyRate: pref.maxHourlyRate,
+          level: pref.level,
+          status: pref.status,
+          typeId: pref.typeId,
+          typeName: pref.typeName
         });
     });
-    this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPreferenceId, { jobTypeHourlyRateRequests: this.jobPreferences }).then((res: any) => {
+    this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPreferenceId, { jobTypeHourlyRateRequests: this.jobPreferences }
+    ).then((res: any) => {
+      this.loadingService.dismiss();
       if (res) {
         this.getJobPreferences();
         this.profileService.getJobPreference();
         this.modalCtrl.dismiss();
-        this.loadingService.dismiss();
       }
     }).catch((err: HttpErrorResponse) => {
-      this.toastService.showMessage(err.error.message + ' ' + (err.error?.subErrors.length != 0 ? err.error?.subErrors[0]?.message : ''));
       this.loadingService.dismiss();
-    })
+      this.toastService.showMessage(err.error.message + ' ' + (err.error?.subErrors.length !== 0 ? err.error?.subErrors[0]?.message : ''));
+    });
   }
 }

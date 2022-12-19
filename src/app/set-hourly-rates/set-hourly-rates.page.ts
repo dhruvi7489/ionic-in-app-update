@@ -36,7 +36,8 @@ export class SetHourlyRatesPage implements OnInit {
   }
 
   async rateSliderChanged(event, jobType) {
-    jobType.finalAmount = await this.setHourlyRatesService.calculateFinalAmount(jobType.basePrice, jobType.maxHourlyRate, jobType.shiftHours);
+    jobType.finalAmount = await
+      this.setHourlyRatesService.calculateFinalAmount(jobType.basePrice, jobType.maxHourlyRate, jobType.shiftHours);
   }
 
   saveHourlyRates() {

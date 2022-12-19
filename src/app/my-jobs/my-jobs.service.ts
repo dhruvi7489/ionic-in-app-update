@@ -37,23 +37,22 @@ export class MyJobsService {
       params += '&status=' + this.selectedTab
     }
     await this.commonProvider.GetMethod(Apiurl.GetMyJobs + params, null).then(async (res: any) => {
+      await this.loadingService.dismiss();
       if (res && res.content?.length != 0) {
-        await this.loadingService.dismiss();
         this.totalMyJobsRecords = res.totalElements;
-        this.noDataFound = res?.content?.length != 0 ? true : false;
+        this.noDataFound = res?.content?.length == 0 ? true : false;
         this.loadedMyJobsRecords = res?.content.length;
         this.errorInApiCall = false;
         res.content.forEach((element) => {
           this.myJobsList.push(element);
         });
-      } else {
-        await this.loadingService.dismiss();
       }
     }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
+      console.log(err)
       this.errorInApiCall = true;
       this.myJobsList = [];
       this.page = 0;
-      this.loadingService.dismiss();
 
     })
   }

@@ -15,7 +15,7 @@ import { Facebook, FacebookLoginResponse } from '@awesome-cordova-plugins/facebo
 export class OnboardingPersonalInfoPage implements OnInit {
   user = null;
   token = null;
-
+  showError: boolean = false;
   @Output() openOnboardingProfilePicturePage = new EventEmitter();
 
   constructor(
@@ -55,10 +55,16 @@ export class OnboardingPersonalInfoPage implements OnInit {
   }
 
   savePersonalInfo() {
-    if (this.onboardingService.id == null) {
-      this.onboardingService.savePersonalInfo();
+    if (!this.onboardingService.full_name || !this.onboardingService.email_address || !this.onboardingService.emailValid
+      || !this.onboardingService.gender || !this.onboardingService.dob) {
+      this.showError = true;
+      return;
     } else {
-      this.onboardingService.updatePersonalInfo();
+      if (this.onboardingService.id == null) {
+        this.onboardingService.savePersonalInfo();
+      } else {
+        this.onboardingService.updatePersonalInfo();
+      }
     }
   }
 

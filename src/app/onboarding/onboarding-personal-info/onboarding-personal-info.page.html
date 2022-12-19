@@ -19,7 +19,9 @@
     <custom-input [inputType]="'text'" [placeholder]="'Full name'" [ngModelData]="onboardingService.full_name"
       [id]="'full_name'" (keyUp)="getFullName($event)">
     </custom-input>
-    <div *ngIf="!onboardingService.full_name" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter user name</div>
+    <!-- <div *ngIf="!onboardingService.full_name" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter user name</div> -->
+    <div *ngIf="showError && !onboardingService.full_name" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter
+      user name</div>
 
     <div class="secondary fw-500 sub-heading-sm mb-8 mt-16">
       <ion-label>Date of birth*</ion-label>
@@ -28,7 +30,9 @@
       (dateChange)="getDOB($event)" [id]="'dob'" [name]="'dob'"
       [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg'" [for]="true">
     </custom-input>
-    <div *ngIf="!onboardingService.dob" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter date of birth</div>
+    <!-- <div *ngIf="!onboardingService.dob" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter date of birth</div> -->
+    <div *ngIf="showError && !onboardingService.dob" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter date of
+      birth</div>
 
     <div class="secondary fw-500 sub-heading-sm mb-8 mt-16">
       <ion-label>Email address*</ion-label>
@@ -36,7 +40,10 @@
     <custom-input [inputType]="'email'" [placeholder]="'Email Address'" [ngModelData]="onboardingService.email_address"
       [id]="'email_address'" (keyUp)="getEmailAddress($event)">
     </custom-input>
-    <div *ngIf="!onboardingService.emailValid" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter valid e-mail
+    <!-- <div *ngIf="!onboardingService.emailValid" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter valid e-mail
+      address</div> -->
+    <div *ngIf="showError && !onboardingService.emailValid" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter
+      valid e-mail
       address</div>
 
     <div class="secondary fw-500 sub-heading-sm mb-8 mt-16">
@@ -53,7 +60,9 @@
         [name]="'gender'" (radioChange)="getGender($event)">
       </custom-input>
     </div>
-    <div *ngIf="!onboardingService.gender" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please select gender</div>
+    <!-- <div *ngIf="!onboardingService.gender" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please select gender</div> -->
+    <div *ngIf="showError && !onboardingService.gender" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please select
+      gender</div>
 
     <div class="secondary fw-500 sub-heading-sm mb-8 mt-16">
       <ion-label>Referral code</ion-label>
@@ -65,6 +74,6 @@
 </ion-content>
 
 <ion-footer>
-  <custom-button [title]="'Next'" (btnClick)="savePersonalInfo()" [disabled]="disable()" [button]="'primary'">
+  <custom-button [title]="'Next'" (btnClick)="savePersonalInfo()" [disabled]="false" [button]="'primary'">
   </custom-button>
 </ion-footer>

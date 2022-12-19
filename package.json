@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "HTTPS=true ng serve",
-    "build": "ng build",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -30,7 +30,7 @@
     "@awesome-cordova-plugins/launch-navigator": "^5.44.0",
     "@awesome-cordova-plugins/media-capture": "^5.45.0",
     "@awesome-cordova-plugins/screen-orientation": "^5.45.0",
-    "@capacitor/android": "4.5.0",
+    "@capacitor/android": "^3.9.0",
     "@capacitor/app": "^4.0.0-beta.2",
     "@capacitor/camera": "^4.0.0-beta.2",
     "@capacitor/configure": "^2.0.10",
@@ -42,6 +42,8 @@
     "@capacitor/push-notifications": "^1.0.9",
     "@capacitor/share": "^4.1.0",
     "@capacitor/status-bar": "^4.1.0",
+    "@ionic-native/app-update": "^5.36.0",
+    "@ionic-native/app-version": "^5.36.0",
     "@ionic-native/base64": "^4.20.0",
     "@ionic-native/core": "^5.36.0",
     "@ionic-native/launch-navigator": "^5.36.0",
@@ -51,6 +53,7 @@
     "@ionic/storage": "^3.0.6",
     "com-badrit-base64": "^0.2.0",
     "cordova-plugin-actionsheet": "^2.3.3",
+    "cordova-plugin-app-version": "^0.1.14",
     "cordova-plugin-dialogs": "^2.0.2",
     "cordova-plugin-facebook-connect": "^3.2.0",
     "cordova-plugin-file": "^7.0.0",
@@ -63,7 +66,7 @@
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "uk.co.workingedge.phonegap.plugin.launchnavigator": "^5.0.6",
-    "w4u-custom-components": "^1.0.47",
+    "w4u-custom-components": "^1.0.48",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

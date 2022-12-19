@@ -51,8 +51,8 @@ export class AvailableJobsService {
   async setInitialValues() {
     const loginUserInfo = await this.storage.get('loginUserInfo');
     this.jobSeeker = loginUserInfo;
-
   }
+
   // Get all jobs list
   async getAllJobsList(search?) {
     const loginUserGender = await this.storage.get('loginUserGender');
@@ -93,7 +93,6 @@ export class AvailableJobsService {
     this.jobApplicationId = null;
 
     this.loadingService.show();
-
     if (this.selectedJobId && loginUserId) {
       let params = this.selectedJobId + '/' + loginUserId;
       let param = { "gender": loginUserGender }
@@ -112,8 +111,8 @@ export class AvailableJobsService {
       })
     } else {
       // this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
-      this.toastService.showMessage("Employment Id not found!")
       this.loadingService.dismiss();
+      this.toastService.showMessage("Employment Id not found!")
     }
   }
 
@@ -139,8 +138,9 @@ export class AvailableJobsService {
 
   // Login user eligible for apply job or not that logic set here
   async logicForValidToApplyJob(res, typeIdFound) {
-    for (let pref of res.content[0]?.jobTypePreferences) {
-      if (pref.typeId == this.selectedJobDetails?.jobTypeId) {
+    if (res.content[0]?.jobTypePreferences?.length != 0) {
+      for (let pref of res.content[0]?.jobTypePreferences) {
+        // if (pref.typeId == this.selectedJobDetails?.jobTypeId) {
         typeIdFound = true;
         if (this.selectedJobDetails?.jobSeekerPaymentInfo?.level == 'Expert') {
           if (pref.level == 'Expert')
@@ -165,11 +165,16 @@ export class AvailableJobsService {
           this.toastService.showMessage('Something went wrong, try again later.');
           return;
         }
+        // }
+      }
+    } else {
+      if (this.selectedJobDetails?.jobSeekerPaymentInfo?.level == 'Beginner') {
+        this.goToSetHourlyRate();
       }
     }
-    if (!typeIdFound) {
-      await this.toastService.showMessage('You can not apply to this job, your profile not approved for this Job Type');
-    }
+    // if (!typeIdFound) {
+    //   await this.toastService.showMessage('You can not apply to this job, your profile not approved for this Job Type');
+    // }
   }
 
   // Go to set hourly rate page
@@ -193,7 +198,7 @@ export class AvailableJobsService {
     }));
     let params = loginUserId + '?sort=createdOn,desc&page=0&size=10000&status=APPROVED'
     await this.commonProvider.GetMethod(Apiurl.GetMyJobs + params, null).then(async (res: any) => {
-      await res.forEach(job => {
+      await res?.content?.forEach(job => {
         job.dates.forEach(date => {
           const jobDateStart = DateTime.local(date?.date[0], date?.date[1], date?.date[2], date?.timeFrom[0], date?.timeFrom[1]);
           const jobDateEnd = DateTime.local(date?.date[0], date?.date[1], date?.date[2], date?.timeTo[0], date?.timeTo[1]);
@@ -206,23 +211,46 @@ export class AvailableJobsService {
       });
 
     }).catch((err: HttpErrorResponse) => {
-
+      console.log(err)
     })
     return isFound;
   }
 
   // update hourly rates
-  updateHourlyRateRange(hourlyRate, isApplyLater) {
+  async updateHourlyRateRange(hourlyRate, isApplyLater) {
     this.loadingService.show();
-    this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPref.id, { jobTypeHourlyRateRequests: this.jobPref?.jobTypePreferences }).then((res: any) => {
+    console.log(this.jobPref, this.selectedJobDetails);
+    if (this.jobPref?.jobTypePreferences?.length == 0) {
       this.loadingService.dismiss();
-      if (res) {
-        this.submitJobApplication(hourlyRate, isApplyLater);
+
+      let jobTypePreferencesRequests = [];
+      let data = {
+        "typeId": this.selectedJobDetails?.jobTypeId,
+        "typeName": this.selectedJobDetails?.jobTypeName,
       }
-    }).catch((err: HttpErrorResponse) => {
-      console.log(err)
-      this.loadingService.dismiss();
-    })
+      jobTypePreferencesRequests.push(data);
+      let params = {
+        "jobSeekerId": await this.storage.get('loginUserId'),
+        "jobTypeRequests": jobTypePreferencesRequests
+      }
+      this.commonProvider.PutMethod(Apiurl.JobPreference + '/' + this.jobPref.id, params).then(async (res: any) => {
+        await this.loadingService.dismiss();
+        await this.submitJobApplication(hourlyRate, isApplyLater);
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
+        console.log(err)
+      })
+    } else {
+      this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPref.id, { jobTypeHourlyRateRequests: this.jobPref?.jobTypePreferences }).then((res: any) => {
+        this.loadingService.dismiss();
+        if (res) {
+          this.submitJobApplication(hourlyRate, isApplyLater);
+        }
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
+        console.log(err)
+      })
+    }
   }
 
   // Apply for job & submit job application
@@ -238,9 +266,9 @@ export class AvailableJobsService {
     application.gender = loginUserGender;
 
     this.commonProvider.PostMethod(Apiurl.SubmitJobApplication, application).then(async (res: any) => {
-      this.loadingService.dismiss();
-      if (res && res.id) {
-        if (!isApplyLater) {
+      await this.loadingService.dismiss();
+      if (!isApplyLater) {
+        if (res && res.id) {
           let obj = {
             title: "Job application successful",
             message: "Congratulations, Your job application is now submitted and awaiting for approval. we will inform you as soon as it is approved.",
@@ -254,9 +282,7 @@ export class AvailableJobsService {
             componentProps: obj
           });
           await modal.present();
-        }
-      } else {
-        if (!isApplyLater) {
+        } else {
           let obj = {
             title: "Job application failed",
             message: "Your job application failed.Please try again later. If this continues to be a problem, please reach out to customer support.",
@@ -273,10 +299,13 @@ export class AvailableJobsService {
           });
           await modal.present();
         }
+      } else {
+        await this.toastService.showMessage('You saved this job for later use!');
+        await this.getSelectedJobById();
       }
     }).catch((err: HttpErrorResponse) => {
-      console.log(err)
       this.loadingService.dismiss();
+      console.log(err)
     })
   }
 

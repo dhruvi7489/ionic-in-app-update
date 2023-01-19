@@ -50,7 +50,8 @@
 </ion-content>
 
 <ion-footer>
-  <custom-button [title]="myEarningsService?.accountId ? 'Update' : 'Save'" (btnClick)="saveAccountFormDetails()"
-    [disabled]="disable()" [button]="'primary'">
+  <!-- (btnClick)="saveAccountFormDetails()" -->
+  <custom-button [title]="myEarningsService?.accountId ? 'Update' : 'Save'" appDebounceClick
+    (debounceClick)="saveAccountFormDetails()" [debounceTimeConst]="300" [disabled]="disable()" [button]="'primary'">
   </custom-button>
 </ion-footer>

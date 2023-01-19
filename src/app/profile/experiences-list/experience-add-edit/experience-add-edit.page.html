@@ -39,7 +39,8 @@
 
 <ion-footer>
   <ion-row class="delete-btn" *ngIf="profileService.editWorkExperienceFlag">
-    <ion-col class="p-0" size="12" (click)="deleteExperience()">
+    <!-- (click)="deleteExperience()" -->
+    <ion-col class="p-0" size="12" appDebounceClick (debounceClick)="deleteExperience()" [debounceTimeConst]="300">
       <div class="d-flex justify-content-center h-48">
         <img src="../../../../assets/imgs/Iconsax/Svg/All/outline/close-red.svg" height="20px" width="20px"
           class="ion-align-self-center">
@@ -49,8 +50,9 @@
   </ion-row>
 
   <div [ngClass]="{'mt-12': profileService.editWorkExperienceFlag}">
-    <custom-button [title]="'Save'" (btnClick)="saveExperience()" [button]="'primary'"
-      [disabled]="!profileService.experienceDescription">
+    <!-- (btnClick)="saveExperience()" -->
+    <custom-button [title]="'Save'" appDebounceClick (debounceClick)="saveExperience()" [debounceTimeConst]="300"
+      [button]="'primary'" [disabled]="!profileService.experienceDescription">
     </custom-button>
   </div>
 </ion-footer>

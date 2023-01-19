@@ -561,6 +561,12 @@ ion-segment-button {
     --button-color-hover: #79193b;
 }
 
+.logout-actionsheet {
+    .action-sheet-group {
+        padding: 0px 0px 0px 0px !important;
+    }
+}
+
 .action-sheet-group {
     margin: 0px 16px 16px 16px;
     padding: 8px 0px 8px 0px;
@@ -684,4 +690,92 @@ ion-backdrop {
 ion-tab-button::part(native) {
     padding-inline-start: 0px !important;
     padding-inline-end: 0px !important;
+}
+
+// Otp Input CSS
+ng-otp-input {
+    display: flex !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+}
+
+.ng-otp-input-wrapper {
+    display: flex !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+
+    .otp-input {
+        background: #fff !important;
+        padding: 10px !important;
+        color: #1a1a1a !important;
+        text-align: center !important;
+        margin-right: 12px !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 44.67px !important;
+        height: 44px !important;
+        background: #FFFFFF !important;
+        border: 1px solid #E8E8E8 !important;
+        border-radius: 12px !important;
+        box-shadow: 0px 1px 2px rgb(26 26 26 / 4%) !important;
+    }
+
+    input:valid {
+        background: #FFFFFF;
+        border: 1px solid #E8E8E8;
+        color: #1A1A1A;
+        box-shadow: 0px 1px 2px rgba(26, 26, 26, 0.04), 0px 0px 0px 4px #F5F5F8;
+    }
+
+    input:focus {
+        outline: none;
+        background: #FFFFFF;
+        border: 1px solid #B2B3CB !important;
+        color: #636363;
+        box-shadow: 0px 1px 2px rgba(26, 26, 26, 0.04), 0px 0px 0px 4px #F5F5F8;
+    }
+
+    @media screen and (max-width: 320px) {
+        .otp-input {
+            width: 40px !important;
+            height: 40px !important;
+            margin-right: 8px !important;
+        }
+    }
+
+    @media screen and (min-width: 321px) and (max-width: 424px) {
+        .otp-input {
+            width: 46px !important;
+            height: 46px !important;
+        }
+    }
+
+    @media screen and (min-width: 425px) and (max-width: 768px) {
+        .otp-input {
+            width: 80px !important;
+            height: 50px !important;
+        }
+    }
+
+    @media screen and (min-width: 769px) and (max-width: 1024px) {
+        .otp-input {
+            width: 110px !important;
+            height: 60px !important;
+        }
+    }
+
+    @media screen and (min-width: 1025px) and (max-width: 1440px) {
+        .otp-input {
+            width: 150px !important;
+            height: 60px !important;
+        }
+    }
+
+    @media screen and (min-width: 1441px) {
+        .otp-input {
+            width: 200px !important;
+            height: 60px !important;
+        }
+    }
 }

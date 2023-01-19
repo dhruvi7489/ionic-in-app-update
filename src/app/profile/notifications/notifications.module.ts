@@ -8,6 +8,7 @@ import { NotificationsPageRoutingModule } from './notifications-routing.module';
 
 import { NotificationsPage } from './notifications.page';
 import { ProfileHeaderPageModule } from '../profile-header/profile-header.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ProfileHeaderPageModule } from '../profile-header/profile-header.module
     FormsModule,
     IonicModule,
     NotificationsPageRoutingModule,
-    ProfileHeaderPageModule
+    ProfileHeaderPageModule,
+    DirectivesModule
   ],
   declarations: [NotificationsPage]
 })

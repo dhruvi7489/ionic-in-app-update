@@ -8,6 +8,7 @@ import { SetHourlyRatesPageRoutingModule } from './set-hourly-rates-routing.modu
 
 import { SetHourlyRatesPage } from './set-hourly-rates.page';
 import { CustomButtonModule } from 'w4u-custom-components';
+import { DirectivesModule } from '../directives/directives.module';
 
 @NgModule({
   imports: [
@@ -15,8 +16,9 @@ import { CustomButtonModule } from 'w4u-custom-components';
     FormsModule,
     IonicModule,
     SetHourlyRatesPageRoutingModule,
-    CustomButtonModule
+    CustomButtonModule,
+    DirectivesModule
   ],
   declarations: [SetHourlyRatesPage]
 })
-export class SetHourlyRatesPageModule {}
+export class SetHourlyRatesPageModule { }

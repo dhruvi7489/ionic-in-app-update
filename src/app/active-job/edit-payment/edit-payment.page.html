@@ -20,7 +20,8 @@
         </ion-row>
         <ion-row>
           <ion-col size="12" class="pl-0">
-            <div class="fw-500 sub-heading-sm secondary">&#x20b9;{{activeJobService?.totalPayment || 0}}</div>
+            <div class="fw-500 sub-heading-sm secondary">&#x20b9;{{activeJobService?.totalPayment || 0 | number :
+              '1.0-0'}}</div>
           </ion-col>
         </ion-row>
       </div>
@@ -33,9 +34,8 @@
         </ion-row>
         <ion-row>
           <ion-col size="12" class="pl-0">
-            <custom-input [inputType]="'tel'" [placeholder]="'&#x20b9; 0'"
-              [ngModelData]="activeJobService.expectedAmount" [id]="'expectedAmount'"
-              (keyUp)="addExpectedAmount($event)">
+            <custom-input [inputType]="'number'" [placeholder]="'&#x20b9; 0'" [ngModelData]="expectedAmount"
+              [id]="'expectedAmount'" (keyUp)="addExpectedAmount($event)">
             </custom-input>
           </ion-col>
         </ion-row>
@@ -64,9 +64,10 @@
 <ion-footer>
   <ion-row>
     <ion-col size="12" class="pl-0 pr-0">
+      <!-- (btnClick)="submitUpdatedAmount()" -->
       <custom-button [title]="'Submit updated amount'"
-        [disabled]="!activeJobService.reasonForExpectedAmount || !activeJobService.expectedAmount"
-        (btnClick)="submitUpdatedAmount()" [button]="'primary'">
+        [disabled]="!activeJobService.reasonForExpectedAmount || !expectedAmount || expectedAmount < 0" appDebounceClick
+        (debounceClick)="submitUpdatedAmount()" [debounceTimeConst]="300" [button]="'primary'">
       </custom-button>
     </ion-col>
   </ion-row>

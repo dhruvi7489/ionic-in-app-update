@@ -1,6 +1,6 @@
 import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Address } from 'src/app/core/modal/address.modal';
-import { ToastService } from 'src/app/services/toast.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 import { ProfileService } from '../profile.service';
 
 

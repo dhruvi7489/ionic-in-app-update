@@ -29,6 +29,8 @@
 </ion-content>
 
 <ion-footer>
-  <custom-button [title]="'Save'" (btnClick)="withdrawAmount()" [disabled]="disable()" [button]="'primary'">
+  <!-- (btnClick)="withdrawAmount()" -->
+  <custom-button [title]="'Save'" appDebounceClick (debounceClick)="withdrawAmount()" [debounceTimeConst]="300"
+    [disabled]="disable()" [button]="'primary'">
   </custom-button>
 </ion-footer>

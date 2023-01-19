@@ -5,14 +5,17 @@
         <ion-row class="d-contents">
           <ion-col size="3" class="logo-title ion-align-self-center pr-0 pb-0 pt-0">
             <div class="img-wrapper d-flex">
-              <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" (click)="back()">
+              <!-- (click)="back()" -->
+              <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" appDebounceClick
+                (debounceClick)="back()" [debounceTimeConst]="300">
               <div class="header-title ion-align-self-center ml-8">
                 <div class="sub-heading-md secondary fw-400">Back</div>
               </div>
             </div>
           </ion-col>
           <ion-col size="6" class="ion-text-align-center pl-0 pr-0 pb-0 pt-0 ion-text-center">
-            <div class="sub-heading-md fw-500 secondary mt-14 mb-14 mr-8 ml-0 w-100 ion-text-center">{{headerTitle}}</div>
+            <div class="sub-heading-md fw-500 secondary mt-14 mb-14 mr-8 ml-0 w-100 ion-text-center">{{headerTitle}}
+            </div>
           </ion-col>
           <ion-col size="3" class="pl-0 pr-0 pb-0 pt-0">
           </ion-col>

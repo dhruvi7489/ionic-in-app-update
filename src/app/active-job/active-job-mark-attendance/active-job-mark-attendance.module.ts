@@ -11,6 +11,7 @@ import { ActiveJobCommonHeaderPageModule } from '../active-job-common-header/act
 import { ActiveJobHeaderPageModule } from '../active-job-header/active-job-header.module';
 import { CustomButtonModule } from 'w4u-custom-components';
 import { ActiveJobFlowStepperPageModule } from '../active-job-flow-stepper/active-job-flow-stepper.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { ActiveJobFlowStepperPageModule } from '../active-job-flow-stepper/activ
     CustomButtonModule,
     ActiveJobHeaderPageModule,
     ActiveJobCommonHeaderPageModule,
-    ActiveJobFlowStepperPageModule
+    ActiveJobFlowStepperPageModule,
+    DirectivesModule
   ],
   declarations: [ActiveJobMarkAttendancePage]
 })

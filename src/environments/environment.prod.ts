@@ -21,6 +21,7 @@ export const environment = {
     // 'https://uatapi.hour4u.com/api/', // UAT Api url
     'https://api.hour4u.com/api/', // Production Api url
   imageUrl: 'https://hour4u-img-data.s3.ap-south-1.amazonaws.com/',
+  UxCamAppKey: '5a343j0gz3kv00m',
   bottomTab: [
     {
       label: 'Jobs',

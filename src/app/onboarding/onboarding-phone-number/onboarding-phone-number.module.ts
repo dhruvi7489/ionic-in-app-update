@@ -9,6 +9,7 @@ import { OnboardingPhoneNumberPageRoutingModule } from './onboarding-phone-numbe
 import { OnboardingPhoneNumberPage } from './onboarding-phone-number.page';
 import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
 import { OnboardingHeaderPageModule } from '../onboarding-header/onboarding-header.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { OnboardingHeaderPageModule } from '../onboarding-header/onboarding-head
     CustomButtonModule,
     CustomInputModule,
     OnboardingHeaderPageModule,
+    DirectivesModule
   ],
   declarations: [OnboardingPhoneNumberPage],
   exports: [OnboardingPhoneNumberPage],

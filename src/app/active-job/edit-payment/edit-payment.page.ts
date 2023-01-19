@@ -9,18 +9,20 @@ import { ActiveJobService } from '../active-job.service';
   styleUrls: ['./edit-payment.page.scss'],
 })
 export class EditPaymentPage implements OnInit {
+  expectedAmount = null;
 
   constructor(
     public router: Router,
     public activeJobService: ActiveJobService,
-    public location: Location
+    public location: Location,
   ) { }
 
   ngOnInit() {
+    this.activeJobService.reasonForExpectedAmount = null;
   }
 
   addExpectedAmount(event) {
-    this.activeJobService.expectedAmount = event.ngModelData;
+    this.expectedAmount = event.ngModelData ? parseFloat(parseFloat(event.ngModelData).toFixed(2)) : null;
   }
 
   addReasonForExpectedAmount(event) {
@@ -30,6 +32,7 @@ export class EditPaymentPage implements OnInit {
 
   submitUpdatedAmount() {
     // this.router.navigateByUrl('tabs/active-job');
+    this.activeJobService.expectedAmount = this.expectedAmount
     this.location.back();
   }
 }

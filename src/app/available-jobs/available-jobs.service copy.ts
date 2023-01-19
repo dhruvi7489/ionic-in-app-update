@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonProvider } from '../core/common';
 import { Apiurl } from '../core/route';
-import { ToastService } from '../services/toast.service';
+import { ToastService } from '../core/services/toast.service';
 import { DateTime } from 'luxon';
 import { JobApplicationModalPage } from './job-application-modal/job-application-modal.page';
 import { ModalController } from '@ionic/angular';
@@ -50,7 +50,7 @@ export class AvailableJobsService {
       }
     }).catch((err: any) => {
       this.errorInApiCall = true;
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -67,7 +67,7 @@ export class AvailableJobsService {
         }
       }).catch((err: any) => {
         this.errorInApiCall = true;
-        console.log(err)
+        console.log(err);
       })
     } else {
       this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
@@ -87,7 +87,7 @@ export class AvailableJobsService {
       }
     }).catch((err: any) => {
       this.errorInApiCall = true;
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -170,7 +170,7 @@ export class AvailableJobsService {
       }
     }).catch((err: any) => {
       this.errorInApiCall = true;
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -221,7 +221,7 @@ export class AvailableJobsService {
       }
     }).catch((err: any) => {
       this.errorInApiCall = true;
-      console.log(err)
+      console.log(err);
     })
   }
 }

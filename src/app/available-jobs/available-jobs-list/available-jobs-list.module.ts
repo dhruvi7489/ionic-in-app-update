@@ -9,6 +9,7 @@ import { AvailableJobsListPageRoutingModule } from './available-jobs-list-routin
 import { AvailableJobsListPage } from './available-jobs-list.page';
 import { AvailableJobsHeaderPageModule } from '../available-jobs-header/available-jobs-header.module';
 import { PipesModule } from 'src/app/core/pipes/pipes.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -17,8 +18,9 @@ import { PipesModule } from 'src/app/core/pipes/pipes.module';
     IonicModule,
     AvailableJobsListPageRoutingModule,
     AvailableJobsHeaderPageModule,
-    PipesModule
+    PipesModule,
+    DirectivesModule
   ],
-  declarations: [AvailableJobsListPage]
+  declarations: [AvailableJobsListPage],
 })
-export class AvailableJobsListPageModule {}
+export class AvailableJobsListPageModule { }

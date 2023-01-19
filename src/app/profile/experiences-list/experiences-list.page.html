@@ -8,7 +8,9 @@
           <div class="fw-400 secondary sub-heading-md">{{experience?.summary || ' '}}</div>
         </ion-col>
         <ion-col class="p-0 ion-text-end" size="2">
-          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="editExperience(i)">
+          <!-- (click)="editExperience(i)" -->
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" appDebounceClick
+            (debounceClick)="editExperience(i)" [debounceTimeConst]="300">
         </ion-col>
       </ion-row>
 

@@ -98,11 +98,16 @@
   <div class="d-flex ion-align-self-center">
     <ion-row class="w-100">
       <ion-col class="m-0" size="6">
-        <custom-button [title]="'Cancel'" [button]="'ternary'" (btnClick)="cancelJob()">
+        <!-- (btnClick)="cancelJob()" -->
+        <custom-button [title]="'Cancel'" [button]="'ternary'" appDebounceClick (debounceClick)="cancelJob()"
+          [debounceTimeConst]="300">
         </custom-button>
       </ion-col>
       <ion-col class="m-0" size="6">
-        <custom-button [title]="'Submit'" [button]="'primary'" (btnClick)="submitJob()" [disabled]="diableSubmitBtn">
+
+        <!-- (btnClick)="submitJob()" -->
+        <custom-button [title]="'Submit'" [button]="'primary'" appDebounceClick (debounceClick)="submitJob()"
+          [debounceTimeConst]="300" [disabled]="disable()">
         </custom-button>
       </ion-col>
     </ion-row>

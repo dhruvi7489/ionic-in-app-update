@@ -7,10 +7,15 @@
     <div class="mt-24 mb-8">
       <ion-label class="fw-500 sub-heading-sm secondary">Enter the code</ion-label>
     </div>
-    <custom-otp (enteredOtp)="otpEnter($event)" [placeholder]="'0'" [otp_input_1]="onboardingService.otp_input_1"
+
+    <!-- <custom-otp (enteredOtp)="otpEnter($event)" [placeholder]="'0'" [otp_input_1]="onboardingService.otp_input_1"
       [otp_input_2]="onboardingService.otp_input_2" [otp_input_3]="onboardingService.otp_input_3"
       [otp_input_4]="onboardingService.otp_input_4" [otp_input_5]="onboardingService.otp_input_5"
-      [otp_input_6]="onboardingService.otp_input_6"></custom-otp>
+      [otp_input_6]="onboardingService.otp_input_6"></custom-otp> -->
+
+    <div class="d-flex mt-24 mr-16">
+      <ng-otp-input (onInputChange)="onOtpChange($event)" [config]="onboardingService.config"></ng-otp-input>
+    </div>
 
     <div class="d-flex mt-16">
       <p class="sub-heading-md fw-400 secondary">Didn't get a code? </p>
@@ -18,7 +23,9 @@
         <div class="ion-align-self-center mt-4 pl-10-77">
           <img class="img-wrapper" src="../../assets/imgs/Iconsax/Svg/All/outline/rotate-left.svg" width="20px">
         </div>
-        <div class="ion-align-self-center sub-heading-md primary fw-500 pl-10-78" (click)="sendOtp()">
+        <!-- (click)="sendOtp()" -->
+        <div class="ion-align-self-center sub-heading-md primary fw-500 pl-10-78" appDebounceClick
+          (debounceClick)="sendOtp()" [debounceTimeConst]="300">
           Resend
         </div>
       </div>
@@ -26,14 +33,9 @@
   </div>
 </ion-content>
 
-<!-- <ion-footer class="footer">
-  <custom-button [title]="'Next'" (btnClick)="sendOtp()" [disabled]="onboardingService.otp.length != 6"
-    [button]="'primary'">
-  </custom-button>
-</ion-footer> -->
-
 <ion-footer>
-  <custom-button [title]="'Next'" (btnClick)="sendOtp()" [disabled]="onboardingService.otp?.length != 6"
-    [button]="'primary'">
+  <!-- (btnClick)="sendOtp()" -->
+  <custom-button [title]="'Next'" appDebounceClick (debounceClick)="sendOtp()" [debounceTimeConst]="300"
+    [disabled]="onboardingService.otp?.length != 6" [button]="'primary'">
   </custom-button>
 </ion-footer>

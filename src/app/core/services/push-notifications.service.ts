@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 // import { FCM } from '@capacitor-community/fcm';
-// import {
-//   ActionPerformed,
-//   PushNotificationSchema,
-//   PushNotifications,
-//   Token,
-// } from '@capacitor/push-notifications';
+import {
+  ActionPerformed,
+  PushNotificationSchema,
+  PushNotifications,
+  Token,
+} from '@capacitor/push-notifications';
 
 @Injectable({
   providedIn: 'root',
@@ -17,67 +18,69 @@ export class PushNotificationService {
   ) { }
 
   async initPushNotification() {
+    const isPushNotificationsAvailable = Capacitor.isPluginAvailable('PushNotifications');
+    console.log(isPushNotificationsAvailable)
+    if (isPushNotificationsAvailable) {
+      await PushNotifications.createChannel({
+        id: "testchannel1",
+        name: "testchannel1",
+        description: "Very urgent message alert",
+        sound: "alert",
+        importance: 5,
+        visibility: 1,
+        lights: true,
+        lightColor: "#eee",
+        vibration: true
+      }
+      ).then(channel => {
+        console.log('channel created', channel);
+      }).catch(err => {
+        console.log('channel created error', err)
+      })
 
-    // await PushNotifications.createChannel({
-    //   id: "testchannel1",
-    //   name: "testchannel1",
-    //   description: "Very urgent message alert",
-    //   sound: "alert",
-    //   importance: 5,
-    //   visibility: -1,
-    //   lights: true,
-    //   lightColor: "#eee",
-    //   vibration: true
-    // }
-    // ).then(channel => {
-    //   console.log('channel created', channel);
-    // }).catch(err => {
-    //   console.log('channel created error', err)
-    // })
+      PushNotifications.requestPermissions().then(result => {
+        if (result.receive === 'granted') {
+          // Register with Apple / Google to receive push via APNS/FCM
+          PushNotifications.register();
+        } else {
+          // Show some error
+        }
+      });
 
-    // PushNotifications.requestPermissions().then(result => {
-    //   if (result.receive === 'granted') {
-    //     // Register with Apple / Google to receive push via APNS/FCM
-    //     PushNotifications.register();
-    //   } else {
-    //     // Show some error
-    //   }
-    // });
+      await PushNotifications.addListener('registration', token => {
+        console.info('Registration token: ', token.value);
+      });
 
-    // await PushNotifications.addListener('registration', token => {
-    //   console.info('Registration token: ', token.value);
-    // });
+      await PushNotifications.addListener('registrationError', (error: any) => {
+        alert('Error on registration: ' + JSON.stringify(error));
+      });
 
-    // await PushNotifications.addListener('registrationError', (error: any) => {
-    //   alert('Error on registration: ' + JSON.stringify(error));
-    // });
+      await PushNotifications.getDeliveredNotifications().then(res => {
+        console.log("getDeliveredNotifications----", res)
+      }).catch(err => {
+        console.log(err);
+      })
 
-    // await PushNotifications.getDeliveredNotifications().then(res => {
-    //   console.log("getDeliveredNotifications----", res)
-    // }).catch(err => {
-    //   console.log(err)
-    // })
+      PushNotifications.addListener('pushNotificationReceived',
+        (notification: PushNotificationSchema) => {
+          this.notification = notification;
+          alert('Push received: ' + JSON.stringify(notification));
+        }
+      );
 
-    // PushNotifications.addListener('pushNotificationReceived',
-    //   (notification: PushNotificationSchema) => {
-    //     this.notification = notification;
-    //     alert('Push received: ' + JSON.stringify(notification));
-    //   }
-    // );
-
-    // PushNotifications.addListener('pushNotificationActionPerformed',
-    //   (notification: ActionPerformed) => {
-    //     alert('Push action performed: ' + JSON.stringify(notification));
-    //   }
-    // );
-
+      PushNotifications.addListener('pushNotificationActionPerformed',
+        (notification: ActionPerformed) => {
+          alert('Push action performed: ' + JSON.stringify(notification));
+        }
+      );
+    }
 
     // // FCM
     // FCM.subscribeTo({ topic: "hour4u" }).then(res => {
     //     alert('subscribed Topic')
     //     console.log("subscribeTo", res)
     // }).catch(err => {
-    //     console.log(err)
+    //     console.log(err);
     // })
 
     // FCM.getToken()
@@ -85,7 +88,7 @@ export class PushNotificationService {
     //         alert(`Token ${token.token}`);
     //         console.log("getToken", token);
     //     })
-    //     .catch((err) => console.log(err));
+    //     .catch((err) => console.log(err););
 
     // FCM.setAutoInit({ enabled: true }).then((res) => {
     //     alert(`Auto init enabled`);

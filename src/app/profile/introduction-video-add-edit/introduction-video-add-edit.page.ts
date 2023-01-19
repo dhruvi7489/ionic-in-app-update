@@ -1,6 +1,6 @@
 import { Component, ElementRef, NgZone, OnInit, SecurityContext, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { VideoService } from 'src/app/services/video.service';
+import { VideoService } from 'src/app/core/services/video.service';
 import { ProfileService } from '../profile.service';
 import { MediaCapture, MediaFile, CaptureError, CaptureImageOptions, CaptureVideoOptions } from '@awesome-cordova-plugins/media-capture/ngx';
 import { Observable, ReplaySubject } from 'rxjs';
@@ -166,7 +166,7 @@ export class IntroductionVideoAddEditPage implements OnInit {
     //           });
     //         });
     //     }).catch((err: CaptureError) => {
-    //       console.log(err)
+    //       console.log(err);
     //     })
     this.zone.run(() => {
       let options: CaptureVideoOptions = { limit: 1 };
@@ -241,12 +241,12 @@ export class IntroductionVideoAddEditPage implements OnInit {
                       if (res) {
                       }
                     }).catch((err: HttpErrorResponse) => {
-                      console.log(err)
+                      console.log(err);
                     })
                   })
                 }
               }).catch((err: HttpErrorResponse) => {
-                console.log(err)
+                console.log(err);
               })
 
               // this.handleUpload(file);

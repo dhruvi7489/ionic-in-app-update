@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ActionPerformed, PushNotifications, PushNotificationSchema, Token } from '@capacitor/push-notifications';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Platform } from '@ionic/angular';
-import { NetworkService } from './services/network.service';
+import { NetworkService } from './core/services/network.service';
 // import { PushNotificationService } from './services/push-notifications.service';
 // import { FCM } from '@capacitor-community/fcm';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -108,14 +108,14 @@ export class AppComponent {
       // FCM.subscribeTo({ topic: "hour4u" }).then(res => {
       //   console.log("subscribeTo", res)
       // }).catch(err => {
-      //   console.log(err)
+      //   console.log(err);
       // })
 
       // FCM.getToken()
       //   .then((token) => {
       //     console.log("getToken", token);
       //   })
-      //   .catch((err) => console.log(err));
+      //   .catch((err) => console.log(err););
 
       // FCM.setAutoInit({ enabled: true }).then((res) => {
       //   console.log("setAutoInit--", res)
@@ -223,7 +223,7 @@ export class AppComponent {
         if (res) {
         }
       }).catch(err => {
-        console.log(err)
+        console.log(err);
       })
     }
   }

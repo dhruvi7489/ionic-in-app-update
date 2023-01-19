@@ -1,7 +1,8 @@
 <ion-content>
   <div>
     <div class="bottom-border">
-      <div class="m-16 ion-text-end" (click)="closeBtnClick()">
+      <!-- (click)="closeBtnClick()" -->
+      <div class="m-16 ion-text-end" appDebounceClick (debounceClick)="closeBtnClick()" [debounceTimeConst]="300">
         <img src="../../../assets/imgs/Iconsax/Svg/All/outline/close.svg">
       </div>
     </div>
@@ -30,19 +31,25 @@
 
           <ion-row *ngIf="navParams.get('success')">
             <ion-col size="12" class="custom-button-primary">
-              <ion-button class="w-100" (click)="okBtnClick()">{{navParams.get('okBtnText')}}</ion-button>
+              <!-- (click)="okBtnClick()" -->
+              <ion-button class="w-100" appDebounceClick (debounceClick)="okBtnClick()"
+                [debounceTimeConst]="300">{{navParams.get('okBtnText')}}</ion-button>
             </ion-col>
           </ion-row>
 
           <ion-row *ngIf="navParams.get('success')">
             <ion-col size="12" class="custom-button-secondary">
-              <ion-button class="w-100" (click)="closeBtnClick()">{{navParams.get('cancelBtnText')}}</ion-button>
+              <!-- (click)="closeBtnClick()" -->
+              <ion-button class="w-100" appDebounceClick (debounceClick)="closeBtnClick()"
+                [debounceTimeConst]="300">{{navParams.get('cancelBtnText')}}</ion-button>
             </ion-col>
           </ion-row>
 
           <ion-row *ngIf="!navParams.get('success')">
             <ion-col size="12">
-              <div class="d-flex justify-content-center c-pointer" (click)="okBtnClick()">
+              <!-- (click)="okBtnClick()" -->
+              <div class="d-flex justify-content-center c-pointer" appDebounceClick (debounceClick)="okBtnClick()"
+                [debounceTimeConst]="300">
                 <div class="ion-align-self-center mt-4">
                   <img src="../../assets/imgs/Iconsax/Svg/All/outline/rotate-right.svg" width="20px">
                 </div>

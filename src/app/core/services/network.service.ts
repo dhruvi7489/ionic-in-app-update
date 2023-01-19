@@ -6,8 +6,8 @@ import { Capacitor } from '@capacitor/core';
 import { ConnectionStatus, Network } from '@capacitor/network';
 import { ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { TOKEN_KEY } from '../core/storage-keys';
-import { InternetConnectionPage } from '../internet-connection/internet-connection.page';
+import { TOKEN_KEY } from '../storage-keys';
+import { InternetConnectionPage } from '../../internet-connection/internet-connection.page';
 
 @Injectable({
     providedIn: 'root'

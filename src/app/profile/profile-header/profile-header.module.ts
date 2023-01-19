@@ -8,6 +8,7 @@ import { ProfileHeaderPageRoutingModule } from './profile-header-routing.module'
 
 import { ProfileHeaderPage } from './profile-header.page';
 import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
     IonicModule,
     ProfileHeaderPageRoutingModule,
     CustomButtonModule,
-    CustomInputModule
+    CustomInputModule,
+    DirectivesModule
   ],
   declarations: [ProfileHeaderPage],
   exports: [ProfileHeaderPage]

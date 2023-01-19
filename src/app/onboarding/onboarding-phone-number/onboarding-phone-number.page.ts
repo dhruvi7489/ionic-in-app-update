@@ -1,10 +1,11 @@
 import { Component, ElementRef, EventEmitter, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastService } from 'src/app/services/toast.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 import { OnboardingService } from '../onboarding.service';
 // declare var MediaRecorder: any;
 
 import { CommonProvider } from 'src/app/core/common';
+import { Storage } from '@ionic/storage';
 // import { Base64 } from '@ionic-native/base64';
 
 @Component({
@@ -14,18 +15,25 @@ import { CommonProvider } from 'src/app/core/common';
 })
 export class OnboardingPhoneNumberPage implements OnInit {
   data = null;
+  loginUserId: any = null;
+
   constructor(
     private toastService: ToastService,
     public onboardingService: OnboardingService,
     public router: Router,
-    // private base64: Base64
+    public storage: Storage
   ) {
+
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.loginUserId = await this.storage.get('loginUserId');
+    if (this.loginUserId) {
+      return;
+    }
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.data = "All API calls mentioned in this guide must be authenticated with an access token. Developers can authenticate their API calls with the access token generated in the App Dashboard >"
   }
 

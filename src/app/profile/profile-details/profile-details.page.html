@@ -22,13 +22,16 @@
     <div class="mt-20 mb-20 ml-16 mr-16">
       <ion-row>
         <ion-col class="p-0" size="8">
-          <custom-button [title]="'Edit profile'" [button]="'primary'" [disabled]="false" (btnClick)="editProfile()"
-            [showLogoOnEnd]="false" [image]="'../../../assets/imgs/Iconsax/Svg/All/outline/edit-1.svg'">
+          <!-- (btnClick)="editProfile()" -->
+          <custom-button [title]="'Edit profile'" [button]="'primary'" [disabled]="false" appDebounceClick
+            (debounceClick)="editProfile()" [debounceTimeConst]="300" [showLogoOnEnd]="false"
+            [image]="'../../../assets/imgs/Iconsax/Svg/All/outline/edit-1.svg'">
           </custom-button>
         </ion-col>
         <ion-col class="pl-12 p-0" size="4">
-          <custom-button [title]="'More'" [button]="'ternary'" [disabled]="false" (btnClick)="profileMoreOptions()"
-            [color]="'black'" [showLogoOnEnd]="false"
+          <!-- (btnClick)="profileMoreOptions()" -->
+          <custom-button [title]="'More'" [button]="'ternary'" [disabled]="false" appDebounceClick
+            (debounceClick)="profileMoreOptions()" [debounceTimeConst]="300" [color]="'black'" [showLogoOnEnd]="false"
             [image]="'../../../assets/imgs/Iconsax/Svg/All/outline/more-3.svg'">
           </custom-button>
         </ion-col>
@@ -113,8 +116,9 @@
         <ion-col class="p-0" size="10">
           <div class="fw-600 secondary sub-heading-lg">Introduction</div>
         </ion-col>
-        <ion-col class="p-0 ion-text-end" size="2">
-          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="introductionVideoEdit()">
+        <ion-col class="p-0 ion-text-end" size="2">-->
+  <!-- (click)="introductionVideoEdit()" -->
+  <!--      <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" appDebounceClick (debounceClick)="introductionVideoEdit()" [debounceTimeConst]="300" >
         </ion-col>
       </ion-row>
 
@@ -262,7 +266,9 @@
         </ion-col>
         <ion-col class="p-0 ion-text-end" size="2"
           *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length !== 0 && showPreferencesEdit()">
-          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="addJobPreferences()">
+          <!-- (click)="addJobPreferences()" -->
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" appDebounceClick
+            (debounceClick)="addJobPreferences()" [debounceTimeConst]="300">
         </ion-col>
       </ion-row>
 
@@ -301,7 +307,10 @@
         </ion-row>
         <ion-row class="mt-16">
           <ion-col size="12" class="p-0">
-            <div class="fw-500 primary sub-heading-md ion-text-center" (click)="addJobPreferences()">Add job preferences
+            <!-- (click)="addJobPreferences()" -->
+            <div class="fw-500 primary sub-heading-md ion-text-center" appDebounceClick
+              (debounceClick)="addJobPreferences()" [debounceTimeConst]="300">Add job
+              preferences
             </div>
           </ion-col>
         </ion-row>
@@ -326,11 +335,15 @@
         </ion-col>
         <ion-col class="p-0 ion-text-end" size="1.5"
           *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length != 0">
-          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/add-primary.svg" (click)="addSkill()">
+          <!-- (click)="addSkill()" -->
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/add-primary.svg" appDebounceClick
+            (debounceClick)="addSkill()" [debounceTimeConst]="300">
         </ion-col>
         <ion-col class="p-0 ion-text-end" size="1.5"
           *ngIf="profileService?.jobPreferences?.jobTypePreferences?.length != 0">
-          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="editSkill()">
+          <!-- (click)="editSkill()" -->
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" appDebounceClick
+            (debounceClick)="editSkill()" [debounceTimeConst]="300">
         </ion-col>
       </ion-row>
 
@@ -354,7 +367,9 @@
         </ion-row>
         <ion-row class="mt-16">
           <ion-col size="12" class="p-0">
-            <div class="fw-500 primary sub-heading-md ion-text-center" (click)="addSkill()">Add skills</div>
+            <!-- (click)="addSkill()" -->
+            <div class="fw-500 primary sub-heading-md ion-text-center" appDebounceClick (debounceClick)="addSkill()"
+              [debounceTimeConst]="300">Add skills</div>
           </ion-col>
         </ion-row>
       </div>
@@ -369,11 +384,15 @@
           <div class="secondary fw-600 sub-heading-lg">Related work experience</div>
         </ion-col>
         <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="profileService.profileData?.workExperiences?.length != 0">
-          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/add-primary.svg" (click)="addWorkExperience()">
+          <!-- (click)="addWorkExperience()" -->
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/add-primary.svg" appDebounceClick
+            (debounceClick)="addWorkExperience()" [debounceTimeConst]="300">
         </ion-col>
         <ion-col class="p-0 ion-text-end" size="1.5"
           *ngIf="profileService.profileData?.workExperiences && profileService.profileData?.workExperiences?.length != 0">
-          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="editWorkExperience()">
+          <!-- (click)="editWorkExperience()" -->
+          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" appDebounceClick
+            (debounceClick)="editWorkExperience()" [debounceTimeConst]="300">
         </ion-col>
       </ion-row>
 
@@ -415,7 +434,9 @@
         </ion-row>
         <ion-row class="mt-16">
           <ion-col size="12" class="p-0">
-            <div class="fw-500 primary sub-heading-md ion-text-center" (click)="addWorkExperience()">Add work
+            <!-- (click)="addWorkExperience()" -->
+            <div class="fw-500 primary sub-heading-md ion-text-center" appDebounceClick
+              (debounceClick)="addWorkExperience()" [debounceTimeConst]="300">Add work
               experience
             </div>
           </ion-col>
@@ -537,8 +558,9 @@
           </ion-col>
         </ion-row>
         <ion-row class="mt-16">
-          <ion-col size="12" class="p-0">
-            <div class="fw-500 primary sub-heading-md ion-text-center" (click)="addPhotosAndVideos()">Add pictures and
+          <ion-col size="12" class="p-0">-->
+  <!-- (click)="addPhotosAndVideos()" -->
+  <!--  <div class="fw-500 primary sub-heading-md ion-text-center" appDebounceClick (debounceClick)="addPhotosAndVideos()" [debounceTimeConst]="300" >Add pictures and
               videos</div>
           </ion-col>
         </ion-row>
@@ -561,11 +583,13 @@
             </div>
           </div>
         </ion-col>
-        <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="profileService?.profileData?.photos?.length != 0">
-          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/add-primary.svg" (click)="addPhotosAndVideos()">
+        <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="profileService?.profileData?.photos?.length != 0">-->
+  <!-- (click)="addPhotosAndVideos()" -->
+  <!--  <img src="../../../assets/imgs/Iconsax/Svg/All/outline/add-primary.svg" appDebounceClick (debounceClick)="addPhotosAndVideos()" [debounceTimeConst]="300" >
         </ion-col>
-        <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="profileService?.profileData?.photos?.length != 0">
-          <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="addPhotosAndVideos()">
+        <ion-col class="p-0 ion-text-end" size="1.5" *ngIf="profileService?.profileData?.photos?.length != 0">-->
+  <!-- (click)="addPhotosAndVideos()" -->
+  <!--  <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" appDebounceClick (debounceClick)="addPhotosAndVideos()" [debounceTimeConst]="300">
         </ion-col>
       </ion-row>
 
@@ -573,9 +597,10 @@
         [ngClass]="{'content-wrap-scroll':profileService.profileData?.photos?.length > 4}">
         <ion-row class="mt-20 mb-8">
           <ion-col size="5.8" *ngFor="let photo of profileService?.profileData?.photos;let i= index;"
-            [ngClass]="{'mr-8' : ((i+1)%2) != 0}">
-            <img src="../../../assets/imgs/camera_placeholder.svg" *ngIf="!photo" class="img-wrap"
-              (click)="uploadPictures()">
+            [ngClass]="{'mr-8' : ((i+1)%2) != 0}">-->
+  <!-- (click)="uploadPictures()" -->
+  <!--<img src="../../../assets/imgs/camera_placeholder.svg" *ngIf="!photo" class="img-wrap"
+              appDebounceClick (debounceClick)="uploadPictures()" [debounceTimeConst]="300" >
             <img [src]="photo" *ngIf="photo" class="img-wrap">
           </ion-col>
         </ion-row>
@@ -590,8 +615,9 @@
           </ion-col>
         </ion-row>
         <ion-row class="mt-16">
-          <ion-col size="12" class="p-0">
-            <div class="fw-500 primary sub-heading-md ion-text-center" (click)="addPhotosAndVideos()">Add pictures and
+          <ion-col size="12" class="p-0">-->
+  <!-- (click)="addPhotosAndVideos()" -->
+  <!-- <div class="fw-500 primary sub-heading-md ion-text-center" appDebounceClick (debounceClick)="addPhotosAndVideos()" [debounceTimeConst]="300" >Add pictures and
               videos</div>
           </ion-col>
         </ion-row>

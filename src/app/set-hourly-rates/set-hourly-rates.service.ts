@@ -8,8 +8,8 @@ import { JobPreference, JobTypePreference } from '../core/modal/job-preference.m
 import { JobType } from '../core/modal/job-type.modal';
 import { Apiurl } from '../core/route';
 import { ProfileService } from '../profile/profile.service';
-import { LoadingService } from '../services/loading.service';
-import { ToastService } from '../services/toast.service';
+import { LoadingService } from '../core/services/loading.service';
+import { ToastService } from '../core/services/toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -89,7 +89,7 @@ export class SetHourlyRatesService {
   //       })
   //     }
   //   }).catch((err: HttpErrorResponse) => {
-  //     console.log(err)
+  //     console.log(err);
   //   })
   // }
 
@@ -119,29 +119,38 @@ export class SetHourlyRatesService {
     this.loadingService.show();
     const typePreferences = [];
     this.jobPreferences.forEach(pref => {
-      // if (pref.maxHourlyRate === null) {
-      //   pref.maxHourlyRate = 0;
-      // }
-      typePreferences.push(
-        {
-          maxHourlyRate: pref.maxHourlyRate,
-          level: pref.level,
-          status: pref.status,
-          typeId: pref.typeId,
-          typeName: pref.typeName
-        });
-    });
-    this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPreferenceId, { jobTypeHourlyRateRequests: this.jobPreferences }
-    ).then((res: any) => {
-      this.loadingService.dismiss();
-      if (res) {
-        this.getJobPreferences();
-        this.profileService.getJobPreference();
-        this.modalCtrl.dismiss();
+      if (pref?.maxHourlyRate) {
+        typePreferences.push(
+          {
+            maxHourlyRate: pref.maxHourlyRate,
+            level: pref?.level,
+            status: pref?.status,
+            typeId: pref?.typeId,
+            typeName: pref?.typeName,
+            basePrice: pref?.basePrice,
+            finalAmount: pref?.finalAmount,
+            hourlyMaxAllowed: pref?.hourlyMaxAllowed,
+            hourlyMinAllowed: pref?.hourlyMinAllowed,
+            shiftHours: pref?.shiftHours
+          });
       }
-    }).catch((err: HttpErrorResponse) => {
-      this.loadingService.dismiss();
-      this.toastService.showMessage(err.error.message + ' ' + (err.error?.subErrors.length !== 0 ? err.error?.subErrors[0]?.message : ''));
     });
+    if (typePreferences?.length != 0) {
+      this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPreferenceId, { jobTypeHourlyRateRequests: typePreferences }
+      ).then((res: any) => {
+        this.loadingService.dismiss();
+        if (res) {
+          this.getJobPreferences();
+          this.profileService.getJobPreference();
+          this.modalCtrl.dismiss();
+        }
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
+        this.toastService.showMessage(err.error.message + ' ' + (err.error?.subErrors.length !== 0 ? err.error?.subErrors[0]?.message : ''));
+      });
+    } else {
+      this.loadingService.dismiss();
+      this.modalCtrl.dismiss();
+    }
   }
 }

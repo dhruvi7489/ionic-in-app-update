@@ -2,27 +2,31 @@ import { Component, NgZone } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { AlertController, IonRouterOutlet, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
-import { NetworkService } from './services/network.service';
-import { PushNotificationService } from './services/push-notifications.service';
+import { NetworkService } from './core/services/network.service';
+import { PushNotificationService } from './core/services/push-notifications.service';
 // import { FCM } from '@capacitor-community/fcm';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+// import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 // import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 // import { INotificationPayload } from 'cordova-plugin-fcm-with-dependecy-updated/typings/INotificationPayload';
 import { CommonProvider } from './core/common';
 import { Apiurl } from './core/route';
 import { AvailableJobsService } from './available-jobs/available-jobs.service';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
-import { LocationService } from './services/location.service';
+import { LocationService } from './core/services/location.service';
 import { Storage } from '@ionic/storage';
 import { Capacitor } from '@capacitor/core';
 import { ActionPerformed, PushNotifications, PushNotificationSchema, Token } from '@capacitor/push-notifications';
-import { AppUpdateService } from './services/app-update.service';
+import { AppUpdateService } from './core/services/app-update.service';
+// import { Clipboard } from '@capacitor/clipboard';
+import { SplashScreen } from '@capacitor/splash-screen';
 
+declare var UXCam: any;
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
+
 
 export class AppComponent {
 
@@ -33,7 +37,7 @@ export class AppComponent {
     public networkService: NetworkService,
     public router: Router,
     // public fcm: FCM,
-    public splashScreen: SplashScreen,
+    // public splashScreen: SplashScreen,
     public commonProvider: CommonProvider,
     public availableJobsService: AvailableJobsService,
     public navParams: NavParams,
@@ -42,155 +46,71 @@ export class AppComponent {
     public storage: Storage,
     private zone: NgZone,
     // private routerOutlet: IonRouterOutlet
-    // public pushNotificationService: PushNotificationService,
+    public pushNotificationService: PushNotificationService,
     public appUpdateService: AppUpdateService,
     public modalCtrl: ModalController,
-    public navCtrl: NavController
+    public navCtrl: NavController,
   ) {
     this.initializeApp();
   }
 
   ngOnInit() {
-    const isPushNotificationsAvailable = Capacitor.isPluginAvailable('PushNotifications');
-    console.log(isPushNotificationsAvailable, PushNotifications)
     console.log(Capacitor.getPlatform())
     if (Capacitor.getPlatform() !== 'web') {
-      this.registerPush();
+      this.pushNotificationService.initPushNotification();
     }
-
-  }
-  private registerPush() {
-    // PushNotifications.requestPermissions().then(permission => {
-    //   console.log("callll", permission)
-    //   if (permission.receive === 'granted') {
-    //     PushNotifications.createChannel({
-    //       id: "testchannel1",
-    //       name: "testchannel1",
-    //       description: "Very urgent message alert",
-    //       sound: "alert",
-    //       importance: 5,
-    //       visibility: -1,
-    //       lights: true,
-    //       lightColor: "#eee",
-    //       vibration: true
-    //     }
-    //     ).then(channel => {
-    //       console.log('channel created', channel);
-    //       PushNotifications.register().then((res: any) => {
-    //         console.log("res----", res)
-    //       }).catch((err: any) => {
-    //         console.log("err-------", err)
-    //       });
-    //       PushNotifications.addListener('registration', (token) => {
-    //         console.log(token, "++++++++++++++");
-    //       });
-    //     }).catch(err => {
-    //       console.log('channel created error', err)
-    //     })
-    //   }
-    //   else {
-    //     // If permission is not granted
-    //   }
-    // });
-
-
-    PushNotifications.requestPermissions().then((permission) => {
-      console.log("permission----", permission)
-      if (permission.receive == 'granted') {
-        console.log("calllllllllllll")
-        // Register with Apple / Google to receive push via APNS/FCM
-        // PushNotifications.register();
-      } else {
-        // No permission for push granted
-      }
-    });
-
-    PushNotifications.addListener(
-      'registration',
-      (token: Token) => {
-        console.log('My token: ' + JSON.stringify(token));
-        // this.pushNotificationToken = JSON.stringify(token.value);
-      }
-    ).catch(err => {
-      console.log('error My token: ' + err);
-    });
-
-    PushNotifications.addListener('registrationError', (error: any) => {
-      console.log('Error: ' + JSON.stringify(error));
-    });
-
-    PushNotifications.addListener(
-      'pushNotificationReceived',
-      async (notification: PushNotificationSchema) => {
-        console.log(notification);
-        alert(notification.body)
-      }
-    );
-    PushNotifications.addListener(
-      'pushNotificationActionPerformed',
-      async (notification: ActionPerformed) => {
-        const data = notification.notification.data;
-        console.log('Action performed: ' + JSON.stringify(notification.notification));
-      }
-    );
-
-
-    // PushNotifications.addListener('registration', (token) => {
-    //   console.log(token, "++++++++++++++---------");
-    // });
-    // PushNotifications.addListener('registrationError', (err) => {
-    //   console.log(err);
-    // });
-    // PushNotifications.addListener('pushNotificationReceived', (notifications) => {
-    //   console.log(notifications);
-    // });
-
   }
 
   async initializeApp() {
-
     // Deep linking
-    App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
-      console.log("event------", event)
-      // this.zone.run(() => {
-      //   console.log("zone run.........")
-      //   // Example url: https://beerswift.app/tabs/tab2
-      //   // slug = /tabs/tab2
-      //   const slug = event.url.split("com.hour4u.app").pop();
-      //   console.log("slug---", slug)
-      //   if (slug) {
-      //     this.router.navigateByUrl(slug);
-      //   }
-      //   // If no match, do nothing - let regular routing
-      //   // logic take over
-      // });
+    // App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
+    //   console.log("event------", event)
+    //   // this.zone.run(() => {
+    //   //   console.log("zone run.........")
+    //   //   // Example url: https://beerswift.app/tabs/tab2
+    //   //   // slug = /tabs/tab2
+    //   //   const slug = event.url.split("com.hour4u.app").pop();
+    //   //   console.log("slug---", slug)
+    //   //   if (slug) {
+    //   //     this.router.navigateByUrl(slug);
+    //   //   }
+    //   //   // If no match, do nothing - let regular routing
+    //   //   // logic take over
+    //   // });
 
-      this.zone.run(() => {
-        const domain = 'com.hour4u.app';
-
-        const pathArray = event.url.split(domain);
-        // The pathArray is now like ['https://devdactic.com', '/details/42']
-
-        // Get the last element with pop()
-        const appPath = pathArray.pop();
-        if (appPath) {
-          this.router.navigateByUrl(appPath);
-        }
-      });
-    });
-
+    //   this.zone.run(() => {
+    //     // const domain = 'com.hour4u.app';
+    //     const domain = 'appuat.hour4u.com';
+    //     const pathArray = event.url.split(domain);
+    //     // The pathArray is now like ['https://devdactic.com', '/details/42']
+    //     console.log("pathArray-----", pathArray)
+    //     // Get the last element with pop()
+    //     const appPath = pathArray.pop();
+    //     console.log("appPath+++++++++++", appPath)
+    //     if (appPath) {
+    //       this.router.navigateByUrl(appPath);
+    //     }
+    //   });
+    // });
 
     this.platform.ready().then(async () => {
-      // Statusbar background and icons color change
-      StatusBar.setBackgroundColor({
-        color: '#ffffff'
-      });
-      StatusBar.setStyle({
-        style: Style.Light
-      })
+      if (Capacitor.getPlatform() !== 'web') {
+        // Splash screen duration
+        await SplashScreen.show({
+          showDuration: 2000,
+          autoHide: true,
+        });
+        // Statusbar background and icons color change
+        StatusBar.setBackgroundColor({
+          color: '#ffffff'
+        });
+        StatusBar.setStyle({
+          style: Style.Light
+        })
 
-      // Block Landscape mode
-      window.screen.orientation.lock('portrait');
+        // Block Landscape mode
+        window.screen.orientation.lock('portrait');
+      }
 
       // Check current internet connection Status
       this.networkService.getInternetConnectionStatus();
@@ -198,14 +118,9 @@ export class AppComponent {
       // Network connection change
       this.networkService.initializeNetworkEvents();
 
-      // Location acccess permission
-      // if (!this.locationService.locationPermissionGranted) {
-      //   console.log("%%%%%%%")
-      //   await this.locationService.requestLocationPermission(false);
-      // }
-
       // Device Back button logic
       App.addListener('backButton', ({ canGoBack }) => {
+        console.log("canGoBack-", canGoBack)
         this.modalCtrl.getTop().then((res: any) => {
           if (res) {
             this.modalCtrl.dismiss();
@@ -238,14 +153,38 @@ export class AppComponent {
             }
           }
         }).catch((err: any) => {
-          console.log(err)
+          console.log(err);
         })
       });
 
-
       // App Update Check
-      this.appUpdateService.checkAppUpdate();
+      if (Capacitor.getPlatform() !== 'web') {
+        // this.appUpdateService.checkAppUpdate();
+      }
 
+      //UX-CAM Setup
+      if (Capacitor.getPlatform() !== 'web') {
+        UXCam.optIntoSchematicRecordings();//To enable session video recording on iOS 
+        const configuration = {
+          userAppKey: Apiurl.UxCamAppKey,
+          enableAutomaticScreenNameTagging: true,
+          enableImprovedScreenCapture: true,
+        }
+        UXCam.startWithConfiguration(configuration);
+      }
+
+      // SMS send
+      // const writeToClipboard = async () => {
+      //   await Clipboard.write({
+      //     string: "Hello World!"
+      //   });
+      // };
+      // console.log("calllllllllllllllllllllllll===============", Clipboard.read())
+      // const checkClipboard = async () => {
+      // const { type, value } = await Clipboard.read();
+
+      // console.log(`Got ${type} from clipboard: ${value}`);
+      // };
 
 
       // Notifications 
@@ -317,31 +256,31 @@ export class AppComponent {
       }
       await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
       }).catch(err => {
-        console.log(err)
+        console.log(err);
       })
     }
   }
 
   // Redirect on particular page click on notification
   async performActionOnGetNotification() {
-    setTimeout(() => {
+    // setTimeout(() => {
 
-      // if (this.pushPayload) {
-      //   if (this.pushPayload.title == 'Profile Approved') {
-      //     this.router.navigateByUrl('set-hourly-rates');
-      //   }
-      //   if (this.pushPayload.title == 'Job Application Actioned') {
-      //     this.router.navigateByUrl('tabs/my-jobs');
-      //   }
-      //   if (this.pushPayload.title == 'Job Reminder') {
-      //     this.router.navigateByUrl('tabs/detactive');
-      //   }
-      //   if (this.pushPayload.title == 'We found you a new job') {
-      //     this.availableJobsService.selectedJobId = this.pushPayload.jobId;
-      //     this.router.navigateByUrl('available-job-details');
-      //   }
-      // }
-    }, 2000);
+    // if (this.pushPayload) {
+    //   if (this.pushPayload.title == 'Profile Approved') {
+    //     this.router.navigateByUrl('set-hourly-rates');
+    //   }
+    //   if (this.pushPayload.title == 'Job Application Actioned') {
+    //     this.router.navigateByUrl('tabs/my-jobs');
+    //   }
+    //   if (this.pushPayload.title == 'Job Reminder') {
+    //     this.router.navigateByUrl('tabs/detactive');
+    //   }
+    //   if (this.pushPayload.title == 'We found you a new job') {
+    //     this.availableJobsService.selectedJobId = this.pushPayload.jobId;
+    //     this.router.navigateByUrl('available-job-details');
+    //   }
+    // }
+    // }, 2000);
   }
 
 

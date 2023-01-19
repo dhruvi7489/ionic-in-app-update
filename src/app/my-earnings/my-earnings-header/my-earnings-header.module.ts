@@ -8,6 +8,7 @@ import { MyEarningsHeaderPageRoutingModule } from './my-earnings-header-routing.
 
 import { MyEarningsHeaderPage } from './my-earnings-header.page';
 import { CustomInputModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { CustomInputModule } from 'w4u-custom-components';
     FormsModule,
     IonicModule,
     MyEarningsHeaderPageRoutingModule,
-    CustomInputModule
+    CustomInputModule,
+    DirectivesModule
   ],
   declarations: [MyEarningsHeaderPage],
   exports: [MyEarningsHeaderPage]

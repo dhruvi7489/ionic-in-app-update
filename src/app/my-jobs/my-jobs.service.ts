@@ -4,7 +4,7 @@ import { Storage } from '@ionic/storage';
 import { CommonProvider } from '../core/common';
 import { MyJob } from '../core/modal/my-job.modal';
 import { Apiurl } from '../core/route';
-import { LoadingService } from '../services/loading.service';
+import { LoadingService } from '../core/services/loading.service';
 
 @Injectable({
   providedIn: 'root'
@@ -49,7 +49,7 @@ export class MyJobsService {
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
-      console.log(err)
+      console.log(err);
       this.errorInApiCall = true;
       this.myJobsList = [];
       this.page = 0;

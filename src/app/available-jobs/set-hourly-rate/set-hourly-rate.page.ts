@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { JobUtilervice } from 'src/app/core/util/job-util.service';
-import { ToastService } from 'src/app/services/toast.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 import { AvailableJobsService } from '../available-jobs.service';
 import { JobApplicationModalPage } from '../job-application-modal/job-application-modal.page';
 
@@ -68,7 +68,7 @@ export class SetHourlyRatePage implements OnInit {
 
   async calculateRatePerHour() {
     this.availableJobsService.jobPref = this.availableJobsService.selectedJobPreferences.content[0];
-    await this.availableJobsService.jobPref.jobTypePreferences.forEach(async prefType => {
+    await this.availableJobsService?.jobPref?.jobTypePreferences?.forEach(async prefType => {
       if (this.availableJobsService.selectedJobDetails?.jobTypeId == prefType.typeId) {
         // if (prefType.status != "Pending") {
         this.diableSubmitBtn = false;
@@ -119,5 +119,9 @@ export class SetHourlyRatePage implements OnInit {
       this.estimatedIncome = Math.round(Math.abs(this.estimatedIncome));
       console.log(this.availableJobsService.selectedJobDetails, this.availableJobsService.selectedJobDetails?.basePrice, this.hourlyRate, hours)
     }
+  }
+
+  disable() {
+    return this.estimatedIncome <= 0;
   }
 }

@@ -9,6 +9,7 @@ import { WithdrawPageRoutingModule } from './withdraw-routing.module';
 import { WithdrawPage } from './withdraw.page';
 import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
 import { MyEarningsHeaderPageModule } from '../my-earnings-header/my-earnings-header.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { MyEarningsHeaderPageModule } from '../my-earnings-header/my-earnings-he
     MyEarningsHeaderPageModule,
     CustomButtonModule,
     CustomInputModule,
+    DirectivesModule
   ],
   declarations: [WithdrawPage]
 })

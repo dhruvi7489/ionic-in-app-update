@@ -9,6 +9,7 @@ import { UploadWorkPhotoViewPageRoutingModule } from './upload-work-photo-view-r
 import { UploadWorkPhotoViewPage } from './upload-work-photo-view.page';
 import { ActiveJobHeaderPageModule } from '../active-job-header/active-job-header.module';
 import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -18,8 +19,9 @@ import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
     UploadWorkPhotoViewPageRoutingModule,
     ActiveJobHeaderPageModule,
     CustomButtonModule,
-    CustomInputModule
+    CustomInputModule,
+    DirectivesModule
   ],
   declarations: [UploadWorkPhotoViewPage]
 })
-export class UploadWorkPhotoViewPageModule {}
+export class UploadWorkPhotoViewPageModule { }

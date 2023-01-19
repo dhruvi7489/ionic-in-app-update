@@ -7,8 +7,8 @@ import { CommonProvider } from '../core/common';
 import { JobseekerAccount } from '../core/modal/jobseeker-account.model';
 import { Payment } from '../core/modal/payment.modal';
 import { Apiurl } from '../core/route';
-import { LoadingService } from '../services/loading.service';
-import { ToastService } from '../services/toast.service';
+import { LoadingService } from '../core/services/loading.service';
+import { ToastService } from '../core/services/toast.service';
 import { WithdrawPage } from './withdraw/withdraw.page';
 
 @Injectable({
@@ -57,7 +57,7 @@ export class MyEarningsService {
         this.earningStatus = res;
       }
     }).catch((err: HttpErrorResponse) => {
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -72,7 +72,7 @@ export class MyEarningsService {
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -93,7 +93,7 @@ export class MyEarningsService {
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -127,7 +127,7 @@ export class MyEarningsService {
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
-      console.log(err)
+      console.log(err);
     })
 
   }
@@ -153,7 +153,7 @@ export class MyEarningsService {
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
-        console.log(err)
+        console.log(err);
       })
     } else {
       let obj: JobseekerAccount = {
@@ -172,7 +172,7 @@ export class MyEarningsService {
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
-        console.log(err)
+        console.log(err);
       })
     }
   }

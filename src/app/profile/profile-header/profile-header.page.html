@@ -5,7 +5,9 @@
         <ion-row class="d-contents">
           <ion-col size="3" class="logo-title ion-align-self-center pr-0 pb-0 pt-0">
             <div class="img-wrapper d-flex">
-              <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" (click)="back()">
+              <!-- (click)="back()" -->
+              <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" appDebounceClick
+                (debounceClick)="back()" [debounceTimeConst]="300">
               <div class="header-title ion-align-self-center ml-8">
                 <div class="sub-heading-md secondary fw-400">Back</div>
               </div>
@@ -55,7 +57,9 @@
         <div class="ion-text-center" *ngIf="profileService.profile_picture">
           <div class="custom-file-upload">
             <div class="camera_outine">
-              <img [src]="profileService.profile_picture" alt="" (click)="uploadPicture()">
+              <!-- (click)="uploadPicture()" -->
+              <img [src]="profileService.profile_picture" alt="" appDebounceClick (debounceClick)="uploadPicture()"
+                [debounceTimeConst]="300">
               <div class="profile-img-inner-wrap">
                 <img class="ion-text-center man-pin" src="../../../assets/imgs/Iconsax/Svg/All/outline/manpin.svg">
               </div>

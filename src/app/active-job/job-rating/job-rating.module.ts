@@ -9,6 +9,7 @@ import { JobRatingPageRoutingModule } from './job-rating-routing.module';
 import { JobRatingPage } from './job-rating.page';
 import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
 import { ActiveJobHeaderPageModule } from '../active-job-header/active-job-header.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -18,8 +19,9 @@ import { ActiveJobHeaderPageModule } from '../active-job-header/active-job-heade
     JobRatingPageRoutingModule,
     ActiveJobHeaderPageModule,
     CustomButtonModule,
-    CustomInputModule
+    CustomInputModule,
+    DirectivesModule
   ],
   declarations: [JobRatingPage]
 })
-export class JobRatingPageModule {}
+export class JobRatingPageModule { }

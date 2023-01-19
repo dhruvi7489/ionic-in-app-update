@@ -5,7 +5,9 @@
         <ion-row class="d-contents">
           <ion-col size="3" class="logo-title ion-align-self-center pr-0 pb-0 pt-0">
             <div class="img-wrapper d-flex">
-              <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" (click)="back()">
+              <!-- (click)="back()" -->
+              <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" appDebounceClick
+                (debounceClick)="back()" [debounceTimeConst]="300">
               <div class="header-title ion-align-self-center ml-8">
                 <div class="sub-heading-md secondary fw-400">Back</div>
               </div>
@@ -29,9 +31,11 @@
       </ion-col>
       <ion-col size="4">
         <div class="ion-text-end">
-          <a
-            href="https://api.whatsapp.com/send?phone={{myEarningsService.phone_no}}&amp;text={{myEarningsService.message}}"  target="_blank">
-            <img class="mt-14 mb-14 pr-8" src="../../../assets/imgs/help-contact.svg" (click)="goToContact()">
+          <a href="https://api.whatsapp.com/send?phone={{myEarningsService.phone_no}}&amp;text={{myEarningsService.message}}"
+            target="_blank">
+            <!-- (click)="goToContact()" -->
+            <img class="mt-14 mb-14 pr-8" src="../../../assets/imgs/help-contact.svg" appDebounceClick
+              (debounceClick)="goToContact()" [debounceTimeConst]="300">
           </a>
         </div>
       </ion-col>

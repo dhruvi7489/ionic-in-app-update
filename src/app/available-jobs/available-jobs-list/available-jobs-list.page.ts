@@ -65,5 +65,4 @@ export class AvailableJobsListPage implements OnInit {
       }, 500)
     }
   }
-
 }

@@ -8,6 +8,7 @@ import { ActiveJobHeaderPageRoutingModule } from './active-job-header-routing.mo
 
 import { ActiveJobHeaderPage } from './active-job-header.page';
 import { CustomInputModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { CustomInputModule } from 'w4u-custom-components';
     FormsModule,
     IonicModule,
     ActiveJobHeaderPageRoutingModule,
-    CustomInputModule
+    CustomInputModule,
+    DirectivesModule
   ],
   declarations: [ActiveJobHeaderPage],
   exports: [ActiveJobHeaderPage]

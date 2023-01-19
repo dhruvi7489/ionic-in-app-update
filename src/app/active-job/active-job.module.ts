@@ -12,6 +12,7 @@ import { CustomButtonModule } from 'w4u-custom-components';
 import { PipesModule } from '../core/pipes/pipes.module';
 // import { ActiveJobFlowStepperPageModule } from './active-job-flow-stepper/active-job-flow-stepper.module';
 import { ActiveJobSummaryPageModule } from './active-job-summary/active-job-summary.module';
+import { DirectivesModule } from '../directives/directives.module';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { ActiveJobSummaryPageModule } from './active-job-summary/active-job-summ
     CustomButtonModule,
     PipesModule,
     // ActiveJobFlowStepperPageModule,
-    ActiveJobSummaryPageModule
+    ActiveJobSummaryPageModule,
+    DirectivesModule
   ],
   declarations: [ActiveJobPage]
 })

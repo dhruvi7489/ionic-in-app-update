@@ -18,7 +18,9 @@
     <div class="ion-text-center" *ngIf="profileService.profile_picture">
       <div class="custom-file-upload">
         <div class="camera_outine">
-          <img [src]="profileService.profile_picture" alt="" (click)="uploadPicture()">
+          <!-- (click)="uploadPicture()" -->
+          <img [src]="profileService.profile_picture" alt="" appDebounceClick (debounceClick)="uploadPicture()"
+            [debounceTimeConst]="300">
           <div class="profile-img-inner-wrap">
             <img class="ion-text-center man-pin" src="../../../assets/imgs/Iconsax/Svg/All/outline/camera-add.svg">
           </div>
@@ -80,8 +82,9 @@
       [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/location.svg'">
     </custom-input>
     <div *ngIf="profileService.autocompleteItems?.length>0">
-      <div *ngFor="let item of profileService.autocompleteItems" (click)="chooseItem(item)"
-        class="pl-12 pt-8 pb-8 placelist">
+      <!-- (click)="chooseItem(item)" -->
+      <div *ngFor="let item of profileService.autocompleteItems" appDebounceClick (debounceClick)="chooseItem(item)"
+        [debounceTimeConst]="300" class="pl-12 pt-8 pb-8 placelist">
         <div class="fw-400 sub-heading-sm secondary"> {{ item }}</div>
       </div>
     </div>
@@ -108,6 +111,8 @@
 </ion-content>
 
 <ion-footer>
-  <custom-button [title]="'Save'" (btnClick)="updateProfile()" [disabled]="disable()" [button]="'primary'">
+  <!-- (btnClick)="updateProfile()"  -->
+  <custom-button [title]="'Save'" appDebounceClick (debounceClick)="updateProfile()" [debounceTimeConst]="300"
+    [disabled]="disable()" [button]="'primary'">
   </custom-button>
 </ion-footer>

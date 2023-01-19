@@ -12,8 +12,8 @@ import { JobPreference } from '../core/modal/job-preference.modal';
 import { S3Object } from '../core/modal/s3-object.modal';
 import { Apiurl } from '../core/route';
 import { S3Util } from '../core/util/s3.util';
-import { LoadingService } from '../services/loading.service';
-import { ToastService } from '../services/toast.service';
+import { LoadingService } from '../core/services/loading.service';
+import { ToastService } from '../core/services/toast.service';
 import { ExperiencesListPage } from './experiences-list/experiences-list.page';
 import { Storage } from '@ionic/storage';
 import { OnboardingService } from '../onboarding/onboarding.service';
@@ -182,6 +182,7 @@ export class ProfileService {
 
   // Update login user personal Information
   async updateProfile() {
+    this.loadingService.show();
     this.profileData.dob = new Date(this.dob);
     this.profileData.email = this.email_address;
     this.profileData.gender = this.gender;
@@ -196,12 +197,14 @@ export class ProfileService {
     this.profileData.vaccineCertID = this.vaccineCertID;
 
     return await this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + this.profileData.id, this.profileData).then(async (res: any) => {
+      this.loadingService.dismiss();
       if (res) {
         this.toastService.showMessage('Personal information updated successfully');
         this.modalCtrl.dismiss();
         await this.getProfileData();
       }
     }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
       console.log(err);
     })
   }
@@ -231,13 +234,16 @@ export class ProfileService {
 
   // Apply for selected job
   async getJobPreference() {
+    await this.loadingService.show();
     const loginUserId = await this.storage.get('loginUserId');
     let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
-    return await this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
+      await this.loadingService.dismiss();
       if (res) {
         this.jobPreferences = res.content[0];
       }
     }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
       console.log(err);
     });
   }
@@ -345,11 +351,11 @@ export class ProfileService {
             this.toastService.showMessage('Profile picture saved successfully');
           }
         }).catch((err: HttpErrorResponse) => {
-          console.log(err)
+          console.log(err);
         })
       }
     }).catch((err: HttpErrorResponse) => {
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -368,7 +374,7 @@ export class ProfileService {
         await this.updatePhotos();
       }
     }).catch((err: HttpErrorResponse) => {
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -393,7 +399,7 @@ export class ProfileService {
         this.toastService.showMessage('Profile photos not deleted!');
 
       }
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -436,7 +442,7 @@ export class ProfileService {
         }
       }).catch((err: HttpErrorResponse) => {
         this.toastService.showMessage('Work Experience not edited, Something went wrong...');
-        console.log(err)
+        console.log(err);
       });
     }
   }
@@ -464,7 +470,7 @@ export class ProfileService {
       }
     }).catch((err: HttpErrorResponse) => {
       this.toastService.showMessage('Work Experience not deleted, Something went wrong...');
-      console.log(err)
+      console.log(err);
     });
   }
 
@@ -599,6 +605,7 @@ export class ProfileService {
   // Profile more options
   async profileMoreOptions() {
     const actionSheet = await this.actionSheetController.create({
+      cssClass: 'logout-actionsheet',
       buttons: [
         // {
         //   text: 'Share Profile',

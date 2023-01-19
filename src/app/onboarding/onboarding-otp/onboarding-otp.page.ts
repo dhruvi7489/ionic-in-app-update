@@ -30,6 +30,7 @@ export class OnboardingOtpPage implements OnInit {
   }
 
   otpEnter(otp) {
+    console.log("++++++++++", otp)
     this.onboardingService.otp = otp;
     let otpArray = otp.split("");
     this.onboardingService.otp_input_1 = otpArray[0];
@@ -43,5 +44,9 @@ export class OnboardingOtpPage implements OnInit {
 
   async sendOtp() {
     await this.onboardingService.login();
+  }
+
+  onOtpChange(event) {
+    this.onboardingService.otp = event;
   }
 }

@@ -6,8 +6,10 @@
     <div class="ion-text-center mt-24">
       <div class="custom-file-upload">
         <div class="camera_outine">
+          <!-- (click)="uploadPicture()" -->
           <img [src]="onboardingService.profile_picture" alt=""
-            onerror="this.src='../../assets/imgs/camera_placeholder.svg'" (click)="uploadPicture()">
+            onerror="this.src='../../assets/imgs/camera_placeholder.svg'" appDebounceClick
+            (debounceClick)="uploadPicture()" [debounceTimeConst]="300">
         </div>
       </div>
     </div>
@@ -20,20 +22,28 @@
 
 <ion-footer>
   <div *ngIf="!onboardingService.profile_picture">
-    <custom-button [title]="'Skip'" (btnClick)="skipProfilePictureUpload()" [button]="'ternary'">
+    <!-- (btnClick)="skipProfilePictureUpload()" -->
+    <custom-button [title]="'Skip'" appDebounceClick (debounceClick)="skipProfilePictureUpload()"
+      [debounceTimeConst]="300" [button]="'ternary'">
     </custom-button>
   </div>
   <div class="mt-10" *ngIf="!onboardingService.profile_picture">
-    <custom-button [title]="'Upload a picture'" (btnClick)="uploadPicture()" [button]="'primary'">
+    <!-- (btnClick)="uploadPicture()" -->
+    <custom-button [title]="'Upload a picture'" appDebounceClick (debounceClick)="uploadPicture()"
+      [debounceTimeConst]="300" [button]="'primary'">
     </custom-button>
   </div>
 
   <div *ngIf="onboardingService.profile_picture">
-    <custom-button [title]="'Re-upload'" (btnClick)="uploadPicture()" [button]="'ternary'">
+    <!-- (btnClick)="uploadPicture()" -->
+    <custom-button [title]="'Re-upload'" appDebounceClick (debounceClick)="uploadPicture()" [debounceTimeConst]="300"
+      [button]="'ternary'">
     </custom-button>
   </div>
   <div class="mt-10" *ngIf="onboardingService.profile_picture">
-    <custom-button [title]="'Next'" (btnClick)="openJobType()" [button]="'primary'">
+    <!-- (btnClick)="openJobType()" -->
+    <custom-button [title]="'Next'" appDebounceClick (debounceClick)="openJobType()" [debounceTimeConst]="300"
+      [button]="'primary'">
     </custom-button>
   </div>
 </ion-footer>

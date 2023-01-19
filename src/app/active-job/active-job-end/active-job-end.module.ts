@@ -10,6 +10,7 @@ import { ActiveJobEndPage } from './active-job-end.page';
 import { ActiveJobCommonHeaderPageModule } from '../active-job-common-header/active-job-common-header.module';
 import { ActiveJobHeaderPageModule } from '../active-job-header/active-job-header.module';
 import { CustomButtonModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -19,8 +20,9 @@ import { CustomButtonModule } from 'w4u-custom-components';
     ActiveJobEndPageRoutingModule,
     ActiveJobHeaderPageModule,
     ActiveJobCommonHeaderPageModule,
-    CustomButtonModule
+    CustomButtonModule,
+    DirectivesModule
   ],
   declarations: [ActiveJobEndPage]
 })
-export class ActiveJobEndPageModule {}
+export class ActiveJobEndPageModule { }

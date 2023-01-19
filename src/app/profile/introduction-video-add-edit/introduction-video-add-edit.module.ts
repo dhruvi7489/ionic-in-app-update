@@ -10,6 +10,7 @@ import { IntroductionVideoAddEditPage } from './introduction-video-add-edit.page
 import { ProfileHeaderPageModule } from '../profile-header/profile-header.module';
 import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
 import { PipesModule } from 'src/app/core/pipes/pipes.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 // import '@teamhive/capacitor-video-recorder';
 
 
@@ -22,7 +23,8 @@ import { PipesModule } from 'src/app/core/pipes/pipes.module';
     ProfileHeaderPageModule,
     CustomButtonModule,
     CustomInputModule,
-    PipesModule
+    PipesModule,
+    DirectivesModule
   ],
   declarations: [IntroductionVideoAddEditPage],
 })

@@ -104,6 +104,8 @@
 </ion-content>
 
 <ion-footer>
-  <custom-button [title]="'Save'" (btnClick)="saveHourlyRates()" [disabled]="false" [button]="'primary'">
+  <!-- (btnClick)="saveHourlyRates()" -->
+  <custom-button [title]="'Save'" appDebounceClick (debounceClick)="saveHourlyRates()" [debounceTimeConst]="300"
+    [disabled]="false" [button]="'primary'">
   </custom-button>
 </ion-footer>

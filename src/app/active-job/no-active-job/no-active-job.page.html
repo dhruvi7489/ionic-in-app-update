@@ -26,7 +26,9 @@
         <ion-row class="mt-22">
           <ion-col size="12" class="p-0">
             <!-- [disabled]="activeJobService.jobCompleted" -->
-            <custom-button [title]="'Apply for a job'" [button]="'primary'" (btnClick)="applyForJob()">
+            <!-- (btnClick)="applyForJob()" -->
+            <custom-button [title]="'Apply for a job'" [button]="'primary'" appDebounceClick
+              (debounceClick)="applyForJob()" [debounceTimeConst]="300">
             </custom-button>
           </ion-col>
         </ion-row>

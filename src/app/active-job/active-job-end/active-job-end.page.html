@@ -30,15 +30,18 @@
 
         <ion-row class="mt-22">
           <ion-col size="12">
-            <custom-button [title]="'Check-out'" [button]="'primary'" [disabled]="false" (btnClick)="checkOut()">
+            <!-- (btnClick)="checkOut()" -->
+            <custom-button [title]="'Check-out'" [button]="'primary'" [disabled]="false" appDebounceClick
+              (debounceClick)="checkOut()" [debounceTimeConst]="300">
             </custom-button>
           </ion-col>
         </ion-row>
 
         <ion-row class="mt-12">
           <ion-col size="12">
+            <!-- (btnClick)="uploadMoreWorkPictures()" -->
             <custom-button [title]="'Upload more work pictures'" [button]="'secondary'" [disabled]="false"
-              (btnClick)="uploadMoreWorkPictures()">
+              appDebounceClick (debounceClick)="uploadMoreWorkPictures()" [debounceTimeConst]="300">
             </custom-button>
           </ion-col>
         </ion-row>

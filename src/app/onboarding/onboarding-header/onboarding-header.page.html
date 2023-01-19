@@ -16,7 +16,9 @@
         <ion-row class="d-contents">
           <ion-col size="3" class="ion-align-self-center pr-0 pb-0 pt-0">
             <div class="d-flex">
-              <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" (click)="back()">
+              <!-- (click)="back()" -->
+              <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" appDebounceClick
+                (debounceClick)="back()" [debounceTimeConst]="300">
               <div class="ion-align-self-center ml-8">
                 <div class="sub-heading-md secondary fw-400">Back</div>
               </div>
@@ -39,5 +41,3 @@
     </div>
   </ion-toolbar>
 </ion-header>
-
-

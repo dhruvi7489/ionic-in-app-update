@@ -8,6 +8,7 @@ import { AvailableJobsHeaderPageRoutingModule } from './available-jobs-header-ro
 
 import { AvailableJobsHeaderPage } from './available-jobs-header.page';
 import { CustomInputModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { CustomInputModule } from 'w4u-custom-components';
     FormsModule,
     IonicModule,
     AvailableJobsHeaderPageRoutingModule,
-    CustomInputModule
+    CustomInputModule,
+    DirectivesModule
   ],
   declarations: [AvailableJobsHeaderPage],
   exports: [AvailableJobsHeaderPage]

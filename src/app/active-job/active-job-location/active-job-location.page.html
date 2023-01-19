@@ -30,8 +30,9 @@
 
         <ion-row class="mt-22">
           <ion-col size="12">
-            <custom-button [title]="'Enable location'" [button]="'primary'" [disabled]="false"
-              (btnClick)="enableLocation()">
+            <!-- (btnClick)="enableLocation()" -->
+            <custom-button [title]="'Enable location'" [button]="'primary'" [disabled]="false" appDebounceClick
+              (debounceClick)="enableLocation()" [debounceTimeConst]="300">
             </custom-button>
           </ion-col>
         </ion-row>
@@ -88,7 +89,9 @@
 
         <ion-row class="mt-22">
           <ion-col size="12">
-            <custom-button [title]="'Navigate'" [button]="'primary'" [disabled]="false" (btnClick)="navigateLocation()">
+            <!-- (btnClick)="navigateLocation()" -->
+            <custom-button [title]="'Navigate'" [button]="'primary'" [disabled]="false" appDebounceClick
+              (debounceClick)="navigateLocation()" [debounceTimeConst]="300">
             </custom-button>
           </ion-col>
         </ion-row>

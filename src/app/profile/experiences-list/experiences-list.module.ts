@@ -8,6 +8,7 @@ import { ExperiencesListPageRoutingModule } from './experiences-list-routing.mod
 
 import { ExperiencesListPage } from './experiences-list.page';
 import { ProfileHeaderPageModule } from '../profile-header/profile-header.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ProfileHeaderPageModule } from '../profile-header/profile-header.module
     FormsModule,
     IonicModule,
     ExperiencesListPageRoutingModule,
-    ProfileHeaderPageModule
+    ProfileHeaderPageModule,
+    DirectivesModule
   ],
   declarations: [ExperiencesListPage]
 })

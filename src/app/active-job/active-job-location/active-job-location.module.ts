@@ -10,6 +10,7 @@ import { ActiveJobLocationPage } from './active-job-location.page';
 import { CustomButtonModule } from 'w4u-custom-components';
 import { ActiveJobHeaderPageModule } from '../active-job-header/active-job-header.module';
 import { ActiveJobCommonHeaderPageModule } from '../active-job-common-header/active-job-common-header.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -19,8 +20,9 @@ import { ActiveJobCommonHeaderPageModule } from '../active-job-common-header/act
     ActiveJobLocationPageRoutingModule,
     CustomButtonModule,
     ActiveJobHeaderPageModule,
-    ActiveJobCommonHeaderPageModule
+    ActiveJobCommonHeaderPageModule,
+    DirectivesModule
   ],
   declarations: [ActiveJobLocationPage]
 })
-export class ActiveJobLocationPageModule {}
+export class ActiveJobLocationPageModule { }

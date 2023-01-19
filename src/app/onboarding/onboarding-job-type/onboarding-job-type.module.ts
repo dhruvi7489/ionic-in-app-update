@@ -9,6 +9,7 @@ import { OnboardingJobTypePageRoutingModule } from './onboarding-job-type-routin
 import { OnboardingJobTypePage } from './onboarding-job-type.page';
 import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
 import { OnboardingHeaderPageModule } from '../onboarding-header/onboarding-header.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { OnboardingHeaderPageModule } from '../onboarding-header/onboarding-head
     OnboardingJobTypePageRoutingModule,
     CustomButtonModule,
     CustomInputModule,
-    OnboardingHeaderPageModule
+    OnboardingHeaderPageModule,
+    DirectivesModule
   ],
   declarations: [OnboardingJobTypePage],
   exports: [OnboardingJobTypePage]

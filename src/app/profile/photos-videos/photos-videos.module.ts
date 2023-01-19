@@ -9,6 +9,7 @@ import { PhotosVideosPageRoutingModule } from './photos-videos-routing.module';
 import { PhotosVideosPage } from './photos-videos.page';
 import { CustomButtonModule } from 'w4u-custom-components';
 import { ProfileHeaderPageModule } from '../profile-header/profile-header.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { ProfileHeaderPageModule } from '../profile-header/profile-header.module
     IonicModule,
     PhotosVideosPageRoutingModule,
     ProfileHeaderPageModule,
-    CustomButtonModule
+    CustomButtonModule,
+    DirectivesModule
   ],
   declarations: [PhotosVideosPage]
 })

@@ -44,7 +44,9 @@
               <div class="fw-500 secondary sub-heading-sm">Job Application Actioned</div>
             </ion-col>
             <ion-col class="p-0 ion-text-end" size="2">
-              <img src="../../../../assets/imgs/Iconsax/Svg/All/outline/close-red.svg" height="20px" width="20px" (click)="deleteNotification()">
+              <!-- (click)="deleteNotification()" -->
+              <img src="../../../../assets/imgs/Iconsax/Svg/All/outline/close-red.svg" height="20px" width="20px"
+                appDebounceClick (debounceClick)="deleteNotification()" [debounceTimeConst]="300">
             </ion-col>
           </ion-row>
           <ion-row class="mt-4">
@@ -67,7 +69,9 @@
               <div class="fw-500 secondary sub-heading-sm">Job Application Actioned</div>
             </ion-col>
             <ion-col class="p-0 ion-text-end" size="2">
-              <img src="../../../../assets/imgs/Iconsax/Svg/All/outline/close-red.svg" height="20px" width="20px" (click)="deleteNotification()">
+              <!-- (click)="deleteNotification()" -->
+              <img src="../../../../assets/imgs/Iconsax/Svg/All/outline/close-red.svg" height="20px" width="20px"
+                appDebounceClick (debounceClick)="deleteNotification()" [debounceTimeConst]="300">
             </ion-col>
           </ion-row>
           <ion-row class="mt-4">

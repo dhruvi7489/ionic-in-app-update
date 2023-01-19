@@ -1,6 +1,6 @@
-<app-onboarding-header></app-onboarding-header>
+<app-onboarding-header *ngIf="!loginUserId"></app-onboarding-header>
 
-<ion-content class="container">
+<ion-content class="container" *ngIf="!loginUserId">
   <div class="c-container-body mt-24 ml-16 mr-16">
     <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Start with your phone number</div>
 
@@ -19,8 +19,9 @@
   </div>
 </ion-content>
 
-<ion-footer>
-  <custom-button [title]="'Next'" (btnClick)="openOTPPage()"
+<ion-footer *ngIf="!loginUserId">
+  <!-- (btnClick)="openOTPPage()" -->
+  <custom-button [title]="'Next'" appDebounceClick (debounceClick)="openOTPPage()" [debounceTimeConst]="300"
     [disabled]="!onboardingService.mobile || onboardingService.mobile.length != 10" [button]="'primary'">
   </custom-button>
 </ion-footer>

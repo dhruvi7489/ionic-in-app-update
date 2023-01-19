@@ -74,8 +74,9 @@
       <div class="mt-12">
         <ion-row>
           <ion-col size="12" class="p-0">
+            <!-- (btnClick)="findJobs()" -->
             <custom-button [title]="'Find jobs'" [button]="'primary'" [disabled]="myJobsService.noDataFound"
-              (btnClick)="findJobs()">
+              appDebounceClick (debounceClick)="findJobs()" [debounceTimeConst]="300">
             </custom-button>
           </ion-col>
         </ion-row>
@@ -105,7 +106,9 @@
         </ion-row>
         <ion-row>
           <ion-col size="12" class="p-0">
-            <div class="d-flex justify-content-center c-pointer" (click)="myJobsService.getMyJobs()">
+            <!-- (click)="myJobsService.getMyJobs()" -->
+            <div class="d-flex justify-content-center c-pointer" appDebounceClick
+              (debounceClick)="myJobsService.getMyJobs()" [debounceTimeConst]="300">
               <div class="ion-align-self-center mt-4">
                 <img class="img-wrapper" src="../../assets/imgs/Iconsax/Svg/All/outline/rotate-right.svg">
               </div>
@@ -118,7 +121,8 @@
 
     <div class="pt-20 pb-20" *ngIf="myJobsService.myJobsList?.length != 0">
       <div *ngFor="let job of myJobsService.myJobsList;let i = index;" [ngClass]="{'mt-12' : i != 0}">
-        <ion-card class="c-card-wrap" (click)="goToJobDetails(job)">
+        <!-- (click)="goToJobDetails(job)" -->
+        <ion-card class="c-card-wrap" appDebounceClick (debounceClick)="goToJobDetails(job)" [debounceTimeConst]="300">
           <ion-card-header class="pt-16 pb-0 pr-16 pl-16 card-wrap-header">
             <ion-row class="bottom-border pb-12">
               <ion-col size="8" class="p-0">

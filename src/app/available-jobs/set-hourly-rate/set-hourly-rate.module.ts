@@ -9,6 +9,7 @@ import { SetHourlyRatePageRoutingModule } from './set-hourly-rate-routing.module
 import { SetHourlyRatePage } from './set-hourly-rate.page';
 import { CustomButtonModule } from 'w4u-custom-components';
 import { AvailableJobsHeaderPageModule } from '../available-jobs-header/available-jobs-header.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -17,8 +18,9 @@ import { AvailableJobsHeaderPageModule } from '../available-jobs-header/availabl
     IonicModule,
     SetHourlyRatePageRoutingModule,
     AvailableJobsHeaderPageModule,
-    CustomButtonModule
+    CustomButtonModule,
+    DirectivesModule
   ],
   declarations: [SetHourlyRatePage]
 })
-export class SetHourlyRatePageModule {}
+export class SetHourlyRatePageModule { }

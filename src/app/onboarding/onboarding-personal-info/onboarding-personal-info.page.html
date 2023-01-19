@@ -4,14 +4,15 @@
   <div class="c-container-body mt-24 ml-16 mr-16 mb-16">
     <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Provide your personal information</div>
 
-    <!-- <div class="c-button-wrapper mt-24">
-      <custom-button [title]="'Continue with Facebook'" (btnClick)="facebookLogin()" [button]="'secondary'"
+    <!-- <div class="c-button-wrapper mt-24"> -->
+    <!-- (btnClick)="facebookLogin()" -->
+    <!-- <custom-button [title]="'Continue with Facebook'" appDebounceClick (debounceClick)="facebookLogin()" [debounceTimeConst]="300" [button]="'secondary'"
         [image]="'../../assets/imgs/facebook.svg'"></custom-button>
     </div>
 
     <div class="mt-16">
       <div class="ternary sub-heading-sm fw-400 ion-text-center">Or</div>
-    </div> -->
+    </div>  -->
 
     <div class="secondary fw-500 sub-heading-sm mt-24 mb-8">
       <ion-label>Your name*</ion-label>
@@ -74,6 +75,8 @@
 </ion-content>
 
 <ion-footer>
-  <custom-button [title]="'Next'" (btnClick)="savePersonalInfo()" [disabled]="false" [button]="'primary'">
+  <!-- (btnClick)="savePersonalInfo()" -->
+  <custom-button [title]="'Next'" appDebounceClick (debounceClick)="savePersonalInfo()" [debounceTimeConst]="300"
+    [disabled]="false" [button]="'primary'">
   </custom-button>
 </ion-footer>

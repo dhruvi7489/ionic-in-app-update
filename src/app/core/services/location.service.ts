@@ -21,12 +21,14 @@ export class LocationService {
         public toastService: ToastService
     ) {
         Geolocation.checkPermissions().then(async (res) => {
+            console.log("check persmision---", res)
             if (res.location === 'denied') {
                 this.locationPermissionGranted = false;
                 await this.requestLocationPermission();
             }
             if (res.location === 'granted') {
                 this.locationPermissionGranted = true;
+                this.getCurrentLocationPosition();
             }
         }).catch((err: HttpErrorResponse) => {
             this.toastService.showMessage(err.message);
@@ -35,7 +37,9 @@ export class LocationService {
 
     async requestLocationPermission(showErrorMsg = true) {
         Geolocation.requestPermissions().then(async (res) => {
-            if (res.location === 'granted') {
+            console.log("request permission----", res)
+            if
+                (res.location === 'granted') {
                 this.locationPermissionGranted = true;
                 this.getCurrentLocationPosition(showErrorMsg);
                 setInterval(async () => {
@@ -51,10 +55,11 @@ export class LocationService {
         });
     }
 
-    async getCurrentLocationPosition(showErrorMsg) {
+    async getCurrentLocationPosition(showErrorMsg?) {
         this.locationCordinates = null;
         Geolocation.getCurrentPosition().then((res: any) => {
             this.locationCordinates = res;
+            console.log("locationCordinates----", this.locationCordinates)
             this.setLocationCordinates(res);
         }).catch((err: HttpErrorResponse) => {
             this.setLocationCordinates(null);

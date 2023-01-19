@@ -8,6 +8,7 @@ import { ProfileDetailsPageRoutingModule } from './profile-details-routing.modul
 
 import { ProfileDetailsPage } from './profile-details.page';
 import { CustomButtonModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { CustomButtonModule } from 'w4u-custom-components';
     FormsModule,
     IonicModule,
     ProfileDetailsPageRoutingModule,
-    CustomButtonModule
+    CustomButtonModule,
+    DirectivesModule
   ],
   declarations: [ProfileDetailsPage],
   exports: [ProfileDetailsPage]

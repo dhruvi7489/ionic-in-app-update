@@ -9,6 +9,7 @@ import { AddSkillsPageRoutingModule } from './add-skills-routing.module';
 import { AddSkillsPage } from './add-skills.page';
 import { ProfileHeaderPageModule } from '../profile-header/profile-header.module';
 import { CustomButtonModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -17,8 +18,9 @@ import { CustomButtonModule } from 'w4u-custom-components';
     IonicModule,
     AddSkillsPageRoutingModule,
     ProfileHeaderPageModule,
-    CustomButtonModule
+    CustomButtonModule,
+    DirectivesModule
   ],
   declarations: [AddSkillsPage]
 })
-export class AddSkillsPageModule {}
+export class AddSkillsPageModule { }

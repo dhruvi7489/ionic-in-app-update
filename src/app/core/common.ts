@@ -1,12 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ToastService } from '../services/toast.service';
-import { ApiService } from './api.service';
+import { ToastService } from './services/toast.service';
+import { ApiService } from './services/api.service';
 import { Apiurl } from './route';
 import { TOKEN_KEY, TOKEN_TYPE } from './storage-keys';
 import { map } from 'rxjs/operators';
-import { LoadingService } from '../services/loading.service';
+import { LoadingService } from './services/loading.service';
 import { Storage } from '@ionic/storage';
 
 @Injectable({

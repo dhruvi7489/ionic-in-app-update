@@ -5,7 +5,9 @@
         <ion-row class="d-contents">
           <ion-col size="3" class="logo-title ion-align-self-center pr-0 pb-0 pt-0">
             <div class="img-wrapper d-flex">
-              <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" (click)="back()">
+              <!-- (click)="back()" -->
+              <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" appDebounceClick
+                (debounceClick)="back()" [debounceTimeConst]="300">
               <div class="header-title ion-align-self-center ml-8">
                 <div class="sub-heading-md secondary fw-400">Back</div>
               </div>
@@ -17,8 +19,9 @@
           </ion-col>
           <ion-col size="3" class="pl-0 pr-0 pb-0 pt-0" *ngIf="showShareBtn">
             <div class="ion-text-end">
+              <!-- (click)="shareSelectedJobDetails()" -->
               <img class="mt-14" src="../../../assets/imgs/Iconsax/Svg/All/outline/share-1.svg" width="24px"
-                height="24px" (click)="shareSelectedJobDetails()">
+                height="24px" appDebounceClick (debounceClick)="shareSelectedJobDetails()" [debounceTimeConst]="300">
             </div>
           </ion-col>
         </ion-row>

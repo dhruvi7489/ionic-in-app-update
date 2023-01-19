@@ -11,6 +11,7 @@ import { ProfileHeaderPageModule } from './profile-header/profile-header.module'
 import { ProfileDetailsPageModule } from './profile-details/profile-details.module';
 import { PipesModule } from '../core/pipes/pipes.module';
 import { MediaCapture } from '@awesome-cordova-plugins/media-capture/ngx';
+import { DirectivesModule } from '../directives/directives.module';
 
 @NgModule({
   imports: [
@@ -20,9 +21,10 @@ import { MediaCapture } from '@awesome-cordova-plugins/media-capture/ngx';
     ProfilePageRoutingModule,
     ProfileHeaderPageModule,
     ProfileDetailsPageModule,
-    PipesModule
+    PipesModule,
+    DirectivesModule
   ],
   declarations: [ProfilePage],
-  providers: [MediaCapture]
+  providers: [MediaCapture],
 })
 export class ProfilePageModule { }

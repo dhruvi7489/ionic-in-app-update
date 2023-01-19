@@ -9,6 +9,7 @@ import { ExperienceAddEditPageRoutingModule } from './experience-add-edit-routin
 import { ExperienceAddEditPage } from './experience-add-edit.page';
 import { ProfileHeaderPageModule } from '../../profile-header/profile-header.module';
 import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
     ExperienceAddEditPageRoutingModule,
     ProfileHeaderPageModule,
     CustomButtonModule,
-    CustomInputModule
+    CustomInputModule,
+    DirectivesModule
   ],
   declarations: [ExperienceAddEditPage]
 })

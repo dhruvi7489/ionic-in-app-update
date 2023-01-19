@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavParams } from '@ionic/angular';
 import { OnboardingService } from 'src/app/onboarding/onboarding.service';
+import { LoadingService } from 'src/app/core/services/loading.service';
 import { ProfileService } from '../profile.service';
 
 @Component({
@@ -14,7 +15,8 @@ export class AddSkillsPage implements OnInit {
   constructor(
     public onboardingService: OnboardingService,
     public profileService: ProfileService,
-    public navParams: NavParams
+    public navParams: NavParams,
+    public loadingService: LoadingService
   ) { }
 
   ngOnInit() {
@@ -32,7 +34,9 @@ export class AddSkillsPage implements OnInit {
   }
 
   async saveJobTypes() {
+    await this.loadingService.show();
     await this.onboardingService.saveJobTypes(true);
     await this.profileService.getJobPreference();
+    await this.loadingService.dismiss();
   }
 }

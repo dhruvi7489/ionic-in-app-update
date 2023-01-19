@@ -2,6 +2,7 @@ import { environment } from 'src/environments/environment';
 
 const RoutePath = environment.apiUrl;
 const ImagePath = environment.imageUrl;
+const UxCamAppKey = environment.UxCamAppKey;
 const authServiceUrl = 'auth-service/v1/';
 const jobSeekerServiceUrl = 'job-seeker-service/v1/';
 const JobService = 'job-service/v1/';
@@ -10,6 +11,7 @@ const ratingService = 'rating-service/v1/';
 export const Apiurl = {
     RoutePath: RoutePath,
     ImagePath: ImagePath,
+    UxCamAppKey: UxCamAppKey,
     UpdateToken: jobSeekerServiceUrl + 'jobseeker/updatetoken',
     SendOTPUrl: authServiceUrl + 'auth/mobileNo/otp/',
     LoginWithOTPUrl: authServiceUrl + 'auth/login-otp',

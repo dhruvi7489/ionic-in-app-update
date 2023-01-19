@@ -9,6 +9,7 @@ import { OnboardingProfilePicturePageRoutingModule } from './onboarding-profile-
 import { OnboardingProfilePicturePage } from './onboarding-profile-picture.page';
 import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
 import { OnboardingHeaderPageModule } from '../onboarding-header/onboarding-header.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { OnboardingHeaderPageModule } from '../onboarding-header/onboarding-head
     OnboardingProfilePicturePageRoutingModule,
     CustomButtonModule,
     CustomInputModule,
-    OnboardingHeaderPageModule
+    OnboardingHeaderPageModule,
+    DirectivesModule
   ],
   declarations: [OnboardingProfilePicturePage],
   exports: [OnboardingProfilePicturePage]

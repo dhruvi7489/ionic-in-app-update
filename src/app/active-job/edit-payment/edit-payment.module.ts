@@ -9,6 +9,7 @@ import { EditPaymentPageRoutingModule } from './edit-payment-routing.module';
 import { EditPaymentPage } from './edit-payment.page';
 import { ActiveJobHeaderPageModule } from '../active-job-header/active-job-header.module';
 import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -18,8 +19,9 @@ import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
     EditPaymentPageRoutingModule,
     ActiveJobHeaderPageModule,
     CustomButtonModule,
-    CustomInputModule
+    CustomInputModule,
+    DirectivesModule
   ],
   declarations: [EditPaymentPage]
 })
-export class EditPaymentPageModule {}
+export class EditPaymentPageModule { }

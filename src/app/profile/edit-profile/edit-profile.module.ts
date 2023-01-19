@@ -9,6 +9,7 @@ import { EditProfilePageRoutingModule } from './edit-profile-routing.module';
 import { EditProfilePage } from './edit-profile.page';
 import { ProfileHeaderPageModule } from '../profile-header/profile-header.module';
 import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { CustomButtonModule, CustomInputModule } from 'w4u-custom-components';
     EditProfilePageRoutingModule,
     ProfileHeaderPageModule,
     CustomButtonModule,
-    CustomInputModule
+    CustomInputModule,
+    DirectivesModule
   ],
   declarations: [EditProfilePage]
 })

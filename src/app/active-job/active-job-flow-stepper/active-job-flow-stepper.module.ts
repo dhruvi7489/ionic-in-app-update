@@ -8,6 +8,7 @@ import { ActiveJobFlowStepperPageRoutingModule } from './active-job-flow-stepper
 
 import { ActiveJobFlowStepperPage } from './active-job-flow-stepper.page';
 import { PipesModule } from 'src/app/core/pipes/pipes.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { PipesModule } from 'src/app/core/pipes/pipes.module';
     FormsModule,
     IonicModule,
     ActiveJobFlowStepperPageRoutingModule,
-    PipesModule
+    PipesModule,
+    DirectivesModule
   ],
   declarations: [ActiveJobFlowStepperPage],
   exports: [ActiveJobFlowStepperPage]

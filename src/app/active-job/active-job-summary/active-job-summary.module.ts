@@ -11,6 +11,7 @@ import { CustomButtonModule } from 'w4u-custom-components';
 import { PipesModule } from 'src/app/core/pipes/pipes.module';
 import { ActiveJobHeaderPageModule } from '../active-job-header/active-job-header.module';
 import { ActiveJobCommonHeaderPageModule } from '../active-job-common-header/active-job-common-header.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { ActiveJobCommonHeaderPageModule } from '../active-job-common-header/act
     CustomButtonModule,
     PipesModule,
     ActiveJobHeaderPageModule,
-    ActiveJobCommonHeaderPageModule
+    ActiveJobCommonHeaderPageModule,
+    DirectivesModule
   ],
   declarations: [ActiveJobSummaryPage],
   exports: [ActiveJobSummaryPage]

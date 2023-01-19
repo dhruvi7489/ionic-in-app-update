@@ -72,7 +72,9 @@
                 :
                 '1.0-0'}}</div>
               <div class="ml-8">
-                <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" (click)="editPayment()">
+                <!-- (click)="editPayment()" -->
+                <img src="../../../assets/imgs/Iconsax/Svg/All/outline/edit-3.svg" appDebounceClick
+                  (debounceClick)="editPayment()" [debounceTimeConst]="300">
               </div>
             </div>
           </ion-col>
@@ -87,7 +89,9 @@
       <div class="mt-24 mb-24">
         <ion-row>
           <ion-col size="12" class="p-0">
-            <custom-button [title]="'Submit your bills'" (btnClick)="submitPayment()" [button]="'primary'">
+            <!-- (btnClick)="submitPayment()" -->
+            <custom-button [title]="'Submit your bills'" appDebounceClick (debounceClick)="submitPayment()"
+              [debounceTimeConst]="300" [button]="'primary'">
             </custom-button>
           </ion-col>
         </ion-row>

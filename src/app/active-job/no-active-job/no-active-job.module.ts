@@ -9,6 +9,7 @@ import { NoActiveJobPageRoutingModule } from './no-active-job-routing.module';
 import { NoActiveJobPage } from './no-active-job.page';
 import { ActiveJobHeaderPageModule } from '../active-job-header/active-job-header.module';
 import { CustomButtonModule } from 'w4u-custom-components';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -17,8 +18,9 @@ import { CustomButtonModule } from 'w4u-custom-components';
     IonicModule,
     NoActiveJobPageRoutingModule,
     ActiveJobHeaderPageModule,
-    CustomButtonModule
+    CustomButtonModule,
+    DirectivesModule
   ],
   declarations: [NoActiveJobPage]
 })
-export class NoActiveJobPageModule {}
+export class NoActiveJobPageModule { }

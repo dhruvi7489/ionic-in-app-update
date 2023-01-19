@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonProvider } from '../core/common';
 import { Apiurl } from '../core/route';
-import { ToastService } from '../services/toast.service';
+import { ToastService } from '../core/services/toast.service';
 import { DateTime } from 'luxon';
 import { JobApplicationModalPage } from './job-application-modal/job-application-modal.page';
 import { ModalController } from '@ionic/angular';
 import { JobApplication } from '../core/modal/job-application.modal';
 import { JobSeeker } from '../core/modal/job-seeker.modal';
-import { LoadingService } from '../services/loading.service';
+import { LoadingService } from '../core/services/loading.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 import { Share } from '@capacitor/share';
@@ -80,7 +80,7 @@ export class AvailableJobsService {
       this.jobLists = [];
       this.page = 0;
       this.errorInApiCall = true;
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -107,7 +107,7 @@ export class AvailableJobsService {
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
-        console.log(err)
+        console.log(err);
       })
     } else {
       // this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
@@ -132,14 +132,14 @@ export class AvailableJobsService {
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
-      console.log(err)
+      console.log(err);
     })
   }
 
   // Login user eligible for apply job or not that logic set here
   async logicForValidToApplyJob(res, typeIdFound) {
-    if (res.content[0]?.jobTypePreferences?.length != 0) {
-      for (let pref of res.content[0]?.jobTypePreferences) {
+    if (res && res.content.length != 0 && res.content[0]?.jobTypePreferences?.length != 0) {
+      for (let pref of res?.content[0]?.jobTypePreferences) {
         // if (pref.typeId == this.selectedJobDetails?.jobTypeId) {
         typeIdFound = true;
         if (this.selectedJobDetails?.jobSeekerPaymentInfo?.level == 'Expert') {
@@ -211,7 +211,7 @@ export class AvailableJobsService {
       });
 
     }).catch((err: HttpErrorResponse) => {
-      console.log(err)
+      console.log(err);
     })
     return isFound;
   }
@@ -238,7 +238,7 @@ export class AvailableJobsService {
         await this.submitJobApplication(hourlyRate, isApplyLater);
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
-        console.log(err)
+        console.log(err);
       })
     } else {
       this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPref.id, { jobTypeHourlyRateRequests: this.jobPref?.jobTypePreferences }).then((res: any) => {
@@ -248,7 +248,7 @@ export class AvailableJobsService {
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
-        console.log(err)
+        console.log(err);
       })
     }
   }
@@ -264,49 +264,53 @@ export class AvailableJobsService {
     application.isApplyLater = isApplyLater;
     application.hourlyRate = hourlyRate || 0;
     application.gender = loginUserGender;
-
-    this.commonProvider.PostMethod(Apiurl.SubmitJobApplication, application).then(async (res: any) => {
-      await this.loadingService.dismiss();
-      if (!isApplyLater) {
-        if (res && res.id) {
-          let obj = {
-            title: "Job application successful",
-            message: "Congratulations, Your job application is now submitted and awaiting for approval. we will inform you as soon as it is approved.",
-            okBtnText: "Apply for another Job",
-            cancelBtnText: "Close",
-            img: "../../assets/imgs/job-application-successful.svg",
-            success: true
+    if (application.hourlyRate != 0) {
+      this.commonProvider.PostMethod(Apiurl.SubmitJobApplication, application).then(async (res: any) => {
+        await this.loadingService.dismiss();
+        if (!isApplyLater) {
+          if (res && res.id) {
+            let obj = {
+              title: "Job application successful",
+              message: "Congratulations, Your job application is now submitted and awaiting for approval. we will inform you as soon as it is approved.",
+              okBtnText: "Apply for another Job",
+              cancelBtnText: "Close",
+              img: "../../assets/imgs/job-application-successful.svg",
+              success: true
+            }
+            const modal = await this.modalCtrl.create({
+              component: JobApplicationModalPage,
+              componentProps: obj
+            });
+            await modal.present();
+          } else {
+            let obj = {
+              title: "Job application failed",
+              message: "Your job application failed.Please try again later. If this continues to be a problem, please reach out to customer support.",
+              okBtnText: "Try again",
+              cancelBtnText: "Close",
+              img: "../../assets/imgs/job-application-failed.svg",
+              hourlyRate: hourlyRate,
+              isApplyLater: isApplyLater,
+              success: false
+            }
+            const modal = await this.modalCtrl.create({
+              component: JobApplicationModalPage,
+              componentProps: obj
+            });
+            await modal.present();
           }
-          const modal = await this.modalCtrl.create({
-            component: JobApplicationModalPage,
-            componentProps: obj
-          });
-          await modal.present();
         } else {
-          let obj = {
-            title: "Job application failed",
-            message: "Your job application failed.Please try again later. If this continues to be a problem, please reach out to customer support.",
-            okBtnText: "Try again",
-            cancelBtnText: "Close",
-            img: "../../assets/imgs/job-application-failed.svg",
-            hourlyRate: hourlyRate,
-            isApplyLater: isApplyLater,
-            success: false
-          }
-          const modal = await this.modalCtrl.create({
-            component: JobApplicationModalPage,
-            componentProps: obj
-          });
-          await modal.present();
+          await this.toastService.showMessage('You saved this job for later use!');
+          await this.getSelectedJobById();
         }
-      } else {
-        await this.toastService.showMessage('You saved this job for later use!');
-        await this.getSelectedJobById();
-      }
-    }).catch((err: HttpErrorResponse) => {
-      this.loadingService.dismiss();
-      console.log(err)
-    })
+
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
+        console.log(err);
+      })
+    } else {
+      await this.toastService.showMessage('Please select valid hourly rate!');
+    }
   }
 
   //Remove Bookmarked
@@ -315,7 +319,7 @@ export class AvailableJobsService {
       this.commonProvider.PutMethod(Apiurl.RemoveBookMark + this.jobApplicationId, null).then((res: any) => {
         this.getSelectedJobById();
       }).catch((err: HttpErrorResponse) => {
-        console.log(err)
+        console.log(err);
       })
     } else {
     }
@@ -344,7 +348,7 @@ export class AvailableJobsService {
       }).then(res => {
         console.log(res)
       }).catch(err => {
-        console.log(err)
+        console.log(err);
       });
     }
   }

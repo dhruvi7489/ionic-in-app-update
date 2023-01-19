@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
 import { JobUtilervice } from 'src/app/core/util/job-util.service';
-import { ToastService } from 'src/app/services/toast.service';
+import { ToastService } from 'src/app/core/services/toast.service';
 import { AvailableJobsService } from '../available-jobs.service';
 
 @Component({
@@ -108,7 +108,7 @@ export class AvailableJobDetailsPage implements OnInit {
 
   async jobBookMark() {
     this.availableJobsService.jobPref = this.availableJobsService.selectedJobPreferences?.content[0];
-    await this.availableJobsService.jobPref.jobTypePreferences.forEach(async prefType => {
+    await this.availableJobsService?.jobPref?.jobTypePreferences?.forEach(async prefType => {
       if (this.availableJobsService.selectedJobDetails?.jobTypeId == prefType.typeId) {
         let hourlyRate = prefType.maxHourlyRate;
         await this.availableJobsService.submitJobApplication(hourlyRate, true);

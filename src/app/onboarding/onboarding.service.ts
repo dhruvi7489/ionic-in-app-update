@@ -1,24 +1,26 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, NgZone, SecurityContext } from '@angular/core';
 import { ActionSheetController, ModalController } from '@ionic/angular';
-import * as moment from 'moment';
 import { CommonProvider } from '../core/common';
 import { LoginRequest } from '../core/modal/login-request.model';
 import { LoginResponse } from '../core/modal/login-response.modal';
 import { PersonalInfoRequest } from '../core/modal/personal-info.model';
 import { Apiurl } from '../core/route';
 import { TOKEN_KEY, TOKEN_TYPE } from '../core/storage-keys';
-import { ToastService } from '../services/toast.service';
+import { ToastService } from '../core/services/toast.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { S3Object } from '../core/modal/s3-object.modal';
 import { S3Util } from '../core/util/s3.util';
 import { JobPreference, jobTypePreferencesRequests, JobTypeRequests } from '../core/modal/job-preference.modal';
 import { Router } from '@angular/router';
-import { LoadingService } from '../services/loading.service';
+import { LoadingService } from '../core/services/loading.service';
 import { OTPModel } from '../core/modal/otp.modal';
-import { LocationService } from '../services/location.service';
+import { LocationService } from '../core/services/location.service';
 import { Storage } from '@ionic/storage';
+import * as moment from 'moment';
+import { Address } from '../core/modal/address.modal';
+declare var google;
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +32,13 @@ export class OnboardingService {
   showExperience: boolean = false;
 
   mobile: string = null;
-
+  config = {
+    allowNumbersOnly: true,
+    length: 6,
+    isPasswordInput: false,
+    disableAutoFocus: false,
+    placeholder: '0',
+  };
   otp: string = "";
 
   otp_input_1: string = null;
@@ -67,6 +75,11 @@ export class OnboardingService {
   disabled = true;
 
   activeTab: string = '';
+  addressObj: Address = new Address(40.730610, -73.935242);
+  autocomplete: any = {
+    query: ''
+  };
+  profileData: any = null;
 
   constructor(
     public commonProvider: CommonProvider,
@@ -82,6 +95,82 @@ export class OnboardingService {
   ) {
     this.setInitialValues();
     this.checkRedirection();
+    // Location cordinates subscribe if get
+    this.locationService.getLocationCordinates().subscribe(async (res) => {
+      if (res) {
+        await this.getAddress(res?.coords?.latitude, res?.coords?.longitude);
+      }
+    })
+  }
+
+  // Get city, country, zip from latitude, longitude
+  async getAddress(latitude, longitude) {
+    const loginUserInfo = await this.storage.get('loginUserInfo');
+    this.addressObj.latitude = latitude;
+    this.addressObj.longitude = longitude;
+    const geoCoder = new google.maps.Geocoder();
+    geoCoder.geocode({ location: { lat: latitude, lng: longitude } }, async (results, status) => {
+      if (status === 'OK') {
+        if (results[0]) {
+          this.autocomplete.query = results[0].formatted_address;
+          this.addressObj.address = results[0].formatted_address;
+          this.addressObj.placeId = results[0].place_id;
+          for (let i = 0; i < results[0].address_components.length; i++) {
+            if (results[0].address_components[i].types[0] === 'locality') {
+              this.addressObj.city = results[0].address_components[i].long_name;
+            }
+            if (results[0].address_components[i].types[0] === 'administrative_area_level_1') {
+              this.addressObj.region = results[0].address_components[i].long_name;
+            }
+            if (results[0].address_components[i].types[0] === 'country') {
+              this.addressObj.country = results[0].address_components[i].long_name;
+            }
+            if (results[0].address_components[i].types[0] === 'postal_code') {
+              this.addressObj.zip = results[0].address_components[i].long_name;
+            }
+          }
+        } else {
+          this.toastService.showMessage('No results found', 2000);
+        }
+      } else {
+        this.toastService.showMessage('Google maps location failed due to: ' + status, 2000);
+      }
+      if (JSON.parse(loginUserInfo)) {
+        this.updateProfile()
+      } else {
+        const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
+        if (loginUserMobileNo) {
+          this.getPersonalInfo()
+        }
+      }
+    });
+  }
+
+  // Update login user personal Information
+  async updateProfile() {
+    const loginUserInfo = await this.storage.get('loginUserInfo');
+    if (!JSON.parse(loginUserInfo)?.address) {
+      this.loadingService.show();
+      let obj = {
+        dob: moment(new Date(JSON.parse(loginUserInfo)?.dob)).format("YYYY-MM-DD"),
+        email: JSON.parse(loginUserInfo)?.email,
+        gender: JSON.parse(loginUserInfo)?.gender,
+        name: JSON.parse(loginUserInfo)?.name,
+        address: this.addressObj,
+        mobile: JSON.parse(loginUserInfo)?.mobile
+      }
+      await this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + JSON.parse(loginUserInfo)?.id, obj).then(async (res: any) => {
+        this.loadingService.dismiss();
+        if (res) {
+          this.toastService.showMessage('Login user location updated successfully');
+          this.modalCtrl.dismiss();
+          await this.getProfileData();
+        }
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
+        console.log(err);
+      })
+    }
   }
 
   async setInitialValues() {
@@ -99,7 +188,7 @@ export class OnboardingService {
       this.router.navigateByUrl('onboarding/onboarding-otp');
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -108,6 +197,7 @@ export class OnboardingService {
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     this.loadingService.show();
     return await this.commonProvider.PostMethod(Apiurl.LoginWithOTPUrl, new LoginRequest(loginUserMobileNo, this.otp)).then(async (res: LoginResponse) => {
+      this.loadingService.dismiss();
       // if (res) {
       this.storage.set(TOKEN_KEY, res.jwtToken)
       this.storage.set(TOKEN_TYPE, res.tokentype)
@@ -116,12 +206,11 @@ export class OnboardingService {
       await this.getPersonalInfo();
       await this.updateToken();
       await this.checkRedirection();
-      this.loadingService.dismiss();
 
       // }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -180,7 +269,7 @@ export class OnboardingService {
         this.router.navigateByUrl('onboarding/onboarding-personal-info');
       }
     }).catch((err: HttpErrorResponse) => {
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -206,15 +295,18 @@ export class OnboardingService {
   // Save login user personal Information
   async savePersonalInfo() {
     await this.loadingService.show();
-    return await this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referralCode)).then(async (res: any) => {
+    await this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referralCode)).then(async (res: any) => {
       await this.loadingService.dismiss();
+      if (this.locationService.locationCordinates) {
+        await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
+      }
       this.router.navigateByUrl('onboarding/onboarding-profile-picture');
       if (res) {
         this.toastService.showMessage("Personal information saved successfully");
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -237,7 +329,7 @@ export class OnboardingService {
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -363,12 +455,12 @@ export class OnboardingService {
           }
         }).catch((err: HttpErrorResponse) => {
           this.loadingService.dismiss();
-          console.log(err)
+          console.log(err);
         })
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
-      console.log(err)
+      console.log(err);
     })
 
   }
@@ -407,7 +499,7 @@ export class OnboardingService {
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -460,11 +552,11 @@ export class OnboardingService {
             })
           }
         }).catch((err: HttpErrorResponse) => {
-          console.log(err)
+          console.log(err);
         })
       }
     }).catch((err: HttpErrorResponse) => {
-      console.log(err)
+      console.log(err);
     })
   }
 
@@ -518,7 +610,7 @@ export class OnboardingService {
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
-        console.log(err)
+        console.log(err);
       })
     } else {
       await this.commonProvider.PostMethod(Apiurl.JobPreference, params).then(async (res: S3Object) => {
@@ -528,7 +620,7 @@ export class OnboardingService {
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
-        console.log(err)
+        console.log(err);
       })
     }
   }
@@ -557,7 +649,7 @@ export class OnboardingService {
         }
       }).catch((err: HttpErrorResponse) => {
         this.toastService.showMessage('Work Experience not edited, Something went wrong...')
-        console.log(err)
+        console.log(err);
       })
     } else {
       // this.toastService.showMessage('Please enter valid experience and link')
@@ -589,7 +681,7 @@ export class OnboardingService {
         }
       }).catch((err: HttpErrorResponse) => {
         this.toastService.showMessage('Work Experience not added, Something went wrong...')
-        console.log(err)
+        console.log(err);
       })
     } else {
       // this.toastService.showMessage('Please enter valid experience and link')
@@ -609,18 +701,20 @@ export class OnboardingService {
         if (res) {
         }
       }).catch((err: HttpErrorResponse) => {
-        console.log(err)
+        console.log(err);
       })
     }
   }
 
   // Check Redirection
   async checkRedirection() {
+    await this.loadingService.show();
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     const TokenKey = await this.storage.get(TOKEN_KEY);
     const loginUserInfo = await this.storage.get('loginUserInfo');
 
     if (loginUserMobileNo && TokenKey) {
+      await this.loadingService.dismiss();
       if (loginUserInfo) {
         await this.redirectToPage(JSON.parse(loginUserInfo));
       } else {
@@ -631,10 +725,11 @@ export class OnboardingService {
             this.router.navigateByUrl('onboarding/onboarding-personal-info');
           }
         }).catch((err: HttpErrorResponse) => {
-          console.log(err)
+          console.log(err);
         })
       }
     } else {
+      await this.loadingService.dismiss();
       //Location access permission 
       if (!this.locationService.locationPermissionGranted) {
         await this.locationService.requestLocationPermission(false);
@@ -650,13 +745,15 @@ export class OnboardingService {
 
   // Redirect To Page
   async redirectToPage(res) {
+    await this.loadingService.show();
     const loginUserId = await this.storage.get('loginUserId');
     const onboringFlowVisited = await this.storage.get('onboringFlowVisited');
     if (res && res.status != "Active") {
-      if (res != null && res.address != null) {
-        this.router.navigateByUrl('tabs/profile');
-      }
-      else if (res != null && res.profilePhoto == null && !onboringFlowVisited) {
+      await this.loadingService.dismiss();
+      // if (res != null && res.address != null) {
+      //   this.router.navigateByUrl('tabs/profile');
+      // }
+      if (res != null && res.profilePhoto == null && !onboringFlowVisited) {
         this.router.navigateByUrl('onboarding/onboarding-profile-picture');
       }
       else {
@@ -683,6 +780,7 @@ export class OnboardingService {
       //   this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
       // }
     } else {
+      await this.loadingService.dismiss();
       if (res == null) {
         this.router.navigateByUrl('onboarding/onboarding-personal-info');
       } else {

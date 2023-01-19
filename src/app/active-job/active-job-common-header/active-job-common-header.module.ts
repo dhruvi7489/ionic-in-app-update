@@ -8,6 +8,7 @@ import { ActiveJobCommonHeaderPageRoutingModule } from './active-job-common-head
 
 import { ActiveJobCommonHeaderPage } from './active-job-common-header.page';
 import { PipesModule } from 'src/app/core/pipes/pipes.module';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { PipesModule } from 'src/app/core/pipes/pipes.module';
     FormsModule,
     IonicModule,
     ActiveJobCommonHeaderPageRoutingModule,
-    PipesModule
+    PipesModule,
+    DirectivesModule
   ],
   declarations: [ActiveJobCommonHeaderPage],
   exports: [ActiveJobCommonHeaderPage]

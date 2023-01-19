@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { JobApplicationModalPageRoutingModule } from './job-application-modal-routing.module';
 
 import { JobApplicationModalPage } from './job-application-modal.page';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { JobApplicationModalPage } from './job-application-modal.page';
     FormsModule,
     IonicModule,
     JobApplicationModalPageRoutingModule,
+    DirectivesModule
   ],
   declarations: [JobApplicationModalPage],
 })
-export class JobApplicationModalPageModule {}
+export class JobApplicationModalPageModule { }

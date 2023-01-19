@@ -10,6 +10,7 @@ import { MyJobsPage } from './my-jobs.page';
 import { MyJobsHeaderPageModule } from './my-jobs-header/my-jobs-header.module';
 import { PipesModule } from '../core/pipes/pipes.module';
 import { CustomButtonModule } from 'w4u-custom-components';
+import { DirectivesModule } from '../directives/directives.module';
 
 @NgModule({
   imports: [
@@ -19,8 +20,9 @@ import { CustomButtonModule } from 'w4u-custom-components';
     MyJobsPageRoutingModule,
     MyJobsHeaderPageModule,
     PipesModule,
-    CustomButtonModule
+    CustomButtonModule,
+    DirectivesModule
   ],
   declarations: [MyJobsPage]
 })
-export class MyJobsPageModule {}
+export class MyJobsPageModule { }

@@ -128,7 +128,6 @@ export class JobUtilervice {
     let jobEndDate = new Date(dateEndObject[0] + '-' + dateEndObject[1] + '-' + dateEndObject[2]);
     jobEndDate.setHours(timeTo[0]);
     jobEndDate.setMinutes(timeTo[1]);
-
     const jobEndTime = (jobEndDate.getTime() - jobStartDate.getTime()) / 1000;
     return Math.abs(jobEndTime / 3600);
   }

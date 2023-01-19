@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { OnboardingHeaderPageRoutingModule } from './onboarding-header-routing.module';
 
 import { OnboardingHeaderPage } from './onboarding-header.page';
+import { DirectivesModule } from 'src/app/directives/directives.module';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { OnboardingHeaderPage } from './onboarding-header.page';
     FormsModule,
     IonicModule,
     OnboardingHeaderPageRoutingModule,
+    DirectivesModule
   ],
   declarations: [OnboardingHeaderPage],
   exports: [OnboardingHeaderPage]

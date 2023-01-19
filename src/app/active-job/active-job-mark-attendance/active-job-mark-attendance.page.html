@@ -30,7 +30,9 @@
 
         <ion-row class="mt-22">
           <ion-col size="12" class="p-0">
-            <custom-button [title]="'Check-in'" [button]="'primary'" [disabled]="true" (btnClick)="checkIn()">
+            <!-- (btnClick)="checkIn()" -->
+            <custom-button [title]="'Check-in'" [button]="'primary'" [disabled]="true" appDebounceClick
+              (debounceClick)="checkIn()" [debounceTimeConst]="300">
             </custom-button>
           </ion-col>
         </ion-row>
@@ -62,7 +64,9 @@
 
         <ion-row class="mt-22">
           <ion-col size="12" class="p-0">
-            <custom-button [title]="'Check-in'" [button]="'primary'" [disabled]="false" (btnClick)="checkIn()">
+            <!-- (btnClick)="checkIn()" -->
+            <custom-button [title]="'Check-in'" [button]="'primary'" [disabled]="false" appDebounceClick
+              (debounceClick)="checkIn()" [debounceTimeConst]="300">
             </custom-button>
           </ion-col>
         </ion-row>
@@ -84,14 +88,18 @@
 
       <ion-row class="mt-12 ml-45" *ngIf="activeJobService?.workImages?.length != 0">
         <ion-col size="4">
+          <!-- (click)="uploadWorkPicture()" -->
           <img class="work-img-wrap"
             [src]="activeJobService?.workImages[0]?.imagePath != null ? 'https://hour4u-img-data.s3.ap-south-1.amazonaws.com/' + activeJobService?.workImages[0]?.imagePath : ''"
-            onerror="this.src='../../assets/imgs/Rectangle 12men.png'" (click)="uploadWorkPicture()">
+            onerror="this.src='../../assets/imgs/Rectangle 12men.png'" appDebounceClick
+            (debounceClick)="uploadWorkPicture()" [debounceTimeConst]="300">
         </ion-col>
         <ion-col size="4" *ngIf="activeJobService?.workImages?.length > 1">
+          <!-- (click)="uploadWorkPicture()" -->
           <img class="work-img-wrap"
             [src]="activeJobService?.workImages[1]?.imagePath != null ? 'https://hour4u-img-data.s3.ap-south-1.amazonaws.com/' + activeJobService?.workImages[1]?.imagePath : ''"
-            onerror="this.src='../../assets/imgs/Rectangle 12men.png'" (click)="uploadWorkPicture()">
+            onerror="this.src='../../assets/imgs/Rectangle 12men.png'" appDebounceClick
+            (debounceClick)="uploadWorkPicture()" [debounceTimeConst]="300">
         </ion-col>
         <ion-col size="4" *ngIf="activeJobService?.workImages?.length > 2">
           <div class="work-img-wrap more-work-img-wrap secondary sub-heading-xl-md fw-500">
@@ -102,8 +110,9 @@
       <ion-row class="mt-24"
         *ngIf="activeJobService?.workImages?.length == 0 && !activeJobService?.endBeforeFifteenMin && !activeJobService.showPaymentPage">
         <ion-col size="12">
-          <custom-button [title]="'Upload work pictures'" [button]="'primary'" [disabled]="false"
-            (btnClick)="uploadWorkPicture()">
+          <!-- (btnClick)="uploadWorkPicture()" -->
+          <custom-button [title]="'Upload work pictures'" [button]="'primary'" [disabled]="false" appDebounceClick
+            (debounceClick)="uploadWorkPicture()" [debounceTimeConst]="300">
           </custom-button>
         </ion-col>
       </ion-row>
@@ -111,8 +120,9 @@
       <ion-row class="mt-24"
         *ngIf="activeJobService?.workImages?.length != 0 && !activeJobService?.endBeforeFifteenMin && !activeJobService.showPaymentPage">
         <ion-col size="12">
+          <!-- (btnClick)="uploadMoreWorkPictures()" -->
           <custom-button [title]="'Upload more work pictures'" [button]="'secondary'" [disabled]="false"
-            (btnClick)="uploadMoreWorkPictures()">
+            appDebounceClick (debounceClick)="uploadMoreWorkPictures()" [debounceTimeConst]="300">
           </custom-button>
         </ion-col>
       </ion-row>

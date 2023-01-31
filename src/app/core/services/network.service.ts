@@ -13,7 +13,7 @@ import { InternetConnectionPage } from '../../internet-connection/internet-conne
     providedIn: 'root'
 })
 export class NetworkService {
-
+    modal: any = null;
     constructor(
         public router: Router,
         public location: Location,
@@ -26,15 +26,17 @@ export class NetworkService {
         Network.addListener('networkStatusChange', async (status: ConnectionStatus) => {
             if (!status.connected) {
                 // this.router.navigateByUrl('internet-connection')
-                this.modalCtrl.dismiss();
-                const modal = await this.modalCtrl.create({
+                // this.modalCtrl.dismiss();
+                this.modal = await this.modalCtrl.create({
                     component: InternetConnectionPage,
                 });
-                await modal.present();
+                await this.modal.present();
             }
             else {
                 // this.location.back();
-                this.modalCtrl.dismiss();
+                if (this.modal) {
+                    this.modalCtrl.dismiss();
+                }
             }
         });
     }
@@ -45,18 +47,20 @@ export class NetworkService {
         Network.getStatus().then(async (status: ConnectionStatus) => {
             if (!status.connected) {
                 // this.router.navigateByUrl('internet-connection')
-                this.modalCtrl.dismiss();
-                const modal = await this.modalCtrl.create({
+                if (this.modal) {
+                    this.modalCtrl.dismiss();
+                }
+                this.modal = await this.modalCtrl.create({
                     component: InternetConnectionPage,
                 });
-                await modal.present();
+                await this.modal.present();
             } else {
                 if (Capacitor.getPlatform() === 'android' || Capacitor.getPlatform() === 'ios') {
+                    if (this.modal) {
+                        this.modalCtrl.dismiss();
+                    }
                     if (tokenKey) {
-                        this.modalCtrl.dismiss();
                         this.router.navigateByUrl("tabs/available-jobs/available-jobs-list");
-                    } else {
-                        this.modalCtrl.dismiss();
                     }
                 }
             }

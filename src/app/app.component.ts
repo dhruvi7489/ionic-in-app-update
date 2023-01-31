@@ -1,24 +1,20 @@
 import { Component, NgZone } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { AlertController, IonRouterOutlet, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
+import { AlertController, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
 import { NetworkService } from './core/services/network.service';
-import { PushNotificationService } from './core/services/push-notifications.service';
-// import { FCM } from '@capacitor-community/fcm';
-// import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-// import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
-// import { INotificationPayload } from 'cordova-plugin-fcm-with-dependecy-updated/typings/INotificationPayload';
+// import { PushNotificationService } from './core/services/push-notifications.service';
 import { CommonProvider } from './core/common';
 import { Apiurl } from './core/route';
 import { AvailableJobsService } from './available-jobs/available-jobs.service';
-import { App, URLOpenListenerEvent } from '@capacitor/app';
+import { App, AppState, RestoredListenerEvent, URLOpenListenerEvent } from '@capacitor/app';
 import { LocationService } from './core/services/location.service';
 import { Storage } from '@ionic/storage';
 import { Capacitor } from '@capacitor/core';
-import { ActionPerformed, PushNotifications, PushNotificationSchema, Token } from '@capacitor/push-notifications';
 import { AppUpdateService } from './core/services/app-update.service';
-// import { Clipboard } from '@capacitor/clipboard';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { ActionPerformed, PushNotifications, PushNotificationSchema } from '@capacitor/push-notifications';
+import { LoadingService } from './core/services/loading.service';
 
 declare var UXCam: any;
 @Component({
@@ -36,8 +32,6 @@ export class AppComponent {
     public platform: Platform,
     public networkService: NetworkService,
     public router: Router,
-    // public fcm: FCM,
-    // public splashScreen: SplashScreen,
     public commonProvider: CommonProvider,
     public availableJobsService: AvailableJobsService,
     public navParams: NavParams,
@@ -45,59 +39,106 @@ export class AppComponent {
     private alertCtrl: AlertController,
     public storage: Storage,
     private zone: NgZone,
-    // private routerOutlet: IonRouterOutlet
-    public pushNotificationService: PushNotificationService,
+    // public pushNotificationService: PushNotificationService,
     public appUpdateService: AppUpdateService,
     public modalCtrl: ModalController,
     public navCtrl: NavController,
+    public loadingService: LoadingService
   ) {
     this.initializeApp();
   }
 
   ngOnInit() {
     console.log(Capacitor.getPlatform())
-    if (Capacitor.getPlatform() !== 'web') {
-      this.pushNotificationService.initPushNotification();
-    }
+
   }
 
   async initializeApp() {
     // Deep linking
-    // App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
-    //   console.log("event------", event)
-    //   // this.zone.run(() => {
-    //   //   console.log("zone run.........")
-    //   //   // Example url: https://beerswift.app/tabs/tab2
-    //   //   // slug = /tabs/tab2
-    //   //   const slug = event.url.split("com.hour4u.app").pop();
-    //   //   console.log("slug---", slug)
-    //   //   if (slug) {
-    //   //     this.router.navigateByUrl(slug);
-    //   //   }
-    //   //   // If no match, do nothing - let regular routing
-    //   //   // logic take over
-    //   // });
+    App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
+      console.log("event------", event)
+      // this.zone.run(() => {
+      //   console.log("zone run.........")
+      //   // Example url: https://beerswift.app/tabs/tab2
+      //   // slug = /tabs/tab2
+      //   const slug = event.url.split("com.hour4u.app").pop();
+      //   console.log("slug---", slug)
+      //   if (slug) {
+      //     this.router.navigateByUrl(slug);
+      //   }
+      //   // If no match, do nothing - let regular routing
+      //   // logic take over
+      // });
 
-    //   this.zone.run(() => {
-    //     // const domain = 'com.hour4u.app';
-    //     const domain = 'appuat.hour4u.com';
-    //     const pathArray = event.url.split(domain);
-    //     // The pathArray is now like ['https://devdactic.com', '/details/42']
-    //     console.log("pathArray-----", pathArray)
-    //     // Get the last element with pop()
-    //     const appPath = pathArray.pop();
-    //     console.log("appPath+++++++++++", appPath)
-    //     if (appPath) {
-    //       this.router.navigateByUrl(appPath);
-    //     }
-    //   });
-    // });
+      this.zone.run(() => {
+        // const domain = 'com.hour4u.app';
+        const domain = 'appuat.hour4u.com';
+        const pathArray = event.url.split(domain);
+        // The pathArray is now like ['https://devdactic.com', '/details/42']
+        console.log("pathArray-----", pathArray)
+        // Get the last element with pop()
+        const appPath = pathArray.pop();
+        console.log("appPath+++++++++++", appPath)
+        if (appPath) {
+          this.router.navigateByUrl(appPath);
+        }
+      });
+    });
+
+    App.addListener('appStateChange', (event: AppState) => {
+      console.log("appp state change----------", event)
+    });
+
+    App.addListener('appRestoredResult', (data: RestoredListenerEvent) => {
+      console.log('Restored state:', data);
+    });
 
     this.platform.ready().then(async () => {
       if (Capacitor.getPlatform() !== 'web') {
+        await PushNotifications.requestPermissions().then(async (result) => {
+          if (result.receive === 'granted') {
+            // Register with Apple / Google to receive push via APNS/FCM
+            await PushNotifications.register();
+          } else {
+            // Show some error
+            console.log(" error ", result)
+          }
+        });
+
+        // On success, we should be able to receive notifications
+        await PushNotifications.addListener('registration', async (token) => {
+          console.info('Registration token: ', token.value);
+          this.storage.set('FCMToken', token.value);
+          await this.updateToken(token.value)
+        });
+
+        // Some issue with our setup and push will not work
+        await PushNotifications.addListener('registrationError', (error: any) => {
+          console.log('Error on registration: ' + JSON.stringify(error));
+        });
+
+        // Show us the notification payload if the app is open on our device
+        await PushNotifications.addListener('pushNotificationReceived',
+          (notification: PushNotificationSchema) => {
+            // this.notification = notification;
+            console.log('Push received: ', notification);
+          }
+        );
+
+        // Method called when tapping on a notification
+        await PushNotifications.addListener('pushNotificationActionPerformed',
+          async (notification: ActionPerformed) => {
+            console.log('Push action performed---', notification);
+            // this.notification = notification?.notification;
+            await this.performRedirectionOnNotification(notification);
+          }
+        );
+      }
+
+      if (Capacitor.getPlatform() !== 'web') {
         // Splash screen duration
         await SplashScreen.show({
-          showDuration: 2000,
+          showDuration: 1500,
           autoHide: true,
         });
         // Statusbar background and icons color change
@@ -110,6 +151,11 @@ export class AppComponent {
 
         // Block Landscape mode
         window.screen.orientation.lock('portrait');
+      }
+
+      // Push notification call
+      if (Capacitor.getPlatform() !== 'web') {
+        // this.pushNotificationService.initPushNotification();
       }
 
       // Check current internet connection Status
@@ -186,67 +232,11 @@ export class AppComponent {
       // console.log(`Got ${type} from clipboard: ${value}`);
       // };
 
-
-      // Notifications 
-
-      // this.setupFCM();
-      /** FCM Start */
-      // this.fcm.createNotificationChannel({
-      //   id: "testchannel1", // required
-      //   name: "testchannel1", // required
-      //   description: "Very urgent message alert",
-      //   importance: "high", // https://developer.android.com/guide/topics/ui/notifiers/notifications#importance
-      //   visibility: "public", // https://developer.android.com/training/notify-user/build-notification#lockscreenNotification
-      //   sound: "alert_sound", // In the "alert_sound" example, the file should located as resources/raw/alert_sound.mp3
-      //   lights: false, // enable lights for notifications
-      //   vibration: true // enable vibration for notifications
-      // }).then(channel => {
-      //   console.log('channel created', channel);
-      // }).catch(err => {
-      //   console.log("channel creation err", err)
-      // })
-
-      // this.fcm.subscribeToTopic('hour4u');
-
-      // this.fcm.getToken().then(async token => {
-      //   console.log("token-----", token)
-      //   localStorage.setItem('FCMToken', token)
-      //   await this.updateToken(token);
-      // }).catch(err => {
-      //   console.log("token err", err)
-      // })
-
-      // this.fcm.getInitialPushPayload().then(
-      //   (data) => {
-      //     console.log("data--4545-------", data)
-      //   }
-      // );
-
-      // this.fcm.onTokenRefresh().subscribe(token => {
-      //   console.log("refresh token---", token)
-      //   localStorage.setItem('FCMToken', token)
-      // });
-
-      // this.fcm.onNotification().subscribe(async (payload: INotificationPayload) => {
-      //   console.log("payload------", payload)
-      //   this.pushPayload = payload;
-      //   await this.performActionOnGetNotification();
-      // }, (err) => {
-      //   console.log("err in notification subscribe", err)
-      // });
-
-      /** FCM End */
     })
-
-    // this.fcm.onNotification().subscribe(async (payload: INotificationPayload) =>
-    // console.log("payload------", payload),
-    // error => {
-    //   console.log("error--", error)
-    // }
-    // );
   }
 
-  // Update login user Device/FCM token
+
+  // Update device token
   async updateToken(token) {
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     if (loginUserMobileNo != null) {
@@ -262,40 +252,26 @@ export class AppComponent {
   }
 
   // Redirect on particular page click on notification
-  async performActionOnGetNotification() {
-    // setTimeout(() => {
-
-    // if (this.pushPayload) {
-    //   if (this.pushPayload.title == 'Profile Approved') {
-    //     this.router.navigateByUrl('set-hourly-rates');
-    //   }
-    //   if (this.pushPayload.title == 'Job Application Actioned') {
-    //     this.router.navigateByUrl('tabs/my-jobs');
-    //   }
-    //   if (this.pushPayload.title == 'Job Reminder') {
-    //     this.router.navigateByUrl('tabs/detactive');
-    //   }
-    //   if (this.pushPayload.title == 'We found you a new job') {
-    //     this.availableJobsService.selectedJobId = this.pushPayload.jobId;
-    //     this.router.navigateByUrl('available-job-details');
-    //   }
-    // }
-    // }, 2000);
+  // Perform action on notification
+  async performRedirectionOnNotification(notification) {
+    console.log("notification---------", notification)
+    setTimeout(() => {
+      this.loadingService.dismiss();
+      if (notification?.notification && notification?.notification?.data) {
+        console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", notification?.notification?.data);
+        if (notification?.notification?.data?.title == 'Profile Approved') {
+          this.router.navigateByUrl('set-hourly-rate');
+        }
+        if (notification?.notification?.data?.title == 'Job Application Actioned') {
+          this.router.navigateByUrl('tabs/my-jobs');
+        }
+        if (notification?.notification?.data?.title == 'Job Reminder') {
+          this.router.navigateByUrl('tabs/active-job');
+        }
+        if (notification?.notification?.data?.title == 'We found you a new job') {
+          this.router.navigateByUrl("available-job-details/" + notification?.notification?.data?.jobId)
+        }
+      }
+    }, 2500);
   }
-
-
-  // private async setupFCM() {
-  //   console.log('Subscribing to new notifications');
-  //   this.fcm.onNotification().subscribe((payload) => {
-  //     console.log("payload", payload)
-  //     if (payload.wasTapped) {
-  //       console.log("Received in background -> ", JSON.stringify(payload));
-  //     } else {
-  //       console.log("Received in foreground -> ", JSON.stringify(payload));
-  //     }
-  //     this.pushPayload = payload;
-  //     console.log('onNotification received event with: ', payload);
-  //   });
-
-  // }
 }

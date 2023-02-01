@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>998549904982-6a9mbs5g6gp1rave2cii20jrbtiq1njd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.998549904982-6a9mbs5g6gp1rave2cii20jrbtiq1njd</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCqeJ35NBwzZLrOUbBzLSw68GPJoTW_UnM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>998549904982</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.hour4u.app</string>
+	<key>PROJECT_ID</key>
+	<string>hour4u-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>hour4u-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:998549904982:ios:bd02b84f2a37fb39d165f7</string>
+	<key>DATABASE_URL</key>
+	<string>https://hour4u-app.firebaseio.com</string>
+</dict>
+</plist>

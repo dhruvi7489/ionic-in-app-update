@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.hour4u.app",
+            "sha256_cert_fingerprints": [
+                "89:54:15:9A:23:D9:58:96:97:D1:20:E2:5E:55:A1:DA:30:C8:BF:C2:15:49:F5:44:10:D1:7D:25:B4:36:9B:2B"
+            ]
+        }
+    }
+]

@@ -15,6 +15,7 @@ import { AppUpdateService } from './core/services/app-update.service';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { ActionPerformed, PushNotifications, PushNotificationSchema } from '@capacitor/push-notifications';
 import { LoadingService } from './core/services/loading.service';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 declare var UXCam: any;
 @Component({
@@ -95,6 +96,23 @@ export class AppComponent {
 
     this.platform.ready().then(async () => {
       if (Capacitor.getPlatform() !== 'web') {
+        await PushNotifications.createChannel({
+          id: "testchannel1",
+          name: "testchannel1",
+          description: "Very urgent message alert",
+          sound: "default",
+          importance: 4,
+          visibility: 1,
+          lights: true,
+          lightColor: "yellow",
+          vibration: true,
+        }
+        ).then(channel => {
+          console.log('channel created', channel);
+        }).catch(err => {
+          console.log('channel created error', err)
+        })
+
         await PushNotifications.requestPermissions().then(async (result) => {
           if (result.receive === 'granted') {
             // Register with Apple / Google to receive push via APNS/FCM
@@ -119,20 +137,50 @@ export class AppComponent {
 
         // Show us the notification payload if the app is open on our device
         await PushNotifications.addListener('pushNotificationReceived',
-          (notification: PushNotificationSchema) => {
-            // this.notification = notification;
+          async (notification: PushNotificationSchema) => {
             console.log('Push received: ', notification);
+            PushNotifications.removeAllDeliveredNotifications(); // Remove globally getting notification when app open
+
+            // Send Local push notification from global notification whn app open
+            const notifs = await LocalNotifications.schedule({
+              notifications: [
+                {
+                  title: notification?.title,
+                  body: notification?.body,
+                  id: 1,
+                  schedule: { at: new Date(Date.now() + 1000 * 5) },
+                  smallIcon: 'icon.png',
+                  sound: null,
+                  attachments: null,
+                  actionTypeId: '',
+                  extra: null,
+                },
+              ],
+            });
+            console.log('scheduled notifications', notifs);
           }
         );
 
-        // Method called when tapping on a notification
+        // Method called when tapping on a notification( App in background or killed mode)
         await PushNotifications.addListener('pushNotificationActionPerformed',
           async (notification: ActionPerformed) => {
             console.log('Push action performed---', notification);
-            // this.notification = notification?.notification;
-            await this.performRedirectionOnNotification(notification);
+            await this.performRedirectionOnNotification(notification?.notification);
           }
         );
+
+
+        // local push notification when app Open 
+        await LocalNotifications.addListener('localNotificationReceived', (data: any) => {
+          console.log("localNotificationReceived=====", data)
+        })
+
+        // local push notification redirection when app Open 
+        await LocalNotifications.addListener('localNotificationActionPerformed', async (data: any) => {
+          console.log("localNotificationActionPerformed----", data)
+          await this.performRedirectionOnLocalNotification(data);
+        })
+
       }
 
       if (Capacitor.getPlatform() !== 'web') {
@@ -257,21 +305,45 @@ export class AppComponent {
     console.log("notification---------", notification)
     setTimeout(() => {
       this.loadingService.dismiss();
-      if (notification?.notification && notification?.notification?.data) {
-        console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", notification?.notification?.data);
-        if (notification?.notification?.data?.title == 'Profile Approved') {
+      if (notification && notification?.data) {
+        console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", notification?.data);
+        if (notification?.data?.title == 'Profile Approved') {
           this.router.navigateByUrl('set-hourly-rate');
         }
-        if (notification?.notification?.data?.title == 'Job Application Actioned') {
+        if (notification?.data?.title == 'Job Application Actioned') {
           this.router.navigateByUrl('tabs/my-jobs');
         }
-        if (notification?.notification?.data?.title == 'Job Reminder') {
+        if (notification?.data?.title == 'Job Reminder') {
           this.router.navigateByUrl('tabs/active-job');
         }
-        if (notification?.notification?.data?.title == 'We found you a new job') {
-          this.router.navigateByUrl("available-job-details/" + notification?.notification?.data?.jobId)
+        if (notification?.data?.title == 'We found you a new job') {
+          this.router.navigateByUrl("available-job-details/" + notification?.data?.jobId)
         }
       }
     }, 2500);
+  }
+
+  // Localnotification action performed
+
+  async performRedirectionOnLocalNotification(notification) {
+    console.log("performRedirectionOnLocalNotification===========", notification)
+    setTimeout(() => {
+      this.loadingService.dismiss();
+      if (notification && notification?.notification) {
+        console.log("22222222222222222222222222222", notification?.notification);
+        if (notification?.notification?.title == 'Profile Approved') {
+          this.router.navigateByUrl('set-hourly-rate');
+        }
+        if (notification?.notification?.title == 'Job Application Actioned') {
+          this.router.navigateByUrl('tabs/my-jobs');
+        }
+        if (notification?.notification?.title == 'Job Reminder') {
+          this.router.navigateByUrl('tabs/active-job');
+        }
+        if (notification?.notification?.title == 'We found you a new job') {
+          this.router.navigateByUrl("available-job-details/" + notification?.notification?.jobId)
+        }
+      }
+    }, 1000);
   }
 }

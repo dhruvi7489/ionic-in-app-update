@@ -116,6 +116,38 @@ export class AvailableJobsService {
     }
   }
 
+  // Get job by job id and login user id globally
+  async getSelectedJobByIdGlobally() {
+    const loginUserId = await this.storage.get('loginUserId');
+    const loginUserGender = await this.storage.get('loginUserGender');
+    this.selectedJobId = this.router.url.split('available-job-details-global/')[1];
+    this.selectedJobDetails = null;
+    this.jobApplicationId = null;
+
+    this.loadingService.show();
+    if (this.selectedJobId && loginUserId) {
+      let params = this.selectedJobId;
+      this.commonProvider.GetMethod(Apiurl.GetJobDetailsGlobally + params, null).then(async (res: any) => {
+        this.loadingService.dismiss();
+        if (res) {
+          this.selectedJobDetails = res;
+          this.jobApplicationId = this.selectedJobDetails.jobApplicationId;
+          await this.selectedJobDetails?.dates?.forEach(date => {
+            this.jobUtilService.shiftDayChange(date.date, date.timeFrom, date.timeTo);
+          })
+        }
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
+        console.log(err);
+      })
+    } else {
+      // this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
+      this.loadingService.dismiss();
+      this.toastService.showMessage("Employment Id not found!")
+    }
+  }
+
+
   // Apply for selected job
   async JobPreference(isDetailPage?: boolean) {
     const loginUserId = await this.storage.get('loginUserId');
@@ -327,15 +359,17 @@ export class AvailableJobsService {
 
   // Share job details to Whatsapp
   async shareSelectedJobDetails() {
-    let pageUrl = encodeURIComponent(this.router.url);
+    // available-job-details-global
+    let url = this.router.url
+    url = this.router.url.replace('available-job-details', 'available-job-details-global');
+    let pageUrl = encodeURIComponent(url);
     let jobType = encodeURIComponent(this.selectedJobDetails?.jobTypeName);
-
     // send message in App whatsapp
     // window.open("https://api.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20https%3A%2F%2Fappuat.hour4u.com" + pageUrl);
 
     // send message in Web whatsapp
     if (Capacitor.getPlatform() == 'web') {
-      window.open("https://web.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20https%3A%2F%2Fappuat.hour4u.com" + pageUrl);
+      window.open("https://web.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20https%3A%2F%2Fappuat.hour4u.com/#" + pageUrl);
     }
 
     // send message in social share
@@ -343,7 +377,7 @@ export class AvailableJobsService {
       await Share.share({
         title: jobType,
         text: 'Hey! I found ' + this.selectedJobDetails?.jobTypeName + ' job on Hour4U. check it out here 👇',
-        url: 'https://appuat.hour4u.com' + this.router.url,
+        url: 'https://appuat.hour4u.com/#' + url,
         dialogTitle: 'hour4u.com',
       }).then(res => {
         console.log(res)

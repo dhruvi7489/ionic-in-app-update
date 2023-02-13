@@ -50,6 +50,10 @@ const routes: Routes = [
     loadChildren: () => import('./available-jobs/available-job-details/available-job-details.module').then(m => m.AvailableJobDetailsPageModule)
   },
   {
+    path: 'available-job-details-global/:id',
+    loadChildren: () => import('./available-jobs/available-job-details-global/available-job-details-global.module').then(m => m.AvailableJobDetailsGlobalModule)
+  },
+  {
     path: 'available-jobs-header',
     loadChildren: () => import('./available-jobs/available-jobs-header/available-jobs-header.module').then(m => m.AvailableJobsHeaderPageModule)
   },

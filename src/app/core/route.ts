@@ -28,6 +28,7 @@ export const Apiurl = {
     AddExperience: jobSeekerServiceUrl + 'jobseeker/addExperience/',
     GetJobsList: JobService + 'mobile/jobsearch',
     GetJobByJobId: JobService + 'mobile/jobview/',
+    GetJobDetailsGlobally: 'v1/employment/unsecured/',
     JobPreference: jobSeekerServiceUrl + 'jobpreference',
     GetMyJobs: JobService + 'mobile/myjobs/',
     UpdateHourlyRate: jobSeekerServiceUrl + 'jobpreference/updateRate/',

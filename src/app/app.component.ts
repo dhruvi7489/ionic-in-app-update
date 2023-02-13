@@ -7,7 +7,7 @@ import { NetworkService } from './core/services/network.service';
 import { CommonProvider } from './core/common';
 import { Apiurl } from './core/route';
 import { AvailableJobsService } from './available-jobs/available-jobs.service';
-import { App, AppState, RestoredListenerEvent, URLOpenListenerEvent } from '@capacitor/app';
+import { App, URLOpenListenerEvent } from '@capacitor/app';
 import { LocationService } from './core/services/location.service';
 import { Storage } from '@ionic/storage';
 import { Capacitor } from '@capacitor/core';
@@ -16,6 +16,8 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { ActionPerformed, PushNotifications, PushNotificationSchema } from '@capacitor/push-notifications';
 import { LoadingService } from './core/services/loading.service';
 import { LocalNotifications } from '@capacitor/local-notifications';
+// import { Deeplinks } from '@awesome-cordova-plugins/deeplinks/ngx';
+import { AvailableJobDetailsPage } from './available-jobs/available-job-details/available-job-details.page';
 
 declare var UXCam: any;
 @Component({
@@ -44,58 +46,130 @@ export class AppComponent {
     public appUpdateService: AppUpdateService,
     public modalCtrl: ModalController,
     public navCtrl: NavController,
-    public loadingService: LoadingService
+    public loadingService: LoadingService,
+    // private deeplinks: Deeplinks
   ) {
     this.initializeApp();
+
+
   }
 
   ngOnInit() {
     console.log(Capacitor.getPlatform())
-
   }
 
   async initializeApp() {
     // Deep linking
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
-      console.log("event------", event)
-      // this.zone.run(() => {
-      //   console.log("zone run.........")
-      //   // Example url: https://beerswift.app/tabs/tab2
-      //   // slug = /tabs/tab2
-      //   const slug = event.url.split("com.hour4u.app").pop();
-      //   console.log("slug---", slug)
-      //   if (slug) {
-      //     this.router.navigateByUrl(slug);
-      //   }
-      //   // If no match, do nothing - let regular routing
-      //   // logic take over
-      // });
-
+      alert(1111)
       this.zone.run(() => {
-        // const domain = 'com.hour4u.app';
-        const domain = 'appuat.hour4u.com';
-        const pathArray = event.url.split(domain);
-        // The pathArray is now like ['https://devdactic.com', '/details/42']
-        console.log("pathArray-----", pathArray)
-        // Get the last element with pop()
-        const appPath = pathArray.pop();
-        console.log("appPath+++++++++++", appPath)
-        if (appPath) {
-          this.router.navigateByUrl(appPath);
+        // Example url: https://beerswift.app/tabs/tab2
+        // slug = /tabs/tab2
+        const slug = event.url.split("appuat.hour4u.com/#/").pop();
+        alert(slug)
+        if (slug) {
+          setTimeout(() => {
+            this.router.navigateByUrl(slug);
+          }, 2000)
         }
+        // If no match, do nothing - let regular routing
+        // logic take over
       });
     });
 
-    App.addListener('appStateChange', (event: AppState) => {
-      console.log("appp state change----------", event)
-    });
-
-    App.addListener('appRestoredResult', (data: RestoredListenerEvent) => {
-      console.log('Restored state:', data);
-    });
-
     this.platform.ready().then(async () => {
+      // this.setupDeepLinks();
+
       if (Capacitor.getPlatform() !== 'web') {
+        // Splash screen duration
+        await SplashScreen.show({
+          showDuration: 1500,
+          autoHide: true,
+        });
+
+        // Statusbar background and icons color change
+        StatusBar.setBackgroundColor({
+          color: '#ffffff'
+        });
+        StatusBar.setStyle({
+          style: Style.Light
+        })
+
+        // Block Landscape mode
+        window.screen.orientation.lock('portrait');
+
+        //UX-CAM Setup
+        UXCam.optIntoSchematicRecordings();//To enable session video recording on iOS 
+        const configuration = {
+          userAppKey: Apiurl.UxCamAppKey,
+          enableAutomaticScreenNameTagging: true,
+          enableImprovedScreenCapture: true,
+        }
+        UXCam.startWithConfiguration(configuration);
+
+        // App Update Check
+        // this.appUpdateService.checkAppUpdate();
+
+
+        // Check current internet connection Status
+        this.networkService.getInternetConnectionStatus();
+
+        // Network connection change
+        this.networkService.initializeNetworkEvents();
+
+        // Device Back button logic
+        App.addListener('backButton', ({ canGoBack }) => {
+          console.log("canGoBack-", canGoBack)
+          this.modalCtrl.getTop().then((res: any) => {
+            if (res) {
+              this.modalCtrl.dismiss();
+            } else {
+              if (this.router.url.includes('/tabs')) {
+                let alert = this.alertCtrl.create({
+                  header: 'Exit',
+                  message: 'Are you sure you want to exit app?',
+                  buttons: [
+                    {
+                      text: 'Cancel',
+                      role: 'cancel',
+                      handler: () => {
+                        console.log('Cancel clicked');
+                      }
+                    },
+                    {
+                      text: 'Exit App',
+                      handler: () => {
+                        App.exitApp();
+                      }
+                    }
+                  ]
+                });
+                alert.then(res => {
+                  res.present();
+                });
+              } else {
+                window.history.back();
+              }
+            }
+          }).catch((err: any) => {
+            console.log(err);
+          })
+        });
+
+        // SMS send
+        // const writeToClipboard = async () => {
+        //   await Clipboard.write({
+        //     string: "Hello World!"
+        //   });
+        // };
+        // console.log("calllllllllllllllllllllllll===============", Clipboard.read())
+        // const checkClipboard = async () => {
+        // const { type, value } = await Clipboard.read();
+
+        // console.log(`Got ${type} from clipboard: ${value}`);
+        // };
+
+        // PUSH NOTIFICATION START
         await PushNotifications.createChannel({
           id: "testchannel1",
           name: "testchannel1",
@@ -169,7 +243,6 @@ export class AppComponent {
           }
         );
 
-
         // local push notification when app Open 
         await LocalNotifications.addListener('localNotificationReceived', (data: any) => {
           console.log("localNotificationReceived=====", data)
@@ -180,111 +253,13 @@ export class AppComponent {
           console.log("localNotificationActionPerformed----", data)
           await this.performRedirectionOnLocalNotification(data);
         })
-
+        // PUSH NOTIFICATION END
       }
-
-      if (Capacitor.getPlatform() !== 'web') {
-        // Splash screen duration
-        await SplashScreen.show({
-          showDuration: 1500,
-          autoHide: true,
-        });
-        // Statusbar background and icons color change
-        StatusBar.setBackgroundColor({
-          color: '#ffffff'
-        });
-        StatusBar.setStyle({
-          style: Style.Light
-        })
-
-        // Block Landscape mode
-        window.screen.orientation.lock('portrait');
-      }
-
-      // Push notification call
-      if (Capacitor.getPlatform() !== 'web') {
-        // this.pushNotificationService.initPushNotification();
-      }
-
-      // Check current internet connection Status
-      this.networkService.getInternetConnectionStatus();
-
-      // Network connection change
-      this.networkService.initializeNetworkEvents();
-
-      // Device Back button logic
-      App.addListener('backButton', ({ canGoBack }) => {
-        console.log("canGoBack-", canGoBack)
-        this.modalCtrl.getTop().then((res: any) => {
-          if (res) {
-            this.modalCtrl.dismiss();
-          } else {
-            if (this.router.url.includes('/tabs')) {
-              let alert = this.alertCtrl.create({
-                header: 'Exit',
-                message: 'Are you sure you want to exit app?',
-                buttons: [
-                  {
-                    text: 'Cancel',
-                    role: 'cancel',
-                    handler: () => {
-                      console.log('Cancel clicked');
-                    }
-                  },
-                  {
-                    text: 'Exit App',
-                    handler: () => {
-                      App.exitApp();
-                    }
-                  }
-                ]
-              });
-              alert.then(res => {
-                res.present();
-              });
-            } else {
-              window.history.back();
-            }
-          }
-        }).catch((err: any) => {
-          console.log(err);
-        })
-      });
-
-      // App Update Check
-      if (Capacitor.getPlatform() !== 'web') {
-        // this.appUpdateService.checkAppUpdate();
-      }
-
-      //UX-CAM Setup
-      if (Capacitor.getPlatform() !== 'web') {
-        UXCam.optIntoSchematicRecordings();//To enable session video recording on iOS 
-        const configuration = {
-          userAppKey: Apiurl.UxCamAppKey,
-          enableAutomaticScreenNameTagging: true,
-          enableImprovedScreenCapture: true,
-        }
-        UXCam.startWithConfiguration(configuration);
-      }
-
-      // SMS send
-      // const writeToClipboard = async () => {
-      //   await Clipboard.write({
-      //     string: "Hello World!"
-      //   });
-      // };
-      // console.log("calllllllllllllllllllllllll===============", Clipboard.read())
-      // const checkClipboard = async () => {
-      // const { type, value } = await Clipboard.read();
-
-      // console.log(`Got ${type} from clipboard: ${value}`);
-      // };
-
     })
   }
 
 
-  // Update device token
+  // Update device token for notification
   async updateToken(token) {
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     if (loginUserMobileNo != null) {
@@ -299,8 +274,8 @@ export class AppComponent {
     }
   }
 
-  // Redirect on particular page click on notification
-  // Perform action on notification
+  // Redirect on particular page click on notification start
+  // Perform action on notification - When app running in BACKGROUND or KILL MODE
   async performRedirectionOnNotification(notification) {
     console.log("notification---------", notification)
     setTimeout(() => {
@@ -323,8 +298,7 @@ export class AppComponent {
     }, 2500);
   }
 
-  // Localnotification action performed
-
+  // Localnotification action performed - When app is OPEN
   async performRedirectionOnLocalNotification(notification) {
     console.log("performRedirectionOnLocalNotification===========", notification)
     setTimeout(() => {
@@ -346,4 +320,27 @@ export class AppComponent {
       }
     }, 1000);
   }
+  // Redirect on particular page click on notification end
+
+  // setupDeepLinks() {
+  //   alert(333333333333)
+  //   console.log("calllllllllllll")
+  //   this.deeplinks
+  //     .route({
+  //       '/available-job-details': AvailableJobDetailsPage,
+  //     })
+  //     .subscribe(
+  //       (match) => {
+  //         alert(4444444444)
+  //         console.log("calllllllll---match-----", match)
+  //         this.zone.run(() => {
+  //           this.router.navigate(match.$link.path);
+  //         });
+  //       },
+  //       (nomatch) => {
+  //         // nomatch.$link - the full link data
+  //         console.error("Got a deeplink that didn't match", nomatch);
+  //       }
+  //     );
+  // }
 }

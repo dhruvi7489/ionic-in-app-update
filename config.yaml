@@ -1,0 +1,16 @@
+vars:
+  BUNDLE_ID:
+    default: com.hour4u.app
+  PACKAGE_NAME:
+    default: com.hour4u.app
+
+platforms:
+  ios:
+    targets:
+      App:
+        bundleId: $BUNDLE_ID
+
+        entitlements:
+          - com.apple.developer.associated-domains: ["applinks:appuat.hour4u.com"]
+  android:
+    packageName: $PACKAGE_NAME

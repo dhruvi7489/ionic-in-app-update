@@ -46,7 +46,8 @@ export class SetHourlyRatesService {
     public modalCtrl: ModalController,
     public profileService: ProfileService,
     public toastService: ToastService,
-    public storage: Storage
+    public storage: Storage,
+    public location: Location
   ) {
 
   }
@@ -71,7 +72,6 @@ export class SetHourlyRatesService {
 
   // Calculate Final Amount based on selected hours
   calculateFinalAmount(basePrice, maxHourlyRate, shiftHours) {
-    console.log("++++++++", basePrice + (maxHourlyRate * shiftHours))
     return basePrice + (maxHourlyRate * shiftHours);
   }
 
@@ -137,12 +137,19 @@ export class SetHourlyRatesService {
     });
     if (typePreferences?.length != 0) {
       this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPreferenceId, { jobTypeHourlyRateRequests: typePreferences }
-      ).then((res: any) => {
-        this.loadingService.dismiss();
+      ).then(async (res: any) => {
+        await this.loadingService.dismiss();
         if (res) {
-          this.getJobPreferences();
-          this.profileService.getJobPreference();
-          this.modalCtrl.dismiss();
+          await this.getJobPreferences();
+          await this.profileService.getJobPreference();
+          await this.modalCtrl.getTop().then(res => {
+            console.log("getTop", res)
+            if (res) {
+              this.modalCtrl.dismiss();
+            } else {
+              this.location.back();
+            }
+          })
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
@@ -150,7 +157,16 @@ export class SetHourlyRatesService {
       });
     } else {
       this.loadingService.dismiss();
-      this.modalCtrl.dismiss();
+      this.modalCtrl.getTop().then(res => {
+        console.log("getTop", res)
+        if (res) {
+          this.modalCtrl.dismiss();
+        } else {
+          this.location.back();
+        }
+      })
     }
   }
+
+
 }

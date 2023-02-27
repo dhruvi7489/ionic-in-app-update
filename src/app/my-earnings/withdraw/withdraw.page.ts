@@ -14,7 +14,7 @@ export class WithdrawPage implements OnInit {
   }
 
   getAvilableAmount(event) {
-    this.myEarningsService.avilableAmountForWithdraw = event.ngModelData;
+    this.myEarningsService.availableAmountForWithdraw = event.ngModelData;
   }
 
   getWantToWithdrawAmount(event) {

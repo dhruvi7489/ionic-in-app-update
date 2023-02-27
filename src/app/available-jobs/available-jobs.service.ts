@@ -118,14 +118,14 @@ export class AvailableJobsService {
 
   // Get job by job id and login user id globally
   async getSelectedJobByIdGlobally() {
-    const loginUserId = await this.storage.get('loginUserId');
+    // const loginUserId = await this.storage.get('loginUserId');
     const loginUserGender = await this.storage.get('loginUserGender');
     this.selectedJobId = this.router.url.split('available-job-details-global/')[1];
     this.selectedJobDetails = null;
     this.jobApplicationId = null;
 
     this.loadingService.show();
-    if (this.selectedJobId && loginUserId) {
+    if (this.selectedJobId) {
       let params = this.selectedJobId;
       this.commonProvider.GetMethod(Apiurl.GetJobDetailsGlobally + params, null).then(async (res: any) => {
         this.loadingService.dismiss();

@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ApplicationRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { JobUtilervice } from 'src/app/core/util/job-util.service';
@@ -27,7 +27,8 @@ export class SetHourlyRatePage implements OnInit {
     public jobUtilService: JobUtilervice,
     public location: Location,
     public router: Router,
-    public toastService: ToastService
+    public toastService: ToastService,
+    public cdr: ApplicationRef
   ) { }
 
   ngOnInit() {
@@ -111,14 +112,16 @@ export class SetHourlyRatePage implements OnInit {
   }
 
   rateSliderChanged(event) {
-    this.hourlyRate = event.target.value;
+    this.hourlyRate = 0;
     this.estimatedIncome = 0;
+    this.hourlyRate += event.target.value;
     for (let date of this.availableJobsService.selectedJobDetails?.dates) {
       let hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
       this.estimatedIncome = this.estimatedIncome + (this.hourlyRate * hours) + this.availableJobsService.selectedJobDetails?.basePrice;
       this.estimatedIncome = Math.round(Math.abs(this.estimatedIncome));
       console.log(this.availableJobsService.selectedJobDetails, this.availableJobsService.selectedJobDetails?.basePrice, this.hourlyRate, hours)
     }
+    this.cdr.tick();
   }
 
   disable() {

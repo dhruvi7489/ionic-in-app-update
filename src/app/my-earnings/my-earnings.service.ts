@@ -35,7 +35,7 @@ export class MyEarningsService {
   totalEarningRecords = 0;
   loadedMyEarningsRecords = 0;
 
-  avilableAmountForWithdraw = null;
+  availableAmountForWithdraw = null;
   wantAmountForWithdraw = null;
 
   constructor(
@@ -149,7 +149,7 @@ export class MyEarningsService {
         if (res) {
           this.getAccountDetails();
           this.modalCtrl.dismiss();
-          // this.withdrawAmountPage();
+          this.withdrawAmountPage();
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
@@ -168,7 +168,7 @@ export class MyEarningsService {
         if (res) {
           this.getAccountDetails();
           this.modalCtrl.dismiss();
-          // this.withdrawAmountPage();
+          this.withdrawAmountPage();
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();

@@ -37,35 +37,34 @@ export class AvailableJobDetailsGlobalComponent implements OnInit {
     this.minTotal = 0;
     this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
       const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
-      this.minTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate * hours));
+      this.minTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo?.minRate * hours));
     });
-    return this.minTotal;
+    if (!isNaN(this.minTotal)) {
+      return this.minTotal;
+    } else {
+      return 0;
+    }
   }
 
   getMaxTotal() {
     this.maxTotal = 0;
     this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
       const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
-      this.maxTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate * hours));
+      this.maxTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo?.maxRate * hours));
     });
-    return this.maxTotal;
+    if (!isNaN(this.maxTotal)) {
+      return this.maxTotal;
+    } else {
+      return 0;
+    }
   }
 
   async applyForJob() {
     const loginUserInfo = await this.storage.get('loginUserInfo');
-    // if (JSON.parse(loginUserInfo)?.status != 'Active') {
-    //   this.toastService.showMessage(`You can't apply to this job now, please wait for approval.`)
-    //   return;
-    // }
-    if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
-      await this.availableJobsService.JobPreference(true);
-    }
-    else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
-      this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
-      return;
-    }
-    else {
-      await this.availableJobsService.JobPreference(true);
+    if (JSON.parse(loginUserInfo)) {
+      this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+    } else {
+      this.router.navigateByUrl('onboarding/onboarding-phone-number');
     }
   }
 

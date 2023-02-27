@@ -21,12 +21,12 @@
 </ion-content>
 
 <ion-footer>
-  <div *ngIf="!onboardingService.profile_picture">
-    <!-- (btnClick)="skipProfilePictureUpload()" -->
-    <custom-button [title]="'Skip'" appDebounceClick (debounceClick)="skipProfilePictureUpload()"
+  <!-- <div *ngIf="!onboardingService.profile_picture"> -->
+  <!-- (btnClick)="skipProfilePictureUpload()" -->
+  <!-- <custom-button [title]="'Skip'" appDebounceClick (debounceClick)="skipProfilePictureUpload()"
       [debounceTimeConst]="300" [button]="'ternary'">
-    </custom-button>
-  </div>
+    </custom-button> -->
+  <!-- </div> -->
   <div class="mt-10" *ngIf="!onboardingService.profile_picture">
     <!-- (btnClick)="uploadPicture()" -->
     <custom-button [title]="'Upload a picture'" appDebounceClick (debounceClick)="uploadPicture()"

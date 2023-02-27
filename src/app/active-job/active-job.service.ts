@@ -284,7 +284,7 @@ export class ActiveJobService {
             if (this.activeJob.history.imageProofs && this.activeJob.history.imageProofs.length != 0) {
               for (let index = 0; index < this.activeJob.history.imageProofs.length; index++) {
                 let date = this.activeJob.history.imageProofs[index].dateTime
-                let newDate: Date = new Date(date[0] + '-' + date[1] + '-' + date[2]);
+                let newDate: Date = new Date(date[0], date[1], date[2]);
                 newDate.setHours(date[3])
                 newDate.setMinutes(date[4])
                 newDate.setSeconds(date[5])
@@ -676,7 +676,7 @@ export class ActiveJobService {
           dateEndObject[2] = this.jobUtilService.addDaysInDate(this.activeJob?.activeDay.date, 1)
         }
         // console.log("=====", dateEndObject)
-        let jobEndDate = new Date(dateEndObject[0] + '-' + dateEndObject[1] + '-' + dateEndObject[2]);
+        let jobEndDate = new Date(dateEndObject[0], dateEndObject[1], dateEndObject[2]);
         jobEndDate.setHours(this.activeJob?.activeDay.timeTo[0]);
         jobEndDate.setMinutes(this.activeJob?.activeDay.timeTo[1]);
         // console.log("@@@@@@@@@", jobEndDate)

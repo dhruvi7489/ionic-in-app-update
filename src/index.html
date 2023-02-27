@@ -14,9 +14,11 @@
   <meta name="msapplication-tap-highlight" content="no" />
 
   <link rel="icon" type="image/png" href="assets/icon/favicon.png" />
-
+  <script>
+    function initMap() { }
+  </script>
   <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdY3MNwfLuDibZ0gvm_BAqAzX43E2u0dc&v=3.exp&libraries=places"></script>
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdY3MNwfLuDibZ0gvm_BAqAzX43E2u0dc&v=3.exp&callback=initMap&libraries=places"></script>
   <!-- add to homescreen for ios -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />

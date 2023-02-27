@@ -55,22 +55,21 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    console.log(Capacitor.getPlatform())
   }
 
   async initializeApp() {
     // Deep linking
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
-      alert(1111)
+      // alert(1111)
       this.zone.run(() => {
         // Example url: https://beerswift.app/tabs/tab2
         // slug = /tabs/tab2
         const slug = event.url.split("appuat.hour4u.com/#/").pop();
-        alert(slug)
+        // alert(slug)
         if (slug) {
           setTimeout(() => {
             this.router.navigateByUrl(slug);
-          }, 2000)
+          }, 2500)
         }
         // If no match, do nothing - let regular routing
         // logic take over
@@ -79,7 +78,7 @@ export class AppComponent {
 
     this.platform.ready().then(async () => {
       // this.setupDeepLinks();
-
+      console.log(Capacitor.getPlatform())
       if (Capacitor.getPlatform() !== 'web') {
         // Splash screen duration
         await SplashScreen.show({
@@ -96,7 +95,9 @@ export class AppComponent {
         })
 
         // Block Landscape mode
-        window.screen.orientation.lock('portrait');
+        if (Capacitor.getPlatform() == 'android') {
+          window.screen.orientation.lock('portrait');
+        }
 
         //UX-CAM Setup
         UXCam.optIntoSchematicRecordings();//To enable session video recording on iOS 
@@ -227,7 +228,7 @@ export class AppComponent {
                   sound: null,
                   attachments: null,
                   actionTypeId: '',
-                  extra: null,
+                  extra: notification?.data,
                 },
               ],
             });
@@ -256,6 +257,7 @@ export class AppComponent {
         // PUSH NOTIFICATION END
       }
     })
+
   }
 
 
@@ -283,7 +285,7 @@ export class AppComponent {
       if (notification && notification?.data) {
         console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", notification?.data);
         if (notification?.data?.title == 'Profile Approved') {
-          this.router.navigateByUrl('set-hourly-rate');
+          this.router.navigateByUrl('set-hourly-rates');
         }
         if (notification?.data?.title == 'Job Application Actioned') {
           this.router.navigateByUrl('tabs/my-jobs');
@@ -295,7 +297,7 @@ export class AppComponent {
           this.router.navigateByUrl("available-job-details/" + notification?.data?.jobId)
         }
       }
-    }, 2500);
+    }, 2300);
   }
 
   // Localnotification action performed - When app is OPEN
@@ -306,7 +308,7 @@ export class AppComponent {
       if (notification && notification?.notification) {
         console.log("22222222222222222222222222222", notification?.notification);
         if (notification?.notification?.title == 'Profile Approved') {
-          this.router.navigateByUrl('set-hourly-rate');
+          this.router.navigateByUrl('set-hourly-rates');
         }
         if (notification?.notification?.title == 'Job Application Actioned') {
           this.router.navigateByUrl('tabs/my-jobs');
@@ -315,7 +317,7 @@ export class AppComponent {
           this.router.navigateByUrl('tabs/active-job');
         }
         if (notification?.notification?.title == 'We found you a new job') {
-          this.router.navigateByUrl("available-job-details/" + notification?.notification?.jobId)
+          this.router.navigateByUrl("available-job-details/" + notification?.notification?.extra?.jobId)
         }
       }
     }, 1000);

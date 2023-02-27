@@ -34,7 +34,7 @@ export class AvailableJobDetailsPage implements OnInit {
 
   getMinTotal() {
     this.minTotal = 0;
-    this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
+    this.availableJobsService.selectedJobDetails?.dates?.forEach(date => {
       const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
       this.minTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate * hours));
     });
@@ -43,7 +43,7 @@ export class AvailableJobDetailsPage implements OnInit {
 
   getMaxTotal() {
     this.maxTotal = 0;
-    this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
+    this.availableJobsService.selectedJobDetails?.dates?.forEach(date => {
       const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
       this.maxTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate * hours));
     });

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CameraSource } from '@capacitor/camera';
+import { Capacitor } from '@capacitor/core';
 import { ActiveJobService } from '../active-job.service';
 
 @Component({
@@ -9,6 +10,7 @@ import { ActiveJobService } from '../active-job.service';
   styleUrls: ['./active-job-mark-attendance.page.scss'],
 })
 export class ActiveJobMarkAttendancePage implements OnInit {
+  isWeb: boolean = false;
 
   constructor(
     public activeJobService: ActiveJobService,
@@ -16,6 +18,9 @@ export class ActiveJobMarkAttendancePage implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (Capacitor.getPlatform() == 'web') {
+      this.isWeb = true;
+    }
   }
 
   ionViewWillEnter() {
@@ -36,4 +41,7 @@ export class ActiveJobMarkAttendancePage implements OnInit {
     this.activeJobService.uploadProfilePicture("MIDDLE");
   }
 
+  downloadApp() {
+    window.open('https://play.google.com/store/apps/details?id=com.hour4u.app', "_blank")
+  }
 }

@@ -20,7 +20,11 @@ import { NgOtpInputModule } from 'ng-otp-input';
   imports: [
     BrowserModule,
     CommonModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot(
+      {
+        swipeBackEnabled: false
+      }
+    ),
     AppRoutingModule,
     HttpClientModule,
     NgOtpInputModule

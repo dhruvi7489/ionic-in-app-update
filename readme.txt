@@ -4,8 +4,18 @@ keytool -genkey -v -keystore hour4u-app-release-key.keystore -alias hour4u -keya
 keytool -list -v -keystore hour4u-app-release-key.keystore
 
 
------------- Build Signed APK
+------------ Build Signed Android APK 
+ionic build
+ionic cap sync android
 cd ./android
 gradlew assemble
+cd ..
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore hour4u-app-release-key.keystore ./android/app/build/outputs/apk/release/app-release-unsigned.apk hour4u
+pwd: hour4u
+#Option1 
+ionic cap sync open android
+build signin app with hour4u-app-release-key.keystore
+keystore pwd: hour4u 
+alias : hour4u
+#Option2
 zipalign -v 4 ./android/app/build/outputs/apk/release/app-release-unsigned.apk hour4u.apk

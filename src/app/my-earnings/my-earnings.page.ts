@@ -24,6 +24,7 @@ export class MyEarningsPage implements OnInit {
     this.myEarningsService.getPaymentStatus();
     this.myEarningsService.resetPayload();
     this.myEarningsService.getPaymentRecords();
+    this.myEarningsService.fetchUserWallet();
     // this.myEarningsService.getAllPaymentRecords();
   }
 
@@ -40,13 +41,18 @@ export class MyEarningsPage implements OnInit {
   }
 
   async handleTabChange(event) {
+    console.log(event.target.value)
     await document.getElementById(event.target.value).scrollIntoView({
       behavior: 'smooth',
       block: 'center',
       inline: 'center'
     });
     this.myEarningsService.resetPayload();
-    await this.myEarningsService.getPaymentRecords();
+    if (event.target.value == 'Paid') {
+      this.myEarningsService.fetchUserPayouts();
+    } else {
+      await this.myEarningsService.getPaymentRecords();
+    }
   }
 
   async doInfinite(infiniteScroll) {

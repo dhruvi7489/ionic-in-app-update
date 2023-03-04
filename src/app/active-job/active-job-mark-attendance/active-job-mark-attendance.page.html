@@ -7,7 +7,7 @@
 
     <!-- 5 -->
     <div class="data-not-found-wrap mark-attendance-wrap" *ngIf="activeJobService.activeJob?.job && !activeJobService.startBeforeThirtyMin && 
-    !activeJobService.showPaymentPage && !activeJobService.jobCompleted" [ngClass]="{'w-95':isWeb}">
+    !activeJobService.showPaymentPage && !activeJobService.jobCompleted" [ngClass]="{'w-92':isWeb}">
       <div class="pb-0">
         <ion-row>
           <ion-col size="12">
@@ -59,7 +59,7 @@
 
     <!-- 6 -->
     <div class="data-not-found-wrap mark-attendance-wrap" *ngIf="activeJobService.activeJob?.job && activeJobService.activeJob?.attendance?.content?.length == 0 && activeJobService.startBeforeThirtyMin 
-     && !activeJobService.showPaymentPage && !activeJobService.jobCompleted" [ngClass]="{'w-95':isWeb}">
+     && !activeJobService.showPaymentPage && !activeJobService.jobCompleted" [ngClass]="{'w-92':isWeb}">
       <div class="pb-0">
         <ion-row>
           <ion-col size="12">

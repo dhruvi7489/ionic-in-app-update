@@ -208,13 +208,13 @@ export class CommonProvider {
         const TokenKey = await this.storage.get(TOKEN_KEY);
         const TokenType = await this.storage.get(TOKEN_TYPE);
         // this.loadingService.show();
-        // const httpHeader = new HttpHeaders({
-        //     Authorization: TokenType + " " + TokenKey
-        // });
+        const httpHeader = new HttpHeaders({
+            Authorization: TokenType + " " + TokenKey
+        });
 
         return new Promise(async (resolve, reject) => {
             return this.http
-                .get(Apiurl.RoutePath + url, { params: data, observe: 'response' })
+                .get(url, { params: data, headers: httpHeader, observe: 'response' })
                 .subscribe(
                     (data: any) => {
                         if (data.status == 200 || data.status == 201 || data.status == 202 || data.status == 204) {

@@ -46,6 +46,7 @@ export const Apiurl = {
     GetEarningStatus: jobSeekerServiceUrl + 'payment/earningStats/',
     SaveAccountDetails: jobSeekerServiceUrl + 'accountdetails',
     GetAccountDetails: jobSeekerServiceUrl + 'accountdetails/getByJobSeekerId/',
+    GetWalletBalance: +'payment/wallet',
     UpdateAccountDetails: jobSeekerServiceUrl + 'accountdetails/updateById/',
     UploadProfilePictures: jobSeekerServiceUrl + 'fileupload/jobseeker/photo/',
     UpdateProfilePhotos: jobSeekerServiceUrl + 'jobseeker/updatePhotos/',

@@ -50,8 +50,6 @@ export class AppComponent {
     // private deeplinks: Deeplinks
   ) {
     this.initializeApp();
-
-
   }
 
   ngOnInit() {
@@ -60,19 +58,18 @@ export class AppComponent {
   async initializeApp() {
     // Deep linking
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
-      // alert(1111)
       this.zone.run(() => {
-        // Example url: https://beerswift.app/tabs/tab2
-        // slug = /tabs/tab2
-        const slug = event.url.split("appuat.hour4u.com/#/").pop();
-        // alert(slug)
+        const slug = event.url.split("uatapp.hour4u.com/#/").pop();
         if (slug) {
-          setTimeout(() => {
-            this.router.navigateByUrl(slug);
-          }, 2500)
+          setTimeout(async () => {
+            const loginUserId = await this.storage.get('loginUserId');
+            if (loginUserId) {
+              this.router.navigateByUrl("available-job-details/" + event.url.split("uatapp.hour4u.com/#/available-job-details-global/").pop())
+            } else {
+              this.router.navigateByUrl(slug);
+            }
+          }, 2100)
         }
-        // If no match, do nothing - let regular routing
-        // logic take over
       });
     });
 

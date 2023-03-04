@@ -64,9 +64,9 @@ export class MyEarningsService {
   // Get All Payment Records
   async getAllPaymentRecords() {
     const loginUserId = await this.storage.get('loginUserId');
-    this.loadingService.show();
+    // this.loadingService.show();
     return await this.commonProvider.GetMethod(Apiurl.GetAllPaymentsRecords + '?' + 'jobSeekerId=' + loginUserId, null).then(async (res: any) => {
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       if (res) {
         this.earningRecords = res.content;
       }
@@ -79,11 +79,11 @@ export class MyEarningsService {
   // Get All Payment Records
   async getPaymentRecords() {
     const loginUserId = await this.storage.get('loginUserId');
-    this.loadingService.show();
+    // this.loadingService.show();
     let param = '?page=' + this.page + '&size=' + this.pageSize + '&sort=createdOn,desc' + '&' + 'jobSeekerId=' + loginUserId
       + '&status=' + this.selectedTab;
     return await this.commonProvider.GetMethod(Apiurl.Payment + '/' + param, null).then(async (res: any) => {
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       if (res) {
         this.loadedMyEarningsRecords = res.numberOfElements;
         this.totalEarningRecords = res.totalElements;
@@ -129,7 +129,6 @@ export class MyEarningsService {
       this.loadingService.dismiss();
       console.log(err);
     })
-
   }
 
   // Save Account Details
@@ -148,7 +147,7 @@ export class MyEarningsService {
         this.loadingService.dismiss();
         if (res) {
           this.getAccountDetails();
-          this.modalCtrl.dismiss();
+          // this.modalCtrl.dismiss();
           this.withdrawAmountPage();
         }
       }).catch((err: HttpErrorResponse) => {
@@ -167,7 +166,7 @@ export class MyEarningsService {
         this.loadingService.dismiss();
         if (res) {
           this.getAccountDetails();
-          this.modalCtrl.dismiss();
+          // this.modalCtrl.dismiss();
           this.withdrawAmountPage();
         }
       }).catch((err: HttpErrorResponse) => {
@@ -184,5 +183,64 @@ export class MyEarningsService {
       componentProps: null
     })
     await modal.present();
+  }
+
+  // Fetch user wallet
+  async fetchUserWallet() {
+    const loginUserId = "5f8542d260f2be2e0c9daa66";
+    // const loginUserId = await this.storage.get('loginUserId');
+    this.loadingService.show();
+    this.commonProvider.GetMethodCustom("https://d294401e-5a24-4eaf-8595-ea5df025eb03.mock.pstmn.io/api/v1/payment/wallet/" + loginUserId, null).then((res: any) => {
+      this.loadingService.dismiss();
+      if (res) {
+        this.availableAmountForWithdraw = res?.result?.walletBalance;
+      }
+    }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
+      console.log(err);
+    })
+  }
+
+  // Fetch user wallet Transection details
+  async fetchUserPayouts() {
+    const loginUserId = "5f8542d260f2be2e0c9daa66";
+    // const loginUserId = await this.storage.get('loginUserId');
+    this.loadingService.show();
+    this.commonProvider.GetMethodCustom("https://d294401e-5a24-4eaf-8595-ea5df025eb03.mock.pstmn.io/api/v1/payment/payout/" + loginUserId, null).then((res: any) => {
+      this.loadingService.dismiss();
+      res?.result.forEach(element => {
+        element.bankDetails = JSON.parse(JSON.parse(element?.payoutMeta)?.bankAccountDetails);
+      });
+      this.earningRecords = res?.result;
+      this.totalEarningRecords = res?.result?.length;
+      console.log(this.earningRecords)
+    }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
+      console.log(err);
+    })
+  }
+
+  // Send request for withdrawal
+  withdrawAmount() {
+    const loginUserId = "5f8542d260f2be2e0c9daa66";
+    // const loginUserId = await this.storage.get('loginUserId');
+    let param = {
+      "user_id": "5f8542d260f2be2e0c9daa66",
+      "amount": this.wantAmountForWithdraw
+    }
+    this.loadingService.show();
+    this.commonProvider.PostMethodCustom("https://d294401e-5a24-4eaf-8595-ea5df025eb03.mock.pstmn.io/api/v1/payment/wallet/credit", param).then((res: any) => {
+      this.toastService.showMessage("Your withdrawal request sent successfully!")
+      this.loadingService.dismiss();
+      this.modalCtrl.dismiss();
+      this.wantAmountForWithdraw = null;
+      setTimeout(() => {
+        this.modalCtrl.dismiss();
+        this.fetchUserWallet();
+      }, 500);
+    }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
+      console.log(err);
+    })
   }
 }

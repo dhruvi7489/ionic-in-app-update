@@ -13,7 +13,7 @@ export class WithdrawPage implements OnInit {
   ngOnInit() {
   }
 
-  getAvilableAmount(event) {
+  getAvailableAmount(event) {
     this.myEarningsService.availableAmountForWithdraw = event.ngModelData;
   }
 
@@ -22,7 +22,7 @@ export class WithdrawPage implements OnInit {
   }
 
   disable() {
-    if (!this.myEarningsService.wantAmountForWithdraw) {
+    if (!this.myEarningsService.wantAmountForWithdraw || this.myEarningsService.wantAmountForWithdraw > this.myEarningsService.availableAmountForWithdraw) {
       return true;
     } else {
       return false;
@@ -30,6 +30,6 @@ export class WithdrawPage implements OnInit {
   }
 
   withdrawAmount() {
-
+    this.myEarningsService.withdrawAmount();
   }
 }

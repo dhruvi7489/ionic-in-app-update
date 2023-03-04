@@ -12,7 +12,7 @@
       </div>
       <custom-input [inputType]="'tel'" [placeholder]="'Available amount to withdraw'"
         [ngModelData]="myEarningsService.availableAmountForWithdraw" [id]="'availableAmountForWithdraw'"
-        (keyUp)="getAvilableAmount($event)">
+        (keyUp)="getAvailableAmount($event)" [isReadOnly]="true" [id]="'availableAmountForWithdraw'">
       </custom-input>
     </div>
 
@@ -20,17 +20,18 @@
       <ion-label>Amount you want to withdraw*</ion-label>
     </div>
     <custom-input [inputType]="'tel'" [placeholder]="'Amount you want to withdraw'"
-      [ngModelData]="myEarningsService.wantAmountForWithdraw" [id]="'wantAmountForWithdraw'"
+      [ngModelData]="myEarningsService.wantAmountForWithdraw" [id]="'wantAmountForWithdraw'" [isNumber]="true"
       (keyUp)="getWantToWithdrawAmount($event)">
     </custom-input>
     <div *ngIf="myEarningsService.wantAmountForWithdraw > myEarningsService.availableAmountForWithdraw"
-      class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Account number not match </div>
+      class="mb-4 mt-4 ml-4 danger sub-heading-xs"> You can't withdraw money more than
+      {{myEarningsService.availableAmountForWithdraw}} </div>
   </div>
 </ion-content>
 
 <ion-footer>
   <!-- (btnClick)="withdrawAmount()" -->
-  <custom-button [title]="'Save'" appDebounceClick (debounceClick)="withdrawAmount()" [debounceTimeConst]="300"
-    [disabled]="disable()" [button]="'primary'">
+  <custom-button [title]="'Confirm withdrawal'" appDebounceClick (debounceClick)="withdrawAmount()"
+    [debounceTimeConst]="300" [disabled]="disable()" [button]="'primary'">
   </custom-button>
 </ion-footer>

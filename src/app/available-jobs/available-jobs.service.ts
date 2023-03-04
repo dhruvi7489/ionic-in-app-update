@@ -56,11 +56,11 @@ export class AvailableJobsService {
   // Get all jobs list
   async getAllJobsList(search?) {
     const loginUserGender = await this.storage.get('loginUserGender');
-    this.loadingService.show();
     if (search) {
       this.jobLists = [];
       this.page = 0;
     }
+    this.loadingService.show();
     let params = '?sort=createdOn,desc&page=' + this.page + '&size=' + this.pageSize;
     let param = { "gender": loginUserGender, "query": search }
     this.commonProvider.PostMethod(Apiurl.GetJobsList + params, param).then(async (res: any) => {
@@ -96,12 +96,12 @@ export class AvailableJobsService {
     if (this.selectedJobId && loginUserId) {
       let params = this.selectedJobId + '/' + loginUserId;
       let param = { "gender": loginUserGender }
-      this.commonProvider.GetMethod(Apiurl.GetJobByJobId + params, param).then(async (res: any) => {
+      this.commonProvider.GetMethod(Apiurl.GetJobByJobId + params, param).then((res: any) => {
         this.loadingService.dismiss();
         if (res) {
           this.selectedJobDetails = res;
           this.jobApplicationId = this.selectedJobDetails.jobApplicationId;
-          await this.selectedJobDetails?.dates?.forEach(date => {
+          this.selectedJobDetails?.dates?.forEach(date => {
             this.jobUtilService.shiftDayChange(date.date, date.timeFrom, date.timeTo);
           })
         }
@@ -151,10 +151,10 @@ export class AvailableJobsService {
   // Apply for selected job
   async JobPreference(isDetailPage?: boolean) {
     const loginUserId = await this.storage.get('loginUserId');
-    this.loadingService.show();
+    // this.loadingService.show();
     let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
     await this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then((res: any) => {
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       let typeIdFound = false;
       if (res) {
         this.selectedJobPreferences = res;
@@ -163,7 +163,7 @@ export class AvailableJobsService {
         }
       }
     }).catch((err: HttpErrorResponse) => {
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       console.log(err);
     })
   }
@@ -341,6 +341,7 @@ export class AvailableJobsService {
         console.log(err);
       })
     } else {
+      await this.loadingService.dismiss();
       await this.toastService.showMessage('Please select valid hourly rate!');
     }
   }
@@ -365,11 +366,11 @@ export class AvailableJobsService {
     let pageUrl = encodeURIComponent(url);
     let jobType = encodeURIComponent(this.selectedJobDetails?.jobTypeName);
     // send message in App whatsapp
-    // window.open("https://api.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20https%3A%2F%2Fappuat.hour4u.com" + pageUrl);
+    // window.open("https://api.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20https%3A%2F%2Fuatapp.hour4u.com" + pageUrl);
 
     // send message in Web whatsapp
     if (Capacitor.getPlatform() == 'web') {
-      window.open("https://web.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20https%3A%2F%2Fappuat.hour4u.com/#" + pageUrl);
+      window.open("https://web.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20https%3A%2F%2Fuatapp.hour4u.com/#" + pageUrl);
     }
 
     // send message in social share
@@ -377,7 +378,7 @@ export class AvailableJobsService {
       await Share.share({
         title: jobType,
         text: 'Hey! I found ' + this.selectedJobDetails?.jobTypeName + ' job on Hour4U. check it out here 👇',
-        url: 'https://appuat.hour4u.com/#' + url,
+        url: 'https://uatapp.hour4u.com/#' + url,
         dialogTitle: 'hour4u.com',
       }).then(res => {
         console.log(res)

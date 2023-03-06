@@ -19,3 +19,8 @@ keystore pwd: hour4u
 alias : hour4u
 #Option2
 zipalign -v 4 ./android/app/build/outputs/apk/release/app-release-unsigned.apk hour4u.apk
+
+
+------------ Build Signed IOS APK 
+ionic Build
+ionic cap sync ios

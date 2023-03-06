@@ -114,6 +114,10 @@ const routes: Routes = [
     loadChildren: () => import('./profile/introduction-video-add-edit/introduction-video-add-edit.module').then(m => m.IntroductionVideoAddEditPageModule)
   },
   {
+    path: 'app-update',
+    loadChildren: () => import('./app-update/app-update.module').then(m => m.AppUpdatePageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundPageModule)
   }

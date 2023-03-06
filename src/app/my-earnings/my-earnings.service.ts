@@ -85,8 +85,8 @@ export class MyEarningsService {
     return await this.commonProvider.GetMethod(Apiurl.Payment + '/' + param, null).then(async (res: any) => {
       // this.loadingService.dismiss();
       if (res) {
-        this.loadedMyEarningsRecords = res.numberOfElements;
-        this.totalEarningRecords = res.totalElements;
+        this.loadedMyEarningsRecords = res?.numberOfElements;
+        this.totalEarningRecords = res?.totalElements;
         res.content?.forEach(element => {
           this.earningRecords.push(element);
         });
@@ -118,12 +118,12 @@ export class MyEarningsService {
     await this.commonProvider.GetMethod(Apiurl.GetAccountDetails + loginUserId, null).then(async (res: any) => {
       this.loadingService.dismiss();
       if (res) {
-        this.accountId = res.id;
-        this.accountNumber = res.accountNumber;
-        this.confirm_accountNumber = res.accountNumber;
-        this.ifscCode = res.ifscCode;
-        this.nameOnAccount = res.nameOnAccount;
-        this.authorizeBankDetails = res.authorizeBankDetails;
+        this.accountId = res?.id;
+        this.accountNumber = res?.accountNumber;
+        this.confirm_accountNumber = res?.accountNumber;
+        this.ifscCode = res?.ifscCode;
+        this.nameOnAccount = res?.nameOnAccount;
+        this.authorizeBankDetails = res?.authorizeBankDetails;
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
@@ -187,32 +187,36 @@ export class MyEarningsService {
 
   // Fetch user wallet
   async fetchUserWallet() {
-    const loginUserId = "5f8542d260f2be2e0c9daa66";
-    // const loginUserId = await this.storage.get('loginUserId');
-    this.loadingService.show();
-    this.commonProvider.GetMethodCustom("https://d294401e-5a24-4eaf-8595-ea5df025eb03.mock.pstmn.io/api/v1/payment/wallet/" + loginUserId, null).then((res: any) => {
-      this.loadingService.dismiss();
+    const loginUserId = await this.storage.get('loginUserId');
+    this.commonProvider.GetMethod(Apiurl.GetWalletBalance + loginUserId, null).then((res: any) => {
       if (res) {
-        this.availableAmountForWithdraw = res?.result?.walletBalance;
+        if (res.statusCode == '200' || res.statusCode == '201') {
+          this.availableAmountForWithdraw = res?.result?.walletBalance;
+        } else {
+          this.availableAmountForWithdraw = 0;
+        }
       }
     }).catch((err: HttpErrorResponse) => {
-      this.loadingService.dismiss();
       console.log(err);
     })
   }
 
   // Fetch user wallet Transection details
   async fetchUserPayouts() {
-    const loginUserId = "5f8542d260f2be2e0c9daa66";
-    // const loginUserId = await this.storage.get('loginUserId');
+    const loginUserId = await this.storage.get('loginUserId');
     this.loadingService.show();
-    this.commonProvider.GetMethodCustom("https://d294401e-5a24-4eaf-8595-ea5df025eb03.mock.pstmn.io/api/v1/payment/payout/" + loginUserId, null).then((res: any) => {
+    let param = loginUserId + '?pageNumber=' + this.page + '&pageSize=' + this.pageSize + '&sortBy=updatedAt';
+    // + '&asc=' + true;
+    this.commonProvider.GetMethod(Apiurl.GetPayoutHistory + param, null).then((res: any) => {
       this.loadingService.dismiss();
       res?.result.forEach(element => {
         element.bankDetails = JSON.parse(JSON.parse(element?.payoutMeta)?.bankAccountDetails);
       });
-      this.earningRecords = res?.result;
-      this.totalEarningRecords = res?.result?.length;
+      this.loadedMyEarningsRecords = this.pageSize;
+      this.totalEarningRecords = res?.totalRecords;
+      res.result?.forEach(element => {
+        this.earningRecords.push(element);
+      });
       console.log(this.earningRecords)
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
@@ -221,22 +225,24 @@ export class MyEarningsService {
   }
 
   // Send request for withdrawal
-  withdrawAmount() {
-    const loginUserId = "5f8542d260f2be2e0c9daa66";
-    // const loginUserId = await this.storage.get('loginUserId');
+  async withdrawAmount() {
+    const loginUserId = await this.storage.get('loginUserId');
     let param = {
-      "user_id": "5f8542d260f2be2e0c9daa66",
+      "userId": loginUserId,
       "amount": this.wantAmountForWithdraw
     }
     this.loadingService.show();
-    this.commonProvider.PostMethodCustom("https://d294401e-5a24-4eaf-8595-ea5df025eb03.mock.pstmn.io/api/v1/payment/wallet/credit", param).then((res: any) => {
+    this.commonProvider.PostMethod(Apiurl.WithdrawAmount, param).then((res: any) => {
       this.toastService.showMessage("Your withdrawal request sent successfully!")
       this.loadingService.dismiss();
       this.modalCtrl.dismiss();
       this.wantAmountForWithdraw = null;
       setTimeout(() => {
         this.modalCtrl.dismiss();
+        this.loadingService.dismiss();
+        this.earningRecords = [];
         this.fetchUserWallet();
+        this.fetchUserPayouts();
       }, 500);
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();

@@ -1,8 +1,8 @@
 <app-my-earnings-header [headerTitle]="'Payment'" [showBackBtn]="true" [showContactIcon]="false" [isModal]="true">
 </app-my-earnings-header>
 
-<ion-content>
-  <div class="c-container-body mt-24 ml-16 mr-16 mb-16">
+<ion-content class="container">
+  <div class="c-container-body mt-24 ml-16 mr-16">
     <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Add your account details</div>
 
     <div class="mt-8">
@@ -50,7 +50,10 @@
 </ion-content>
 
 <ion-footer>
-  <!-- (btnClick)="saveAccountFormDetails()" -->
+  <custom-button [title]="'Skip'" appDebounceClick (debounceClick)="skip()" [debounceTimeConst]="300" [id]="'skip-btn'"
+    [button]="'ternary'">
+  </custom-button>
+
   <custom-button [title]="myEarningsService?.accountId ? 'Update' : 'Save'" appDebounceClick
     (debounceClick)="saveAccountFormDetails()" [debounceTimeConst]="300" [disabled]="disable()" [button]="'primary'">
   </custom-button>

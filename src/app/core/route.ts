@@ -7,6 +7,7 @@ const authServiceUrl = 'auth-service/v1/';
 const jobSeekerServiceUrl = 'job-seeker-service/v1/';
 const JobService = 'job-service/v1/';
 const ratingService = 'rating-service/v1/';
+const paymentService = 'payment-service/api/v1/';
 
 export const Apiurl = {
     RoutePath: RoutePath,
@@ -46,7 +47,9 @@ export const Apiurl = {
     GetEarningStatus: jobSeekerServiceUrl + 'payment/earningStats/',
     SaveAccountDetails: jobSeekerServiceUrl + 'accountdetails',
     GetAccountDetails: jobSeekerServiceUrl + 'accountdetails/getByJobSeekerId/',
-    GetWalletBalance: +'payment/wallet',
+    GetWalletBalance: paymentService + 'payment/wallet/',
+    GetPayoutHistory: paymentService + 'payment/payout/',
+    WithdrawAmount: paymentService + 'payment/payout',
     UpdateAccountDetails: jobSeekerServiceUrl + 'accountdetails/updateById/',
     UploadProfilePictures: jobSeekerServiceUrl + 'fileupload/jobseeker/photo/',
     UpdateProfilePhotos: jobSeekerServiceUrl + 'jobseeker/updatePhotos/',

@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-// import { AlertController } from '@ionic/angular';
 import { MyEarningsService } from '../my-earnings.service';
-// import { Checkout } from 'capacitor-razorpay';
 
 @Component({
   selector: 'app-payment',
@@ -13,7 +11,6 @@ export class PaymentPage implements OnInit {
 
   constructor(
     public myEarningsService: MyEarningsService,
-    // private alertController: AlertController
   ) {
   }
 
@@ -58,51 +55,7 @@ export class PaymentPage implements OnInit {
     return this.disabled;
   }
 
-
-  // async payWithRazorpay() {
-  //   const options = {
-  //     key: 'rzp_test_svKFMbRMkWDzNB',
-  //     amount: '100000',
-  //     description: 'Transection test',
-  //     image: 'https://i.imgur.com/3g7nmJC.jpg',
-  //     order_id: 'order_KdpWSnARIzinjZ',//Order ID generated in Step 1
-  //     currency: 'INR',
-  //     name: 'Dhruvi patel',
-  //     prefill: {
-  //       email: 'dhruvi7489@gmail.com',
-  //       contact: '7048450515'
-  //     },
-  //     theme: {
-  //       color: '#3399cc'
-  //     }
-  //   }
-  //   try {
-  //     let data = (await Checkout.open(options));
-  //     console.log(data.response + "AcmeCorp");
-  //     console.log(JSON.stringify(data))
-  //   } catch (error) {
-  //     //it's paramount that you parse the data into a JSONObject
-  //     let errorObj = JSON.parse(error['code'])
-  //     alert(errorObj.description);
-  //     alert(errorObj.code);
-
-  //     alert(errorObj.reason);
-  //     alert(errorObj.step);
-  //     alert(errorObj.source);
-  //     alert(errorObj.metadata.order_id);
-  //     alert(errorObj.metadata.payment_id);
-
-  //   }
-  // }
-  // async presentAlert(response: string) {
-  //   // let responseObj = JSON.parse(response)
-  //   console.log("message" + response['razorpay_payment_id']);
-  //   const alert = await this.alertController.create({
-  //     message: response['razorpay_payment_id'],
-  //     backdropDismiss: true,
-  //   });
-
-  //   await alert.present();
-  // }
-
+  skip() {
+    this.myEarningsService.withdrawAmountPage();
+  }
 }

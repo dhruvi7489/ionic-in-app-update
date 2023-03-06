@@ -106,8 +106,7 @@ export class AppComponent {
         UXCam.startWithConfiguration(configuration);
 
         // App Update Check
-        // this.appUpdateService.checkAppUpdate();
-
+        this.appUpdateService.checkAppUpdate();
 
         // Check current internet connection Status
         this.networkService.getInternetConnectionStatus();

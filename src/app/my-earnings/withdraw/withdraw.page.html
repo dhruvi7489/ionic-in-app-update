@@ -26,6 +26,9 @@
     <div *ngIf="myEarningsService.wantAmountForWithdraw > myEarningsService.availableAmountForWithdraw"
       class="mb-4 mt-4 ml-4 danger sub-heading-xs"> You can't withdraw money more than
       {{myEarningsService.availableAmountForWithdraw}} </div>
+    <div *ngIf="myEarningsService.wantAmountForWithdraw && myEarningsService.wantAmountForWithdraw <= 0"
+      class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter
+      valid withdrawal amount</div>
   </div>
 </ion-content>
 

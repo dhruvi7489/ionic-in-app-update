@@ -22,7 +22,7 @@ import { NgOtpInputModule } from 'ng-otp-input';
     CommonModule,
     IonicModule.forRoot(
       {
-        swipeBackEnabled: false
+        swipeBackEnabled: false // close swipe back event in IOS
       }
     ),
     AppRoutingModule,

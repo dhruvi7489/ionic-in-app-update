@@ -1,0 +1,30 @@
+<ion-content>
+  <div class="data-not-found-wrap w-92">
+    <div class="pb-0">
+      <ion-row>
+        <ion-col size="12">
+          <img src="../../assets/imgs/logo.svg" width="80px">
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+          <div class="secondary fw-600 sub-heading-xl">New Update Available</div>
+        </ion-col>
+      </ion-row>
+    </div>
+    <!-- <div class="mt-12">
+      <ion-row>
+        <ion-col size="12">
+          <div class="fw-400 sub-heading-sm ternary">Find temporary staff for your next gig fast and easy!</div>
+        </ion-col>
+      </ion-row>
+    </div> -->
+  </div>
+</ion-content>
+
+<ion-footer>
+  <!-- (btnClick)="openOTPPage()" -->
+  <custom-button [title]="'Update Now'" appDebounceClick (debounceClick)="updateApp()" [debounceTimeConst]="300"
+    [button]="'primary'">
+  </custom-button>
+</ion-footer>

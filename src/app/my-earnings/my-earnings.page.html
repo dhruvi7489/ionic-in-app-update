@@ -7,7 +7,7 @@
             <div class="pl-16 pt-16 pr-16 inner-wrap" *ngIf="myEarningsService.earningStatus">
                 <div>
                     <ion-row>
-                        <ion-col class="count-card-wrap p-12 ml-0 mt-0 mb-0 mr-12" size="6">
+                        <ion-col class="count-card-wrap p-12 ml-0 mt-0 mb-0 mr-12" size="7">
                             <div class="d-flex">
                                 <div class="fw-400 ternary sub-heading-sm">
                                     Your balance
@@ -24,7 +24,8 @@
                                 </ion-col>
                             </ion-row>
                         </ion-col>
-                        <ion-col class="p-0 ion-align-self-center" size="5.5">
+                        <ion-col class="p-0 ion-align-self-center" size="4"
+                            *ngIf="myEarningsService.availableAmountForWithdraw != 0">
                             <!-- <custom-button [title]="'Withdraw'" [button]="'secondary'" [disabled]="false"
                                 (btnClick)="withdrawAmount()">
                             </custom-button> -->
@@ -217,7 +218,6 @@
                     </div>
                     <div>
                         <ion-row>
-                            <!-- <ion-col size="12" class="p-0"> -->
                             <ion-col size="8" class="pl-0 pr-0 pt-0 pb-0 ion-align-self-center">
                                 <div class="d-flex">
                                     <div class="pr-8 ion-align-self-center">
@@ -226,9 +226,6 @@
                                     <div class="ternary sub-heading-xs fw-400 ion-align-self-center mr-4">
                                         {{earning?.updatedAt | date: 'MMM dd,
                                         yyyy hh:mm a'}}
-                                        <!-- {{earning?.date[0].timeFrom | formatTime | date: 'hh:mm a' }} to
-                                        {{earning?.date[0].timeTo |
-                                        formatTime | date: 'hh:mm a'}} -->
                                     </div>
                                 </div>
                             </ion-col>
@@ -236,47 +233,12 @@
                                 <div class="d-flex ion-float-right"
                                     [ngClass]="{'completed-bedge' : earning?.status == 'SUCCESS', 'rejected-bedge' : earning?.status == 'FAILED',
                                 'pending-inreview-bedge' : earning?.status != 'FAILED' && earning?.status != 'SUCCESS' }">
-                                    <!-- <div class="ion-align-self-center fw-400 sub-heading-xs">
-                                        {{earning?.status}}
-                                    </div> -->
                                     <label class="fw-400 sub-heading-xs pr-4">
                                         {{earning?.status}}
                                     </label>
                                 </div>
                             </ion-col>
-                            <!-- <div class="d-flex ion-float-right">
-                                        <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
-                                        <div class="ion-align-self-center">
-                                            <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/clock.svg">
-                                        </div>
-                                        <div class="primary fw-400 sub-heading-xs ion-align-self-center">
-                                            {{earning.hours}} hours </div>
-                                    </div> -->
-                            <!-- </ion-col> -->
-                            <!-- <ion-col size="6" class="p-0">
-                                <div class="d-flex ion-float-right">
-                                    <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/dot.svg">
-                                    <div class="ion-align-self-center">
-                                        <img class="mr-8" src="../../assets/imgs/Iconsax/Svg/All/outline/clock.svg">
-                                    </div>
-                                    <div class="primary fw-400 sub-heading-xs ion-align-self-center">
-                                        {{earning.hours}} hours </div>
-                                </div>
-                            </ion-col> -->
                         </ion-row>
-
-                        <!-- <ion-row class="pt-8">
-                            <ion-col size="12" class="p-0">
-                                <div class="d-flex">
-                                    <div class="pr-8">
-                                        <img src="../../assets/imgs/Iconsax/Svg/All/outline/location.svg">
-                                    </div>
-                                    <div class="ternary sub-heading-xs fw-400 ion-align-self-center">
-                                        Hotel Ramada Plaza, National games park, Pune
-                                    </div>
-                                </div>
-                            </ion-col>
-                        </ion-row> -->
                     </div>
                 </div>
             </div>

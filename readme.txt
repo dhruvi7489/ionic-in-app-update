@@ -13,7 +13,7 @@ cd ..
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore hour4u-app-release-key.keystore ./android/app/build/outputs/apk/release/app-release-unsigned.apk hour4u
 pwd: hour4u
 #Option1 
-ionic cap sync open android
+ionic cap open android
 build signin app with hour4u-app-release-key.keystore
 keystore pwd: hour4u 
 alias : hour4u
@@ -21,6 +21,7 @@ alias : hour4u
 zipalign -v 4 ./android/app/build/outputs/apk/release/app-release-unsigned.apk hour4u.apk
 
 
------------- Build Signed IOS APK 
+------------ Build IOS APK 
 ionic Build
-ionic cap sync ios
+npx cap sync ios
+npx cap open ios

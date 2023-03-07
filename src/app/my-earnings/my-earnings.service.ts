@@ -239,8 +239,7 @@ export class MyEarningsService {
       this.wantAmountForWithdraw = null;
       setTimeout(() => {
         this.modalCtrl.dismiss();
-        this.loadingService.dismiss();
-        this.earningRecords = [];
+        this.selectedTab = 'Unapproved';
         this.fetchUserWallet();
         this.fetchUserPayouts();
       }, 500);

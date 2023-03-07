@@ -82,7 +82,7 @@ export class MyEarningsService {
     // this.loadingService.show();
     let param = '?page=' + this.page + '&size=' + this.pageSize + '&sort=createdOn,desc' + '&' + 'jobSeekerId=' + loginUserId
       + '&status=' + this.selectedTab;
-    return await this.commonProvider.GetMethod(Apiurl.Payment + '/' + param, null).then(async (res: any) => {
+    return await this.commonProvider.GetMethod(Apiurl.Payment + param, null).then(async (res: any) => {
       // this.loadingService.dismiss();
       if (res) {
         this.loadedMyEarningsRecords = res?.numberOfElements;

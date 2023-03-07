@@ -632,7 +632,9 @@ export class ProfileService {
   logoOut() {
     this.storage.clear();
     this.onboardingService.resetOnbordingValues();
-    this.router.navigateByUrl('onboarding/onboarding-phone-number');
+    setTimeout(() => {
+      this.router.navigateByUrl('onboarding/onboarding-phone-number');
+    }, 100);
   }
 
   // Share Profile 

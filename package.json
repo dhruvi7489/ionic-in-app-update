@@ -73,7 +73,7 @@
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "uk.co.workingedge.phonegap.plugin.launchnavigator": "^5.0.6",
-    "w4u-custom-components": "^1.0.50",
+    "w4u-custom-components": "^1.0.52",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

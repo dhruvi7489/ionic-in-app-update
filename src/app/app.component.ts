@@ -68,7 +68,7 @@ export class AppComponent {
             } else {
               this.router.navigateByUrl(slug);
             }
-          }, 2100)
+          }, 2300)
         }
       });
     });
@@ -259,16 +259,18 @@ export class AppComponent {
 
   // Update device token for notification
   async updateToken(token) {
-    const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
-    if (loginUserMobileNo != null) {
-      let obj = {
-        deviceToken: token,
-        mobile: loginUserMobileNo
+    if (token) {
+      const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
+      if (loginUserMobileNo != null) {
+        let obj = {
+          deviceToken: token,
+          mobile: loginUserMobileNo
+        }
+        await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
+        }).catch(err => {
+          console.log(err);
+        })
       }
-      await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
-      }).catch(err => {
-        console.log(err);
-      })
     }
   }
 
@@ -318,27 +320,4 @@ export class AppComponent {
       }
     }, 1000);
   }
-  // Redirect on particular page click on notification end
-
-  // setupDeepLinks() {
-  //   alert(333333333333)
-  //   console.log("calllllllllllll")
-  //   this.deeplinks
-  //     .route({
-  //       '/available-job-details': AvailableJobDetailsPage,
-  //     })
-  //     .subscribe(
-  //       (match) => {
-  //         alert(4444444444)
-  //         console.log("calllllllll---match-----", match)
-  //         this.zone.run(() => {
-  //           this.router.navigate(match.$link.path);
-  //         });
-  //       },
-  //       (nomatch) => {
-  //         // nomatch.$link - the full link data
-  //         console.error("Got a deeplink that didn't match", nomatch);
-  //       }
-  //     );
-  // }
 }

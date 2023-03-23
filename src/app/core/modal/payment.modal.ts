@@ -22,4 +22,8 @@ export class Payment {
   expectedAmount: number;
   reasonForExpectedAmount: string;
   feedback: string;
+  bankDetails?: any;
+  transferMode?: any;
+  payoutAmount?: any;
+  updatedAt?: any;
 }

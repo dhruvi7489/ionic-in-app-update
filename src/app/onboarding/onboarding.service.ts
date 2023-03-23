@@ -688,21 +688,24 @@ export class OnboardingService {
       this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
     }
   }
+
   // Update Token
   async updateToken() {
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     const FCMToken = await this.storage.get('FCMToken');
-    if (loginUserMobileNo != null) {
-      let obj = {
-        deviceToken: FCMToken,
-        mobile: loginUserMobileNo
-      }
-      await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
-        if (res) {
+    if (FCMToken) {
+      if (loginUserMobileNo != null) {
+        let obj = {
+          deviceToken: FCMToken,
+          mobile: loginUserMobileNo
         }
-      }).catch((err: HttpErrorResponse) => {
-        console.log(err);
-      })
+        await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
+          if (res) {
+          }
+        }).catch((err: HttpErrorResponse) => {
+          console.log(err);
+        })
+      }
     }
   }
 

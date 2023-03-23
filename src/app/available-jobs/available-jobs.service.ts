@@ -119,7 +119,7 @@ export class AvailableJobsService {
   // Get job by job id and login user id globally
   async getSelectedJobByIdGlobally() {
     // const loginUserId = await this.storage.get('loginUserId');
-    const loginUserGender = await this.storage.get('loginUserGender');
+    // const loginUserGender = await this.storage.get('loginUserGender');
     this.selectedJobId = this.router.url.split('available-job-details-global/')[1];
     this.selectedJobDetails = null;
     this.jobApplicationId = null;
@@ -254,7 +254,6 @@ export class AvailableJobsService {
     console.log(this.jobPref, this.selectedJobDetails);
     if (this.jobPref?.jobTypePreferences?.length == 0) {
       this.loadingService.dismiss();
-
       let jobTypePreferencesRequests = [];
       let data = {
         "typeId": this.selectedJobDetails?.jobTypeId,
@@ -273,16 +272,63 @@ export class AvailableJobsService {
         console.log(err);
       })
     } else {
-      this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPref.id, { jobTypeHourlyRateRequests: this.jobPref?.jobTypePreferences }).then((res: any) => {
-        this.loadingService.dismiss();
-        if (res) {
-          this.submitJobApplication(hourlyRate, isApplyLater);
+      let jobTypePreferencesRequests = [];
+
+      this.jobPref?.jobTypePreferences?.forEach(element => {
+        let data = {
+          "typeId": element?.typeId,
+          "typeName": element?.typeName,
         }
+        jobTypePreferencesRequests.push(data);
+      })
+
+      let JobTypeNotMatched = false;
+
+      this.jobPref?.jobTypePreferences?.forEach(async (element) => {
+        if (element.typeId != this.selectedJobDetails?.jobTypeId) {
+          JobTypeNotMatched = true;
+        } else {
+          JobTypeNotMatched = false;
+        }
+      });
+
+      if (JobTypeNotMatched) {
+        this.saveJobPreferences(jobTypePreferencesRequests, hourlyRate, isApplyLater);
+      } else {
+        this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPref.id, { jobTypeHourlyRateRequests: this.jobPref?.jobTypePreferences }).then((res: any) => {
+          this.loadingService.dismiss();
+          if (res) {
+            this.submitJobApplication(hourlyRate, isApplyLater);
+          }
+        }).catch((err: HttpErrorResponse) => {
+          this.loadingService.dismiss();
+          console.log(err);
+        })
+      }
+    }
+  }
+
+  async saveJobPreferences(jobTypePreferencesRequests, hourlyRate, isApplyLater) {
+    let data = {
+      "typeId": this.selectedJobDetails?.jobTypeId,
+      "typeName": this.selectedJobDetails?.jobTypeName,
+    }
+    jobTypePreferencesRequests.push(data);
+    let params = {
+      "jobSeekerId": await this.storage.get('loginUserId'),
+      "jobTypeRequests": jobTypePreferencesRequests
+    }
+    this.commonProvider.PutMethod(Apiurl.JobPreference + '/' + this.jobPref.id, params).then(async (res: any) => {
+      await this.loadingService.dismiss();
+      this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPref.id, { jobTypeHourlyRateRequests: this.jobPref?.jobTypePreferences }).then((res: any) => {
+        this.submitJobApplication(hourlyRate, isApplyLater);
       }).catch((err: HttpErrorResponse) => {
-        this.loadingService.dismiss();
         console.log(err);
       })
-    }
+    }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
+      console.log(err);
+    })
   }
 
   // Apply for job & submit job application

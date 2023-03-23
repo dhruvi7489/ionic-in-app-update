@@ -7,8 +7,9 @@
     <div class="c-input-label secondary mt-24 mb-8">
       <ion-label class="sub-heading-sm bold-graphik-font fw-500">Enter your phone number</ion-label>
     </div>
+
     <custom-input [inputType]="'tel'" [placeholder]="'Phone'" [ngModelData]="onboardingService.mobile" [isNumber]="true"
-      (keyUp)="onKeyUp($event)" [maxlength]="'10'" [id]="'mobile'">
+      (keyUp)="onKeyUp($event)" (pasteData)="onPaste($event)" [maxlength]="'10'" [id]="'mobile'">
     </custom-input>
 
     <div class="sub-heading-sm bold-graphik-font fw-400 ternary mt-8">You will receive a 6-digit OTP on this number to

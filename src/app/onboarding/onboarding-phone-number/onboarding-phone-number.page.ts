@@ -41,6 +41,10 @@ export class OnboardingPhoneNumberPage implements OnInit {
     this.onboardingService.mobile = event.ngModelData;
   }
 
+  onPaste(event) {
+    this.onboardingService.mobile = event.ngModelData;
+  }
+
   async openOTPPage() {
     // window.open('https://wa.me/7048450515', "_blank");
     // window.open('https://api.whatsapp.com/send?phone=91' + this.onboardingService.mobile + '&amp;' + 'text=' + this.data, "_blank");

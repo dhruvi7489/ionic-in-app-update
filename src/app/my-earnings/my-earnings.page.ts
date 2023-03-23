@@ -25,6 +25,7 @@ export class MyEarningsPage implements OnInit {
     this.myEarningsService.resetPayload();
     this.myEarningsService.getPaymentRecords();
     this.myEarningsService.fetchUserWallet();
+    this.myEarningsService.fetchUserPayouts();
     // this.myEarningsService.getAllPaymentRecords();
   }
 

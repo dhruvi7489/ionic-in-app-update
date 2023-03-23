@@ -37,6 +37,7 @@ export class MyEarningsService {
 
   availableAmountForWithdraw = null;
   wantAmountForWithdraw = null;
+  totalWithdrwnAmount = 0;
 
   constructor(
     public commonProvider: CommonProvider,
@@ -214,6 +215,7 @@ export class MyEarningsService {
       });
       this.loadedMyEarningsRecords = this.pageSize;
       this.totalEarningRecords = res?.totalRecords;
+      this.totalWithdrwnAmount = res?.totalWithdrawnAmount;
       res.result?.forEach(element => {
         this.earningRecords.push(element);
       });

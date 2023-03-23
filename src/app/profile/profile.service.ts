@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable, NgZone, SecurityContext } from '@angular/core';
+import { ApplicationRef, Injectable, NgZone, SecurityContext } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -80,6 +80,7 @@ export class ProfileService {
     public loadingService: LoadingService,
     public storage: Storage,
     public onboardingService: OnboardingService,
+    public cdr: ApplicationRef
   ) {
     this.setInitialValues();
   }
@@ -629,12 +630,11 @@ export class ProfileService {
   }
 
   // logoOut
-  logoOut() {
+  async logoOut() {
     this.storage.clear();
     this.onboardingService.resetOnbordingValues();
-    setTimeout(() => {
-      this.router.navigateByUrl('onboarding/onboarding-phone-number');
-    }, 100);
+    this.router.navigateByUrl('onboarding/onboarding-phone-number');
+    this.cdr.tick();
   }
 
   // Share Profile 

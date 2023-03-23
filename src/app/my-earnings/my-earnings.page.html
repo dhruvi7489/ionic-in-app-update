@@ -7,10 +7,10 @@
             <div class="pl-16 pt-16 pr-16 inner-wrap" *ngIf="myEarningsService.earningStatus">
                 <div>
                     <ion-row>
-                        <ion-col class="count-card-wrap p-12 ml-0 mt-0 mb-0 mr-12" size="7">
+                        <ion-col class="count-card-wrap p-12 ml-0 mt-0 mb-0 mr-12" size="7.5">
                             <div class="d-flex">
                                 <div class="fw-400 ternary sub-heading-sm">
-                                    Your balance
+                                    Available to withdraw
                                 </div>
                                 <div class="ml-4">
                                     <img src="../../assets/imgs/Iconsax/Svg/All/outline/help-question-circle.svg">
@@ -30,17 +30,17 @@
                                 (btnClick)="withdrawAmount()">
                             </custom-button> -->
                             <!-- (btnClick)="withdrawAmount()" -->
-                            <custom-button [title]="'Withdraw'" [button]="'secondary'" [disabled]="false"
-                                appDebounceClick (debounceClick)="withdrawAmount()" [debounceTimeConst]="300">
+                            <custom-button [title]="'Withdraw'" [button]="'primary'" [disabled]="false" appDebounceClick
+                                (debounceClick)="withdrawAmount()" [debounceTimeConst]="300">
                             </custom-button>
                         </ion-col>
                     </ion-row>
 
                     <ion-row class="mt-16">
-                        <ion-col size="6" class="count-card-wrap p-12 ml-0 mt-0 mb-0 mr-12">
+                        <ion-col size="3.7" class="count-card-wrap p-8 ml-0 mt-0 mb-0">
                             <div class="d-flex">
                                 <div class="fw-400 ternary sub-heading-sm">
-                                    Paid out
+                                    Approved
                                 </div>
                                 <div class="ml-4">
                                     <img src="../../assets/imgs/Iconsax/Svg/All/outline/help-question-circle.svg">
@@ -49,16 +49,15 @@
                             <ion-row class="pt-8">
                                 <ion-col class="p-0">
                                     <div class="primary fw-600 sub-heading-md">
-                                        &#x20b9;{{myEarningsService.earningStatus?.totalEarning ?
-                                        myEarningsService.earningStatus?.totalEarning?.toFixed(2) : 00}}
+                                        &#x20b9;{{myEarningsService.earningStatus?.approved.toFixed(2)}}
                                     </div>
                                 </ion-col>
                             </ion-row>
                         </ion-col>
-                        <ion-col size="5.5" class="count-card-wrap p-12 ml-0 mt-0 mb-0">
+                        <ion-col size="4" class="count-card-wrap p-8 ml-0 mt-0 mb-0 ml-4">
                             <div class="d-flex">
                                 <div class="fw-400 ternary sub-heading-sm">
-                                    Awaiting approval
+                                    In approval
                                 </div>
                                 <div class="ml-4">
                                     <img src="../../assets/imgs/Iconsax/Svg/All/outline/help-question-circle.svg">
@@ -67,8 +66,25 @@
                             <ion-row class="pt-8">
                                 <ion-col class="p-0">
                                     <div class="primary fw-600 sub-heading-md">
-                                        &#x20b9;{{myEarningsService.earningStatus?.unapproved ?
-                                        myEarningsService.earningStatus?.unapproved?.toFixed(2): 00}}
+                                        &#x20b9;{{myEarningsService.earningStatus?.unapproved.toFixed(2)}}
+                                    </div>
+                                </ion-col>
+                            </ion-row>
+                        </ion-col>
+                        <ion-col size="4" class="count-card-wrap p-8 mt-0 mb-0 ml-4">
+                            <div class="d-flex">
+                                <div class="fw-400 ternary sub-heading-sm">
+                                    Withdrawn
+                                </div>
+                                <div class="ml-4">
+                                    <img src="../../assets/imgs/Iconsax/Svg/All/outline/help-question-circle.svg">
+                                </div>
+                            </div>
+                            <ion-row class="pt-8">
+                                <ion-col class="p-0">
+                                    <div class="primary fw-600 sub-heading-md">
+                                        &#x20b9;{{myEarningsService.totalWithdrwnAmount ?
+                                        myEarningsService.totalWithdrwnAmount?.toFixed(2): 00}}
                                     </div>
                                 </ion-col>
                             </ion-row>

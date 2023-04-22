@@ -107,8 +107,8 @@
               </div>
               <!-- (click)="show = !show" -->
               <div *ngIf="availableJobsService.selectedJobDetails?.description?.length > 100"
-                class="fw-400 sub-heading-md primary mt-8" appDebounceClick (debounceClick)="show = !show"
-                [debounceTimeConst]="300">{{ show ? 'Read less': 'Read more' }}
+                class="fw-400 sub-heading-sm primary mt-2 text-decoration-underline" appDebounceClick
+                (debounceClick)="show = !show" [debounceTimeConst]="300">{{ show ? 'Read less': 'Read more' }}
               </div>
             </ion-col>
           </ion-row>

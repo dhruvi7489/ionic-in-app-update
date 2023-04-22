@@ -4,6 +4,7 @@ import { Storage } from '@ionic/storage';
 import { JobUtilervice } from 'src/app/core/util/job-util.service';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { AvailableJobsService } from '../available-jobs.service';
+import { AppUpdateService } from 'src/app/core/services/app-update.service';
 
 @Component({
   selector: 'app-available-job-details-global',
@@ -22,15 +23,22 @@ export class AvailableJobDetailsGlobalComponent implements OnInit {
     public availableJobsService: AvailableJobsService,
     public jobUtilService: JobUtilervice,
     public toastService: ToastService,
-    public storage: Storage
+    public storage: Storage,
+    public appUpdateService: AppUpdateService
   ) { }
 
   ngOnInit() {
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.btnTitle = "Apply";
-    this.availableJobsService.getSelectedJobByIdGlobally();
+    await this.availableJobsService.getSelectedJobByIdGlobally();
+    const loginUserInfo = await this.storage.get('loginUserInfo');
+    if (JSON.parse(loginUserInfo)) {
+      // let url = this.router.url.replace('available-job-details-global/', 'available-job-details/');
+      // this.router.navigateByUrl(url);
+      this.availableJobsService.getSelectedJobById(this.router.url.split('available-job-details-global/')[1]);
+    }
   }
 
   getMinTotal() {
@@ -62,10 +70,22 @@ export class AvailableJobDetailsGlobalComponent implements OnInit {
   async applyForJob() {
     const loginUserInfo = await this.storage.get('loginUserInfo');
     if (JSON.parse(loginUserInfo)) {
-      this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+      // this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+      if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
+        await this.availableJobsService.JobPreference(true);
+      }
+      else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
+        this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
+        return;
+      }
+      else {
+        await this.availableJobsService.JobPreference(true);
+      }
     } else {
+      this.appUpdateService.forDeepLink = false;
       this.router.navigateByUrl('onboarding/onboarding-phone-number');
     }
+
   }
 
   disableApplyJobBtn() {
@@ -85,24 +105,32 @@ export class AvailableJobDetailsGlobalComponent implements OnInit {
 
   async bookmarkJob() {
     const loginUserInfo = await this.storage.get('loginUserInfo');
-    // if (JSON.parse(loginUserInfo)?.status != 'Active') {
-    //   this.toastService.showMessage(`You can't save this job now, please wait for approval.`)
-    //   return;
-    // }
-    if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
-      await this.availableJobsService.JobPreference(true);
-    }
-    else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
-      this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
-      return;
+    if (JSON.parse(loginUserInfo)) {
+      //   this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+
+      if (JSON.parse(loginUserInfo)?.status != 'Active') {
+        this.toastService.showMessage(`You can't save this job now, please wait for approval.`)
+        return;
+      }
+      if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
+        await this.availableJobsService.JobPreference(true);
+      }
+      else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
+        this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
+        return;
+      }
+      else {
+        if (this.availableJobsService.selectedJobPreferences) {
+          await this.jobBookMark();
+        } else {
+          await this.availableJobsService.JobPreference(false);
+          await this.jobBookMark();
+        }
+      }
     }
     else {
-      if (this.availableJobsService.selectedJobPreferences) {
-        await this.jobBookMark();
-      } else {
-        await this.availableJobsService.JobPreference(false);
-        await this.jobBookMark();
-      }
+      this.appUpdateService.forDeepLink = false;
+      this.router.navigateByUrl('onboarding/onboarding-phone-number');
     }
   }
 

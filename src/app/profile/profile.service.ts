@@ -50,7 +50,17 @@ export class ProfileService {
   latitude = 0;
   longitude = 0;
   geo: any;
-  addressObj: Address = new Address(40.730610, -73.935242);
+  addressObj: Address = {
+    address: null,
+    city: null,
+    country: null,
+    latitude: null,
+    longitude: null,
+    placeId: null,
+    region: null,
+    zip: null,
+    distance: null
+  };
   autocomplete: any = {
     query: ''
   };
@@ -99,8 +109,8 @@ export class ProfileService {
   async getProfileData(i?) {
     this.loadingService.show();
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
-    return await this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
-      await this.loadingService.dismiss();
+    await this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
+      this.loadingService.dismiss();
       if (res) {
         this.profileData = res;
         this.full_name = this.profileData.name;
@@ -183,7 +193,7 @@ export class ProfileService {
 
   // Update login user personal Information
   async updateProfile() {
-    this.loadingService.show();
+    await this.loadingService.show();
     this.profileData.dob = new Date(this.dob);
     this.profileData.email = this.email_address;
     this.profileData.gender = this.gender;
@@ -198,7 +208,7 @@ export class ProfileService {
     this.profileData.vaccineCertID = this.vaccineCertID;
 
     return await this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + this.profileData.id, this.profileData).then(async (res: any) => {
-      this.loadingService.dismiss();
+      await this.loadingService.dismiss();
       if (res) {
         this.toastService.showMessage('Personal information updated successfully');
         this.modalCtrl.dismiss();
@@ -238,7 +248,7 @@ export class ProfileService {
     await this.loadingService.show();
     const loginUserId = await this.storage.get('loginUserId');
     let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
-    this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
+    await this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
       await this.loadingService.dismiss();
       if (res) {
         this.jobPreferences = res.content[0];
@@ -381,9 +391,9 @@ export class ProfileService {
 
   async updatePhotos(flag = 'save') {
     const loginUserId = await this.storage.get('loginUserId');
-    this.loadingService.show();
+    await this.loadingService.show();
     await this.commonProvider.PutMethod(Apiurl.UpdateProfilePhotos + loginUserId, this.photos).then(async (res: any) => {
-      this.loadingService.dismiss();
+      await this.loadingService.dismiss();
       if (res) {
         if (flag === 'save') {
           this.toastService.showMessage('Profile photos saved successfully');
@@ -512,6 +522,7 @@ export class ProfileService {
 
   // Get city, country, zip from latitude, longitude
   getAddress(latitude, longitude) {
+    this.addressObj = new Address();
     this.addressObj.latitude = latitude;
     this.addressObj.longitude = longitude;
     const geoCoder = new google.maps.Geocoder();

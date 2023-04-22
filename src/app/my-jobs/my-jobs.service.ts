@@ -64,6 +64,7 @@ export class MyJobsService {
     this.loadedMyJobsRecords = 0;
     this.totalMyJobsRecords = 0;
     this.noDataFound = false;
+    this.errorInApiCall = false;
     this.myJobsList = [];
   }
 }

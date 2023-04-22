@@ -19,6 +19,8 @@ export class AttendanceBody {
     updatedOn?: Date;
 
     // for req
-    checkInTime: Date
-    checkOutTime?: Date
+    checkInTime: Date;
+    checkOutTime?: Date;
+
+    address: any;
 }

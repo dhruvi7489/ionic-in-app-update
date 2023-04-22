@@ -27,8 +27,8 @@ export class MyJobsPage implements OnInit {
   }
 
   goToJobDetails(selectedJob) {
-    this.availableJobsService.selectedJobId = selectedJob.employmentId;
-    this.router.navigateByUrl("available-job-details/" + this.availableJobsService.selectedJobId)
+    this.availableJobsService.employmentId = selectedJob.employmentId;
+    this.router.navigateByUrl("available-job-details/" + this.availableJobsService.employmentId)
   }
 
   findJobs() {

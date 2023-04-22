@@ -50,7 +50,7 @@ export class JobUtilervice {
 
   arrayToDate2(arr: any, time: any) {
     // new Date("2020-04-13T00:00:00.000+08:00");
-    var mydate = new Date("" + arr[0] + "-" + arr[1] + "-" + arr[2] + "T00:00:00.000+05:30");
+    var mydate = new Date("" + arr[0] + "-" + (arr[1] - 1) + "-" + arr[2] + "T00:00:00.000+05:30");
     // mydate.setFullYear(arr[0]);
     // mydate.setMonth(arr[1]);
     // mydate.setDate(arr[2]);
@@ -120,12 +120,12 @@ export class JobUtilervice {
       dateEndObject[2] = this.addDaysInDate(dateObject, 1)
     }
 
-    let jobStartDate = new Date(dateObject[0], dateObject[1], dateObject[2]);
+    let jobStartDate = new Date(dateObject[0], dateObject[1] - 1, dateObject[2]);
     jobStartDate.setHours(timeFrom[0]);
     jobStartDate.setMinutes(timeFrom[1]);
 
 
-    let jobEndDate = new Date(dateEndObject[0], dateEndObject[1], dateEndObject[2]);
+    let jobEndDate = new Date(dateEndObject[0], dateEndObject[1] - 1, dateEndObject[2]);
     jobEndDate.setHours(timeTo[0]);
     jobEndDate.setMinutes(timeTo[1]);
     const jobEndTime = (jobEndDate.getTime() - jobStartDate.getTime()) / 1000;
@@ -134,7 +134,7 @@ export class JobUtilervice {
 
   // Add days into given date
   addDaysInDate(dateObject: any, days: number) {
-    var futureDate = new Date(dateObject[0], dateObject[1], dateObject[2]);
+    var futureDate = new Date(dateObject[0], dateObject[1] - 1, dateObject[2]);
     futureDate.setDate(futureDate.getDate() + days);
     return futureDate.getDate();
   }

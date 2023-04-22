@@ -20,6 +20,7 @@ import { LocationService } from '../core/services/location.service';
 import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 import { Address } from '../core/modal/address.modal';
+import { AppUpdateService } from '../core/services/app-update.service';
 declare var google;
 
 @Injectable({
@@ -75,11 +76,22 @@ export class OnboardingService {
   disabled = true;
 
   activeTab: string = '';
-  addressObj: Address = new Address(40.730610, -73.935242);
+  addressObj: Address = {
+    address: null,
+    city: null,
+    country: null,
+    latitude: null,
+    longitude: null,
+    placeId: null,
+    region: null,
+    zip: null,
+    distance: null
+  };
   autocomplete: any = {
     query: ''
   };
   profileData: any = null;
+  locationCheck: boolean = false;
 
   constructor(
     public commonProvider: CommonProvider,
@@ -92,6 +104,7 @@ export class OnboardingService {
     public locationService: LocationService,
     public modalCtrl: ModalController,
     public storage: Storage,
+    public appUpdateService: AppUpdateService
   ) {
     this.setInitialValues();
     this.checkRedirection();
@@ -99,6 +112,7 @@ export class OnboardingService {
     this.locationService.getLocationCordinates().subscribe(async (res) => {
       if (res) {
         await this.getAddress(res?.coords?.latitude, res?.coords?.longitude);
+        return;
       }
     })
   }
@@ -106,6 +120,7 @@ export class OnboardingService {
   // Get city, country, zip from latitude, longitude
   async getAddress(latitude, longitude) {
     const loginUserInfo = await this.storage.get('loginUserInfo');
+    this.addressObj = new Address();
     this.addressObj.latitude = latitude;
     this.addressObj.longitude = longitude;
     const geoCoder = new google.maps.Geocoder();
@@ -135,22 +150,49 @@ export class OnboardingService {
       } else {
         this.toastService.showMessage('Google maps location failed due to: ' + status, 2000);
       }
-      if (JSON.parse(loginUserInfo)) {
-        this.updateProfile()
+      if (this.locationCheck) {
+        await this.savePersonalInfoAfterLocationFetch();
+        await this.locationService.clearWatch();
+        this.locationCheck = false;
+        return;
       } else {
-        const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
-        if (loginUserMobileNo) {
-          this.getPersonalInfo()
-        }
+        // const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
+        // if (loginUserMobileNo) {
+        //   await this.getPersonalInfo();
+        //   await this.locationService.clearWatch();
+        //   this.locationCheck = false;
+        //   return;
+        // }
       }
     });
+  }
+
+  // Save login user personal Information after location fetch
+  async savePersonalInfoAfterLocationFetch() {
+    const loginUserInfo = await this.storage.get('loginUserInfo');
+    this.loadingService.show();
+
+    if (!JSON.parse(loginUserInfo) && this.locationCheck) {
+      await this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referralCode)).then(async (res: any) => {
+        this.loadingService.dismiss();
+        await this.getPersonalInfo();
+        await this.updateProfile();
+        return;
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
+        console.log(err);
+      })
+    } else {
+      await this.updateProfile();
+      return;
+    }
   }
 
   // Update login user personal Information
   async updateProfile() {
     const loginUserInfo = await this.storage.get('loginUserInfo');
+    this.loadingService.show();
     if (!JSON.parse(loginUserInfo)?.address) {
-      this.loadingService.show();
       let obj = {
         dob: moment(new Date(JSON.parse(loginUserInfo)?.dob)).format("YYYY-MM-DD"),
         email: JSON.parse(loginUserInfo)?.email,
@@ -161,15 +203,15 @@ export class OnboardingService {
       }
       await this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + JSON.parse(loginUserInfo)?.id, obj).then(async (res: any) => {
         this.loadingService.dismiss();
-        if (res) {
-          this.toastService.showMessage('Login user location updated successfully');
-          this.modalCtrl.dismiss();
-          await this.getProfileData();
-        }
+        this.toastService.showMessage("Personal information saved successfully");
+        this.router.navigateByUrl('onboarding/onboarding-profile-picture');
+        await this.getProfileData();
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
         console.log(err);
       })
+    } else {
+      this.loadingService.dismiss();
     }
   }
 
@@ -292,22 +334,19 @@ export class OnboardingService {
     }
   }
 
-  // Save login user personal Information
+  // Get login user location before save personal info
   async savePersonalInfo() {
-    await this.loadingService.show();
-    await this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referralCode)).then(async (res: any) => {
-      await this.loadingService.dismiss();
+    this.locationCheck = true;
+    if (!this.locationService.locationPermissionGranted) {
+      await this.locationService.requestLocationPermission(true);
+    } else {
       if (this.locationService.locationCordinates) {
         await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
+      } else {
+        await this.locationService.getCurrentLocationPosition();
+        await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
       }
-      this.router.navigateByUrl('onboarding/onboarding-profile-picture');
-      if (res) {
-        this.toastService.showMessage("Personal information saved successfully");
-      }
-    }).catch((err: HttpErrorResponse) => {
-      this.loadingService.dismiss();
-      console.log(err);
-    })
+    }
   }
 
   // Update login user personal Information
@@ -741,7 +780,7 @@ export class OnboardingService {
       if (loginUserMobileNo && !TokenKey) {
         this.router.navigateByUrl('onboarding/onboarding-otp');
       } else {
-        this.router.navigateByUrl('onboarding/onboarding-phone-number');
+        this.router.navigateByUrl('launch-screen');
       }
     }
   }
@@ -774,8 +813,10 @@ export class OnboardingService {
           if (this.jobPreferences?.jobTypePreferences.length == 0 && !onboringFlowVisited) {
             this.router.navigateByUrl('onboarding/onboarding-job-type');
           } else {
-            this.onbordingFlowVisited();
-            this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+            // this.onbordingFlowVisited();
+            if (!this.router.url.includes('tabs') && !this.appUpdateService.forDeepLink) {
+              this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+            }
           }
         }
       }
@@ -787,7 +828,7 @@ export class OnboardingService {
       if (res == null) {
         this.router.navigateByUrl('onboarding/onboarding-personal-info');
       } else {
-        if (!this.router.url.includes('tabs')) {
+        if (!this.router.url.includes('tabs') && !this.appUpdateService.forDeepLink) {
           this.onbordingFlowVisited();
           this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
         }
@@ -797,7 +838,6 @@ export class OnboardingService {
 
   async onbordingFlowVisited() {
     await this.storage.set('onboringFlowVisited', true);
-    console.log(await this.storage.get('onboringFlowVisited'))
   }
 
   // Reset Onboarding all values
@@ -832,5 +872,6 @@ export class OnboardingService {
     this.jobCategories = [];
     this.jobPreferences = null;
     this.disabled = true;
+    this.appUpdateService.forDeepLink = false;
   }
 }

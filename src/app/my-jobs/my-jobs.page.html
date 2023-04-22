@@ -48,74 +48,78 @@
   </ion-refresher>
 
   <div class="c-container-wrap" [ngClass]="{'backgroud-color': myJobsService.myJobsList?.length != 0, 
-    'h-550' : myJobsService.myJobsList?.length != 0 && myJobsService.myJobsList?.length < 2}">
+    'h-550' : myJobsService.myJobsList?.length != 0 }">
     <div class="data-not-found-wrap pt-20 pb-20"
       *ngIf="myJobsService.myJobsList.length == 0 && !myJobsService.errorInApiCall">
-      <div class="pb-0">
-        <ion-row>
-          <ion-col size="12">
-            <img src="../../assets/imgs/no-my-jobs.svg">
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="12" class="p-0">
-            <div class="secondary fw-600 sub-heading-xl">No jobs yet</div>
-          </ion-col>
-        </ion-row>
+      <div class="center-card-wrap">
+        <div class="pb-0">
+          <ion-row>
+            <ion-col size="12">
+              <img src="../../assets/imgs/no-my-jobs.svg">
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" class="p-0">
+              <div class="secondary fw-600 sub-heading-xl">No jobs yet</div>
+            </ion-col>
+          </ion-row>
+        </div>
+        <div class="mt-12">
+          <ion-row>
+            <ion-col size="12" class="p-0">
+              <div class="fw-400 sub-heading-sm ternary">Your upcoming, past or bookmarked jobs will appear here as soon
+                as they are available. </div>
+            </ion-col>
+          </ion-row>
+        </div>
+        <div class="mt-12">
+          <ion-row>
+            <ion-col size="12" class="p-0">
+              <!-- (btnClick)="findJobs()" -->
+              <custom-button [title]="'Find jobs'" [button]="'primary'" [disabled]="myJobsService.noDataFound"
+                appDebounceClick (debounceClick)="findJobs()" [debounceTimeConst]="300">
+              </custom-button>
+            </ion-col>
+          </ion-row>
+        </div>
       </div>
-      <div class="mt-12">
-        <ion-row>
-          <ion-col size="12" class="p-0">
-            <div class="fw-400 sub-heading-sm ternary">Your upcoming, past or bookmarked jobs will appear here as soon
-              as they are available. </div>
-          </ion-col>
-        </ion-row>
-      </div>
-      <div class="mt-12">
-        <ion-row>
-          <ion-col size="12" class="p-0">
-            <!-- (btnClick)="findJobs()" -->
-            <custom-button [title]="'Find jobs'" [button]="'primary'" [disabled]="myJobsService.noDataFound"
-              appDebounceClick (debounceClick)="findJobs()" [debounceTimeConst]="300">
-            </custom-button>
-          </ion-col>
-        </ion-row>
-      </div>
-
     </div>
 
     <div class="data-not-found-wrap pt-20 pb-20" *ngIf="myJobsService.errorInApiCall">
-      <div class="pb-0">
-        <ion-row>
-          <ion-col size="12">
-            <img src="../../assets/imgs/something-went-wrong.svg">
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="12" class="p-0">
-            <div class="secondary fw-600 sub-heading-xl">Something went wrong</div>
-          </ion-col>
-        </ion-row>
-      </div>
-      <div class="mt-12">
-        <ion-row>
-          <ion-col size="12" class="p-0">
-            <div class="fw-400 sub-heading-sm ternary">Sorry, we couldn’t load the jobs due to an internal error. Please
-              try again.</div>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="12" class="p-0">
-            <!-- (click)="myJobsService.getMyJobs()" -->
-            <div class="d-flex justify-content-center c-pointer" appDebounceClick
-              (debounceClick)="myJobsService.getMyJobs()" [debounceTimeConst]="300">
-              <div class="ion-align-self-center mt-4">
-                <img class="img-wrapper" src="../../assets/imgs/Iconsax/Svg/All/outline/rotate-right.svg">
+      <div class="center-card-wrap">
+        <div class="pb-0">
+          <ion-row>
+            <ion-col size="12">
+              <img src="../../assets/imgs/something-went-wrong.svg">
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" class="p-0">
+              <div class="secondary fw-600 sub-heading-xl">Something went wrong</div>
+            </ion-col>
+          </ion-row>
+        </div>
+        <div class="mt-12">
+          <ion-row>
+            <ion-col size="12" class="p-0">
+              <div class="fw-400 sub-heading-sm ternary">Sorry, we couldn’t load the jobs due to an internal error.
+                Please
+                try again.</div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" class="p-0">
+              <!-- (click)="myJobsService.getMyJobs()" -->
+              <div class="d-flex justify-content-center c-pointer" appDebounceClick
+                (debounceClick)="myJobsService.getMyJobs()" [debounceTimeConst]="300">
+                <div class="ion-align-self-center mt-4">
+                  <img class="img-wrapper" src="../../assets/imgs/Iconsax/Svg/All/outline/rotate-right.svg">
+                </div>
+                <div class="ion-align-self-center fw-500 sub-heading-md primary ml-10">Try again</div>
               </div>
-              <div class="ion-align-self-center fw-500 sub-heading-md primary ml-10">Try again</div>
-            </div>
-          </ion-col>
-        </ion-row>
+            </ion-col>
+          </ion-row>
+        </div>
       </div>
     </div>
 
@@ -193,7 +197,7 @@
               <!-- <ion-col size="8.5"> -->
               <ion-col size="12" class="p-0">
                 <div class="d-flex">
-                  <div class="pr-8">
+                  <div class="pr-8 d-grid">
                     <img src="../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg">
                   </div>
                   <!-- <div class="ternary sub-heading-xs fw-400 ion-align-self-center">

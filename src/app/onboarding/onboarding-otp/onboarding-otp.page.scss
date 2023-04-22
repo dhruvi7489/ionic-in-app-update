@@ -6,6 +6,19 @@
     .pl-10-78 {
         padding-left: 10.78px;
     }
+
+    .c-container-body {
+        @media screen and (max-width: 767px) {
+            ::ng-deep .otp-input {
+                font-size: 18px !important;
+            }
+
+            ::ng-deep .ng-otp-input-wrapper .otp-input {
+                width: 45px !important;
+                height: 50px !important;
+            }
+        }
+    }
 }
 
 .footer {

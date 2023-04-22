@@ -55,10 +55,8 @@ export class IntroductionVideoAddEditPage implements OnInit {
   }
 
   async changeFile(event) {
-    console.log(event, event.event.target)
     this.video = event.ngModelData
     this.videoBase64 = event.ngModelData
-    console.log(this.videoBase64)
   }
 
   // Senitize Url
@@ -71,7 +69,6 @@ export class IntroductionVideoAddEditPage implements OnInit {
   }
 
   fileChangeEvent(event) {
-    console.log(event, event.srcElement.files)
     var reader = new FileReader();
     reader.readAsDataURL(event.target.files[0]);
     reader.onload = (_event) => {
@@ -105,7 +102,6 @@ export class IntroductionVideoAddEditPage implements OnInit {
       state: 'active',
     }
     this.mediaRecorder = new MediaRecorder(stream, options)
-    console.log(this.mediaRecorder)
     let chunks = [];
 
     this.mediaRecorder.ondataavailable = (event) => {

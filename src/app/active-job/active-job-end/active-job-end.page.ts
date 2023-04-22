@@ -29,6 +29,6 @@ export class ActiveJobEndPage implements OnInit {
   }
 
   async uploadMoreWorkPictures() {
-    this.activeJobService.uploadProfilePicture("MIDDLE");
+    await this.activeJobService.uploadProfilePicture("MIDDLE");
   }
 }

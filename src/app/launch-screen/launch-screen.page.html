@@ -1,0 +1,39 @@
+<ion-header class="container">
+  <ion-toolbar>
+    <div class="d-flex justify-content-space-between">
+      <div class="pl-16 pr-16 pt-12 d-flex">
+        <div>
+          <img src="../../assets/imgs/logo.svg">
+        </div>
+        <div class="ion-align-self-center">
+          <div class="header-title d-flex ml-10">
+            <div class="main-body-heading-sm fw-500 secondary">hour</div>
+            <div class="main-body-heading-sm fw-400 secondary">4u</div>
+          </div>
+        </div>
+      </div>
+      <div class="ion-align-self-center">
+        <div class="sub-heading-md fw-400 secondary mr-16" appDebounceClick (debounceClick)="skip()"
+          [debounceTimeConst]="300">skip</div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-slides pager (ionSlideDidChange)="getSlideIndex()">
+    <ion-slide *ngFor="let slide of slidesArray">
+      <div>
+        <img [src]="slide.image">
+        <div class="secondary fw-600 sub-heading-xl mt-24">{{slide?.headerText}}</div>
+        <div class="fw-400 sub-heading-sm ternary mt-12">{{slide?.subText}}</div>
+      </div>
+    </ion-slide>
+  </ion-slides>
+</ion-content>
+
+<ion-footer>
+  <custom-button [title]="btnTitle" appDebounceClick (debounceClick)="skip()" [debounceTimeConst]="300"
+    [disabled]="currentIndex != 2" [button]="'primary'">
+  </custom-button>
+</ion-footer>

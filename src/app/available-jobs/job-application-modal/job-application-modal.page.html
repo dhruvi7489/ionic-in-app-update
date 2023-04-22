@@ -37,7 +37,7 @@
             </ion-col>
           </ion-row>
 
-          <ion-row *ngIf="navParams.get('success')">
+          <ion-row *ngIf="navParams.get('success')" class="p-0 m-0">
             <ion-col size="12" class="custom-button-secondary">
               <!-- (click)="closeBtnClick()" -->
               <ion-button class="w-100" appDebounceClick (debounceClick)="closeBtnClick()"

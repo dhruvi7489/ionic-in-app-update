@@ -29,16 +29,16 @@ export class ActiveJobMarkAttendancePage implements OnInit {
     }
   }
 
-  checkIn() {
-    this.activeJobService.markAttendance();
+  async checkIn() {
+    await this.activeJobService.markAttendance();
   }
 
-  uploadWorkPicture() {
-    this.activeJobService.pickImage(CameraSource.Camera, "MIDDLE");
+  async uploadWorkPicture() {
+    await this.activeJobService.pickImage(CameraSource.Camera, "MIDDLE");
   }
 
-  uploadMoreWorkPictures() {
-    this.activeJobService.uploadProfilePicture("MIDDLE");
+  async uploadMoreWorkPictures() {
+    await this.activeJobService.uploadProfilePicture("MIDDLE");
   }
 
   downloadApp() {

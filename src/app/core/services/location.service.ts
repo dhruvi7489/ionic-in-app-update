@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Geolocation } from '@capacitor/geolocation';
 import { Subject } from 'rxjs';
@@ -14,14 +14,16 @@ export class LocationService {
     currentLocationFetch: boolean = false;
     locationCordinates: any = null;
     public cordinates = new Subject<any>();
+    watchId: any = null;
+    watchCoordinate: any;
 
     constructor(
         public router: Router,
         public location: Location,
-        public toastService: ToastService
+        public toastService: ToastService,
+        private zone: NgZone
     ) {
         Geolocation.checkPermissions().then(async (res) => {
-            console.log("check persmision---", res)
             if (res.location === 'denied') {
                 this.locationPermissionGranted = false;
                 await this.requestLocationPermission();
@@ -37,7 +39,6 @@ export class LocationService {
 
     async requestLocationPermission(showErrorMsg = true) {
         Geolocation.requestPermissions().then(async (res) => {
-            console.log("request permission----", res)
             if
                 (res.location === 'granted') {
                 this.locationPermissionGranted = true;
@@ -59,7 +60,7 @@ export class LocationService {
         this.locationCordinates = null;
         Geolocation.getCurrentPosition().then((res: any) => {
             this.locationCordinates = res;
-            console.log("locationCordinates----", this.locationCordinates)
+            this.watchPosition();
             this.setLocationCordinates(res);
         }).catch((err: HttpErrorResponse) => {
             this.setLocationCordinates(null);
@@ -75,5 +76,28 @@ export class LocationService {
 
     getLocationCordinates(): Subject<any> {
         return this.cordinates;
+    }
+
+    watchPosition() {
+        try {
+            this.watchId = Geolocation.watchPosition({}, (position, err) => {
+                if (position) {
+                    this.zone.run(() => {
+                        this.watchCoordinate = {
+                            latitude: position?.coords?.latitude,
+                            longitude: position?.coords?.longitude,
+                        };
+                    });
+                }
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    clearWatch() {
+        if (this.watchId != null) {
+            Geolocation.clearWatch({ id: this.watchId });
+        }
     }
 }

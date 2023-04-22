@@ -11,10 +11,11 @@
     </div>
     <custom-input [inputType]="'textarea'" [placeholder]="'Description'"
       [ngModelData]="profileService.experienceDescription" [id]="'experienceDescription'" [rows]="'5'"
-      (keyUp)="addExperienceDescription($event)" [maxlength]="profileService.maxlengthExperienceDescription">
+      (keyUp)="addExperienceDescription($event)">
+      <!-- [maxlength]="profileService.maxlengthExperienceDescription" -->
     </custom-input>
-    <div class="sub-heading-sm ternary fw-400 mt-8">
-      {{profileService.leftCharactersExperienceDescription}} characters left</div>
+    <!-- <div class="sub-heading-sm ternary fw-400 mt-8">
+      {{profileService.leftCharactersExperienceDescription}} characters left</div> -->
 
     <div class="c-input-label secondary mt-16 mb-8">
       <ion-label class="sub-heading-sm bold-graphik-font secondary fw-500">{{profileService.editWorkExperienceFlag ?

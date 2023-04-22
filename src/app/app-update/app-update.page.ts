@@ -15,7 +15,7 @@ export class AppUpdatePage implements OnInit {
   ngOnInit() {
   }
 
-  updateApp() {
-    this.appUpdateService.updateApp();
+  async updateApp() {
+    await this.appUpdateService.updateApp();
   }
 }

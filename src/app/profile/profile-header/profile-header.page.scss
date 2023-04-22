@@ -57,8 +57,10 @@
                 background: #E9E9FE;
                 border: 2px solid #FFFFFF;
                 border-radius: 48px;
-                left: 200px;
-                top: 150px;
+                // left: 200px;
+                // top: 150px;
+                left: 56%;
+                top: 81%;
 
                 .man-pin {
                     width: 16px;
@@ -66,6 +68,14 @@
                     vertical-align: bottom;
                 }
             }
+
+            @media screen and (min-width: 769px) {
+                .profile-img-inner-wrap {
+                    left: 52%;
+                    top: 81%;
+                }
+            }
+
         }
     }
 }

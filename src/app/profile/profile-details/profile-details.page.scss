@@ -94,3 +94,21 @@
         }
     }
 }
+
+.header-content-wrap {
+    .show {
+        overflow: visible !important;
+        height: auto !important;
+    }
+
+    .h-auto {
+        height: auto !important;
+        overflow: hidden !important;
+        -webkit-line-clamp: 3;
+    }
+
+    .work-exp {
+        height: 75px;
+        overflow: hidden;
+    }
+}

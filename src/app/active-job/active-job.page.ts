@@ -20,7 +20,7 @@ export class ActiveJobPage implements OnInit {
   ngOnInit() {
   }
 
-  ionViewWillEnter() {
-    this.activeJobService.GetActiveJob();
+  async ionViewWillEnter() {
+    await this.activeJobService.GetActiveJob();
   }
 }

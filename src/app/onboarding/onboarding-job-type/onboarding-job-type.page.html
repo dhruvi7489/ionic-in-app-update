@@ -53,11 +53,10 @@
       </ion-label>
     </div>
     <custom-input [inputType]="'textarea'" [placeholder]="'Description'" [ngModelData]="onboardingService.description"
-      [id]="'description'" [rows]="'5'" (keyUp)="addDescription($event)"
-      [maxlength]="onboardingService.maxlengthDescription">
+      [id]="'description'" [rows]="'5'" (keyUp)="addDescription($event)">
     </custom-input>
-    <div class="sub-heading-sm ternary fw-400 mt-8">
-      {{onboardingService.leftCharacters}} characters left</div>
+    <!-- <div class="sub-heading-sm ternary fw-400 mt-8">
+      {{onboardingService.leftCharacters}} characters left</div> -->
 
     <div class="c-input-label secondary mt-16 mb-8">
       <ion-label class="sub-heading-sm bold-graphik-font secondary fw-500">Add link</ion-label>

@@ -212,19 +212,21 @@ export class AppComponent {
   }
 
   async updateToken(token) {
-    const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
-    if (loginUserMobileNo != null) {
-      let obj = {
-        deviceToken: token,
-        mobile: loginUserMobileNo
-      }
-      await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
-        console.log(res)
-        if (res) {
+    if (token) {
+      const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
+      if (loginUserMobileNo != null) {
+        let obj = {
+          deviceToken: token,
+          mobile: loginUserMobileNo
         }
-      }).catch(err => {
-        console.log(err);
-      })
+        await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
+          console.log(res)
+          if (res) {
+          }
+        }).catch(err => {
+          console.log(err);
+        })
+      }
     }
   }
 }

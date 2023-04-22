@@ -8,6 +8,7 @@ import { AppUpdate, AppUpdateAvailability } from '@capawesome/capacitor-app-upda
 })
 export class AppUpdateService {
     // updateUrl = 'https://uat.hour4u.com/appVersion/version.xml';
+    forDeepLink: boolean = false;
 
     constructor(
         public router: Router

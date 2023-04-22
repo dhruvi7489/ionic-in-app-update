@@ -64,6 +64,7 @@
           <ion-col size="12" class="p-0">
             <div class="fw-400 sub-heading-sm ternary">
               <ion-range [(ngModel)]="hourlyRate" (ionChange)="rateSliderChanged($event)"
+                (ngModelChange)="initialEstimatedIncome=null;"
                 [min]="availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate"
                 [max]="availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate" color="primary" [step]="1"
                 pin="true" class="range-pressed ion-text-center pt-0 pl-8 pr-8">

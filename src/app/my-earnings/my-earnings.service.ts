@@ -63,32 +63,34 @@ export class MyEarningsService {
   }
 
   // Get All Payment Records
-  async getAllPaymentRecords() {
-    const loginUserId = await this.storage.get('loginUserId');
-    // this.loadingService.show();
-    return await this.commonProvider.GetMethod(Apiurl.GetAllPaymentsRecords + '?' + 'jobSeekerId=' + loginUserId, null).then(async (res: any) => {
-      // this.loadingService.dismiss();
-      if (res) {
-        this.earningRecords = res.content;
-      }
-    }).catch((err: HttpErrorResponse) => {
-      this.loadingService.dismiss();
-      console.log(err);
-    })
-  }
+  // async getAllPaymentRecords() {
+  //   console.log("calll 2")
+  //   const loginUserId = await this.storage.get('loginUserId');
+  //   // await this.loadingService.show();
+  //   return await this.commonProvider.GetMethod(Apiurl.GetAllPaymentsRecords + '?' + 'jobSeekerId=' + loginUserId, null).then(async (res: any) => {
+  //     await this.loadingService.dismiss();
+  //     console.log("1")
+  //     if (res) {
+  //       this.earningRecords = res.content;
+  //     }
+  //   }).catch((err: HttpErrorResponse) => {
+  //     this.loadingService.dismiss();
+  //     console.log(err);
+  //   })
+  // }
 
   // Get All Payment Records
   async getPaymentRecords() {
     const loginUserId = await this.storage.get('loginUserId');
-    // this.loadingService.show();
+    this.loadingService.show();
     let param = '?page=' + this.page + '&size=' + this.pageSize + '&sort=createdOn,desc' + '&' + 'jobSeekerId=' + loginUserId
       + '&status=' + this.selectedTab;
     return await this.commonProvider.GetMethod(Apiurl.Payment + param, null).then(async (res: any) => {
-      // this.loadingService.dismiss();
+      this.loadingService.dismiss();
       if (res) {
         this.loadedMyEarningsRecords = res?.numberOfElements;
         this.totalEarningRecords = res?.totalElements;
-        res.content?.forEach(element => {
+        res?.content?.forEach(element => {
           this.earningRecords.push(element);
         });
       }
@@ -147,9 +149,9 @@ export class MyEarningsService {
       await this.commonProvider.PutMethod(Apiurl.UpdateAccountDetails + this.accountId, obj).then(async (res: any) => {
         this.loadingService.dismiss();
         if (res) {
-          this.getAccountDetails();
+          await this.getAccountDetails();
           // this.modalCtrl.dismiss();
-          this.withdrawAmountPage();
+          await this.withdrawAmountPage();
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
@@ -166,9 +168,9 @@ export class MyEarningsService {
       await this.commonProvider.PostMethod(Apiurl.SaveAccountDetails, obj).then(async (res: any) => {
         this.loadingService.dismiss();
         if (res) {
-          this.getAccountDetails();
+          await this.getAccountDetails();
           // this.modalCtrl.dismiss();
-          this.withdrawAmountPage();
+          await this.withdrawAmountPage();
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
@@ -203,26 +205,27 @@ export class MyEarningsService {
   }
 
   // Fetch user wallet Transection details
-  async fetchUserPayouts() {
+  async fetchUserPayouts(isFortTotalWithdrawnAmount?: boolean) {
     const loginUserId = await this.storage.get('loginUserId');
     this.loadingService.show();
     let param = loginUserId + '?pageNumber=' + this.page + '&pageSize=' + this.pageSize + '&sortBy=updatedAt';
     // + '&asc=' + true;
     this.commonProvider.GetMethod(Apiurl.GetPayoutHistory + param, null).then((res: any) => {
       this.loadingService.dismiss();
-      res?.result.forEach(element => {
-        element.bankDetails = JSON.parse(JSON.parse(element?.payoutMeta)?.bankAccountDetails);
-      });
-      this.loadedMyEarningsRecords = this.pageSize;
-      this.totalEarningRecords = res?.totalRecords;
+      if (isFortTotalWithdrawnAmount) {
+        res?.result?.forEach(element => {
+          element.bankDetails = JSON.parse(JSON.parse(element?.payoutMeta)?.bankAccountDetails);
+        });
+        this.loadedMyEarningsRecords = this.pageSize;
+        this.totalEarningRecords = res?.totalRecords;
+        res.result?.forEach(element => {
+          this.earningRecords.push(element);
+        });
+      }
       this.totalWithdrwnAmount = res?.totalWithdrawnAmount;
-      res.result?.forEach(element => {
-        this.earningRecords.push(element);
-      });
-      console.log(this.earningRecords)
     }).catch((err: HttpErrorResponse) => {
+      console.log(err)
       this.loadingService.dismiss();
-      console.log(err);
     })
   }
 
@@ -239,11 +242,11 @@ export class MyEarningsService {
       this.loadingService.dismiss();
       this.modalCtrl.dismiss();
       this.wantAmountForWithdraw = null;
-      setTimeout(() => {
-        this.modalCtrl.dismiss();
+      setTimeout(async () => {
         this.selectedTab = 'Unapproved';
-        this.fetchUserWallet();
-        this.fetchUserPayouts();
+        this.modalCtrl.dismiss();
+        await this.fetchUserWallet();
+        await this.fetchUserPayouts(false);
       }, 500);
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();

@@ -18,6 +18,9 @@ import { Payment } from '../core/modal/payment.modal';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 import { JobUtilervice } from '../core/util/job-util.service';
+import { Address } from '../core/modal/address.modal';
+import { Capacitor } from '@capacitor/core';
+declare var google;
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +62,18 @@ export class ActiveJobService {
 
   dayChange: boolean = false;
   newDayDate: any[] = [];
+
+  addressObj: Address = {
+    address: null,
+    city: null,
+    country: null,
+    latitude: null,
+    longitude: null,
+    placeId: null,
+    region: null,
+    zip: null,
+    distance: null
+  };
 
   constructor(
     public commonProvider: CommonProvider,
@@ -284,7 +299,7 @@ export class ActiveJobService {
             if (this.activeJob.history.imageProofs && this.activeJob.history.imageProofs.length != 0) {
               for (let index = 0; index < this.activeJob.history.imageProofs.length; index++) {
                 let date = this.activeJob.history.imageProofs[index].dateTime
-                let newDate: Date = new Date(date[0], date[1], date[2]);
+                let newDate: Date = new Date(date[0], date[1] - 1, date[2]);
                 newDate.setHours(date[3])
                 newDate.setMinutes(date[4])
                 newDate.setSeconds(date[5])
@@ -362,7 +377,6 @@ export class ActiveJobService {
         })
       }
     }
-    // console.log("++++++++++++", this.activeJob.attendance)
     this.activeJob?.job?.dates?.forEach(dateObject => {
       let scheduledStartDate: DateTime = DateTime.local(dateObject.date[0], dateObject.date[1], dateObject.date[2], dateObject.timeFrom[0], dateObject.timeFrom[1]);
       let scheduledEndDate: DateTime = DateTime.local(dateObject.date[0], dateObject.date[1], dateObject.date[2], dateObject.timeTo[0], dateObject.timeTo[1]);
@@ -401,18 +415,15 @@ export class ActiveJobService {
         //     }
         //   }
         // }
-        // console.log("checkInDate----", checkInDate)
         if (checkInDate) {
           // Job end after 2 hours of check-in
           var twoHoursAfter: DateTime = checkInDate.plus({
             hours: 2
           });
           if (!this.endAfterTwoHours && checkInDate) {
-            console.log("+++++++++", checkInDate.toString(), twoHoursAfter.toString(), DateTime.local().toString())
             // if (twoHoursAfter.toString() < DateTime.local().toString()) {
             if (checkInDate.toString() <= twoHoursAfter.toString()) {
               if (twoHoursAfter.toString() < DateTime.local().toString()) {
-                console.log("calllll")
                 this.endAfterTwoHours = true;
                 this.checkRedirection();
               }
@@ -434,15 +445,30 @@ export class ActiveJobService {
     })
   }
 
+  // Get Current Location Coordinates
+  private setCurrentLocation() {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.addressObj.latitude = position.coords.latitude;
+        this.addressObj.longitude = position.coords.longitude;
+        this.getAddress(this.addressObj.latitude, this.addressObj.longitude);
+      });
+    }
+  }
+
   // Mark attendance(Check-in)
   async markAttendance() {
     await this.getEmployeeAttendance();
-    if (this.activeJob.attendance && this.activeJob.attendance.content?.length == 0) {
-      if (this.activeJob?.job.attendanceLogInSelfieRequired) {
-        this.pickImage(CameraSource.Camera, "START");
-      } else {
-        await this.saveMarkAttendance();
+    if (this.addressObj?.latitude && this.addressObj?.longitude) {
+      if (this.activeJob.attendance && this.activeJob.attendance.content?.length == 0) {
+        if (this.activeJob?.job.attendanceLogInSelfieRequired) {
+          this.pickImage(CameraSource.Camera, "START");
+        } else {
+          await this.saveMarkAttendanceWithLocationInfo();
+        }
       }
+    } else {
+      await this.saveMarkAttendance();
     }
   }
 
@@ -568,7 +594,7 @@ export class ActiveJobService {
     await this.commonProvider.PutMethod(Apiurl.SaveAttendanceImgProof, param).then(async (res) => {
       if (res) {
         if (enumType == 'START') {
-          await this.saveMarkAttendance();
+          await this.saveMarkAttendanceWithLocationInfo();
           await this.getActiveJobDetails();
         } else if (enumType = 'MIDDLE') {
           await this.getActiveJobDetails();
@@ -579,30 +605,95 @@ export class ActiveJobService {
     })
   }
 
-  // Final save mark attendance
-  async saveMarkAttendance() {
-    const loginUserId = await this.storage.get('loginUserId');
-    const loginUserInfo = await this.storage.get('loginUserInfo');
-    this.loadingService.show();
-    let param: AttendanceBody = {
-      employmentId: this.activeJob?.job?.employmentId,
-      jobSeekerId: loginUserId,
-      jobSeekerName: JSON.parse(loginUserInfo)?.name,
-      checkInTime: new Date()
-    }
-    await this.commonProvider.PostMethod(Apiurl.MarkAttendance, param).then(async (res: any) => {
-      this.loadingService.dismiss();
-      this.activeJob.attendance = res;
-      // if(res){
-      await this.getEmployeementHistory();
-      await this.getEmployeeAttendance();
-      // }
-    }).catch((err: HttpErrorResponse) => {
-      this.loadingService.dismiss();
-      console.log(err);
-    })
+  // Get city, country, zip from latitude, longitude
+  async getAddress(latitude, longitude) {
+    this.addressObj = new Address();
+    this.addressObj.latitude = latitude;
+    this.addressObj.longitude = longitude;
+    const geoCoder = new google.maps.Geocoder();
+    geoCoder.geocode({ location: { lat: latitude, lng: longitude } }, async (results, status) => {
+      if (status === 'OK') {
+        if (results[0]) {
+          this.addressObj.address = results[0].formatted_address;
+          this.addressObj.placeId = results[0].place_id;
+          for (let i = 0; i < results[0].address_components.length; i++) {
+            if (results[0].address_components[i].types[0] === 'locality') {
+              this.addressObj.city = results[0].address_components[i].long_name;
+            }
+            if (results[0].address_components[i].types[0] === 'administrative_area_level_1') {
+              this.addressObj.region = results[0].address_components[i].long_name;
+            }
+            if (results[0].address_components[i].types[0] === 'country') {
+              this.addressObj.country = results[0].address_components[i].long_name;
+            }
+            if (results[0].address_components[i].types[0] === 'postal_code') {
+              this.addressObj.zip = results[0].address_components[i].long_name;
+            }
+          }
+        } else {
+          this.toastService.showMessage('No results found', 2000);
+        }
+      } else {
+        this.toastService.showMessage('Google maps location failed due to: ' + status, 2000);
+      }
+      if (this.addressObj.latitude && this.addressObj.longitude) {
+        if (this.activeJob?.job.attendanceLogInSelfieRequired) {
+          this.pickImage(CameraSource.Camera, "START");
+        }
+        else {
+          this.saveMarkAttendanceWithLocationInfo();
+        }
+      }
+    });
   }
 
+
+  // Get user heck in location before mark attendance
+  async saveMarkAttendance() {
+    if (Capacitor.getPlatform() !== 'web') {
+      if (!this.locationService.locationPermissionGranted) {
+        await this.locationService.requestLocationPermission(true);
+      } else {
+        if (this.locationService.locationCordinates) {
+          await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
+        } else {
+          await this.locationService.getCurrentLocationPosition();
+          await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
+        }
+      }
+    } else {
+      await this.setCurrentLocation();
+    }
+  }
+
+  // Final save mark attendance with location address
+  async saveMarkAttendanceWithLocationInfo() {
+    const loginUserId = await this.storage.get('loginUserId');
+    const loginUserInfo = await this.storage.get('loginUserInfo');
+    await this.loadingService.show();
+    if (this.addressObj.latitude && this.addressObj.longitude) {
+      let param: AttendanceBody = {
+        employmentId: this.activeJob?.job?.employmentId,
+        jobSeekerId: loginUserId,
+        jobSeekerName: JSON.parse(loginUserInfo)?.name,
+        checkInTime: new Date(),
+        address: this.addressObj,
+      }
+      console.log("Mark attendance", param)
+      await this.commonProvider.PostMethod(Apiurl.MarkAttendance, param).then(async (res: any) => {
+        await this.loadingService.dismiss();
+        this.activeJob.attendance = res;
+        // if(res){
+        await this.getEmployeementHistory();
+        await this.getEmployeeAttendance();
+        await this.locationService.clearWatch();
+        // }
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
+        console.log(err);
+      })
+    }
+  }
   // async updateHistory() {
   //   const locationHistoryReq = {
   //     employmentId: this.activeJob?.job?.employmentId,
@@ -631,8 +722,6 @@ export class ActiveJobService {
       var currentTime = new Date();
       var currentOffset = currentTime.getTimezoneOffset();
       var ISTOffset = 330;   // IST offset UTC +5:30 
-      // console.log("calllllllll--", this.activeJob)
-      // console.log("att=========", att);
       let scheduledEndDate: DateTime = DateTime.local(this.activeJob?.activeDay?.date[0], this.activeJob?.activeDay?.date[1],
         this.activeJob?.activeDay?.date[2], this.activeJob?.activeDay?.timeTo[0], this.activeJob?.activeDay?.timeTo[1]);
       let scheduledStartDate: DateTime = DateTime.local(this.activeJob?.activeDay?.date[0], this.activeJob?.activeDay?.date[1],
@@ -644,16 +733,13 @@ export class ActiveJobService {
       // If end-time is less than the job end-time
       let checkOutTimeBasedOnCurrentTime = new Date(currentTime.getTime() + (ISTOffset + currentOffset) * 60000);
       let isDayChange = this.jobUtilService.shiftDayChange(this.activeJob?.activeDay.date, this.activeJob?.activeDay.timeFrom, this.activeJob?.activeDay.timeTo);
-      console.log("*************", checkOutTimeBasedOnTimeTo, checkOutTimeBasedOnCurrentTime, scheduledEndDate.toString())
       const hours = this.jobUtilService.hoursOfJob(this.activeJob?.activeDay.date, this.activeJob?.activeDay.timeFrom, this.activeJob?.activeDay.timeTo);
-      // console.log("isDayChange------", isDayChange, hours)
 
       if (!isDayChange) { // If day not change
         if (checkOutTimeBasedOnTimeTo > checkOutTimeBasedOnCurrentTime) { // If end-time is less than the job end-time
           att.checkOutTime = checkOutTimeBasedOnCurrentTime;
           if (this.activeJob.attendance.content[0].totalRecordedTime == null) {
             att.totalRecordedTime = this.getRecordedTime(DateTime.local());
-            console.log(att.totalRecordedTime, "________")
           }
           // return;
           await this.completeWork(att);
@@ -664,7 +750,6 @@ export class ActiveJobService {
             if (att.totalRecordedTime < 0) {
               att.totalRecordedTime = Number(att.totalRecordedTime) + 24
             }
-            console.log(att.totalRecordedTime, "+++++++++")
           }
           // return;
           await this.completeWork(att);
@@ -675,30 +760,24 @@ export class ActiveJobService {
         if (scheduledStartDate.toString() > scheduledEndDate.toString()) {
           dateEndObject[2] = this.jobUtilService.addDaysInDate(this.activeJob?.activeDay.date, 1)
         }
-        // console.log("=====", dateEndObject)
-        let jobEndDate = new Date(dateEndObject[0], dateEndObject[1], dateEndObject[2]);
+        let jobEndDate = new Date(dateEndObject[0], dateEndObject[1] - 1, dateEndObject[2]);
         jobEndDate.setHours(this.activeJob?.activeDay.timeTo[0]);
         jobEndDate.setMinutes(this.activeJob?.activeDay.timeTo[1]);
-        // console.log("@@@@@@@@@", jobEndDate)
 
         if (jobEndDate > checkOutTimeBasedOnCurrentTime) {
           att.checkOutTime = checkOutTimeBasedOnCurrentTime;
           if (this.activeJob.attendance.content[0].totalRecordedTime == null) {
-            console.log("calll 1")
             att.totalRecordedTime = this.getRecordedTime(DateTime.local());
-            console.log(att.totalRecordedTime, "#########")
           }
           // return;
           await this.completeWork(att);
         } else {
           att.checkOutTime = jobEndDate;
           if (this.activeJob.attendance.content[0].totalRecordedTime == null) {
-            console.log("calll 2", jobEndDate, scheduledEndDate)
             att.totalRecordedTime = this.getRecordedTime(scheduledEndDate);
             if (att.totalRecordedTime < 0) {
               att.totalRecordedTime = Number(att.totalRecordedTime) + 24
             }
-            console.log(att.totalRecordedTime, "@@@@@@@@@")
           }
           // return;
           await this.completeWork(att);
@@ -723,10 +802,7 @@ export class ActiveJobService {
       this.activeJob.attendance?.content[0]?.checkIn[3],
       this.activeJob.attendance?.content[0]?.checkIn[4]);
     attendanceDate.setLocale('in-IN');
-    console.log("callll")
-    console.log("jobEndTime", jobEndTime, attendanceDate)
     if (attendanceDate.diff(jobStartTime, 'minutes').minutes > 0) {
-      console.log(jobEndTime.diff(attendanceDate, 'day').day);
       return jobEndTime.diff(attendanceDate, 'hours').hours.toFixed(2);
     } else {
       return jobEndTime.diff(attendanceDate, 'hours').hours.toFixed(2);
@@ -789,7 +865,6 @@ export class ActiveJobService {
       "reasonForExpectedAmount": this.reasonForExpectedAmount,
       "feedback": this.jobRatingDescription
     }
-    console.log("param-------", param)
     await this.commonProvider.PostMethod(Apiurl.Payment, param).then(async (res: any) => {
       await this.loadingService.dismiss();
       if (res) {

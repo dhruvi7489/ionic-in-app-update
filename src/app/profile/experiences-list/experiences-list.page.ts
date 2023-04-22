@@ -10,6 +10,7 @@ import { ExperienceAddEditPage } from './experience-add-edit/experience-add-edit
   styleUrls: ['./experiences-list.page.scss'],
 })
 export class ExperiencesListPage implements OnInit {
+  show: boolean = false;
 
   constructor(
     public router: Router,

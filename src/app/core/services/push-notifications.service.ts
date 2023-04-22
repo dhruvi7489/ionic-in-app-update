@@ -29,7 +29,6 @@ export class PushNotificationService {
 
   async initPushNotification() {
     const isPushNotificationsAvailable = Capacitor.isPluginAvailable('PushNotifications');
-    console.log(isPushNotificationsAvailable)
     if (isPushNotificationsAvailable) {
       await PushNotifications.createChannel({
         id: "testchannel1",
@@ -84,7 +83,6 @@ export class PushNotificationService {
           // setTimeout(() => {
           //   alert("pushNotificationActionPerformed");
           // }, 3000);
-          console.log('Push action performed+++++++++++++-------- ', notification);
           // this.notification = notification?.notification;
           // this.performRedirectionOnNotification(notification);
         }

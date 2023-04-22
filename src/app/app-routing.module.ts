@@ -3,7 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: 'onboarding/onboarding-phone-number', pathMatch: 'full'
+    path: '', redirectTo: 'launch-screen', pathMatch: 'full'
   },
   {
     path: 'tabs',
@@ -14,13 +14,17 @@ const routes: Routes = [
     loadChildren: () => import('./otp/otp.module').then(m => m.OtpPageModule)
   },
   {
+    path: 'onboarding-header',
+    loadChildren: () => import('./onboarding/onboarding-header/onboarding-header.module').then(m => m.OnboardingHeaderPageModule)
+  },
+  {
     path: 'onboarding/onboarding-phone-number',
     loadChildren: () => import('./onboarding/onboarding-phone-number/onboarding-phone-number.module').then(m => m.OnboardingPhoneNumberPageModule)
   },
-  {
-    path: 'onboarding/onboarding-header',
-    loadChildren: () => import('./onboarding/onboarding-header/onboarding-header.module').then(m => m.OnboardingHeaderPageModule)
-  },
+  // {
+  //   path: 'onboarding/onboarding-header',
+  //   loadChildren: () => import('./onboarding/onboarding-header/onboarding-header.module').then(m => m.OnboardingHeaderPageModule)
+  // },
   {
     path: 'onboarding/onboarding-otp',
     loadChildren: () => import('./onboarding/onboarding-otp/onboarding-otp.module').then(m => m.OnboardingOtpPageModule)
@@ -116,6 +120,10 @@ const routes: Routes = [
   {
     path: 'app-update',
     loadChildren: () => import('./app-update/app-update.module').then(m => m.AppUpdatePageModule)
+  },
+  {
+    path: 'launch-screen',
+    loadChildren: () => import('./launch-screen/launch-screen.module').then(m => m.LaunchScreenPageModule)
   },
   {
     path: '**',

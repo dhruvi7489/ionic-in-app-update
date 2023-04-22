@@ -111,8 +111,6 @@ export class SetHourlyRatesService {
     return obj;
   }
 
-
-
   // Set Hourly Rates
   setHourlyRates() {
     // update hourly rates
@@ -140,16 +138,15 @@ export class SetHourlyRatesService {
       ).then(async (res: any) => {
         await this.loadingService.dismiss();
         if (res) {
-          await this.getJobPreferences();
-          await this.profileService.getJobPreference();
           await this.modalCtrl.getTop().then(res => {
-            console.log("getTop", res)
             if (res) {
               this.modalCtrl.dismiss();
             } else {
               this.location.back();
             }
           })
+          await this.getJobPreferences();
+          await this.profileService.getJobPreference();
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
@@ -158,7 +155,6 @@ export class SetHourlyRatesService {
     } else {
       this.loadingService.dismiss();
       this.modalCtrl.getTop().then(res => {
-        console.log("getTop", res)
         if (res) {
           this.modalCtrl.dismiss();
         } else {
@@ -167,6 +163,4 @@ export class SetHourlyRatesService {
       })
     }
   }
-
-
 }

@@ -20,12 +20,12 @@ export class MyEarningsPage implements OnInit {
   ) {
   }
 
-  ionViewWillEnter() {
-    this.myEarningsService.getPaymentStatus();
-    this.myEarningsService.resetPayload();
-    this.myEarningsService.getPaymentRecords();
-    this.myEarningsService.fetchUserWallet();
-    this.myEarningsService.fetchUserPayouts();
+  async ionViewWillEnter() {
+    await this.myEarningsService.getPaymentStatus();
+    await this.myEarningsService.resetPayload();
+    await this.myEarningsService.getPaymentRecords();
+    await this.myEarningsService.fetchUserWallet();
+    await this.myEarningsService.fetchUserPayouts(false);
     // this.myEarningsService.getAllPaymentRecords();
   }
 
@@ -42,7 +42,6 @@ export class MyEarningsPage implements OnInit {
   }
 
   async handleTabChange(event) {
-    console.log(event.target.value)
     await document.getElementById(event.target.value).scrollIntoView({
       behavior: 'smooth',
       block: 'center',
@@ -50,7 +49,7 @@ export class MyEarningsPage implements OnInit {
     });
     this.myEarningsService.resetPayload();
     if (event.target.value == 'Paid') {
-      this.myEarningsService.fetchUserPayouts();
+      this.myEarningsService.fetchUserPayouts(true);
     } else {
       await this.myEarningsService.getPaymentRecords();
     }
@@ -63,7 +62,7 @@ export class MyEarningsPage implements OnInit {
       if (this.myEarningsService.selectedTab != 'Paid') {
         await this.myEarningsService.getPaymentRecords();
       } else {
-        await this.myEarningsService.fetchUserPayouts();
+        await this.myEarningsService.fetchUserPayouts(true);
       }
       await setTimeout(() => {
         infiniteScroll.target.complete();

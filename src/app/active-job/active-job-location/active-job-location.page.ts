@@ -26,12 +26,12 @@ export class ActiveJobLocationPage implements OnInit {
   }
 
   //enable location
-  enableLocation() {
-    this.activeJobService.checkLocationEnable();
+  async enableLocation() {
+    await this.activeJobService.checkLocationEnable();
   }
 
-  navigateLocation() {
-    this.activeJobService.navigateToMap();
+  async navigateLocation() {
+    await this.activeJobService.navigateToMap();
   }
 
 }

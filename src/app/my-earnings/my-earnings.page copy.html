@@ -183,25 +183,28 @@
         <div class="ml-16 mr-16"
             *ngIf="!myEarningsService.earningStatus && myEarningsService.earningRecords?.length == 0">
             <div class="data-not-found-wrap">
-                <div class="pb-0">
-                    <ion-row>
-                        <ion-col size="12">
-                            <img src="../../assets/imgs/no-earnings.svg">
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col size="12" class="p-0">
-                            <div class="secondary fw-600 sub-heading-xl">No earnings available yet</div>
-                        </ion-col>
-                    </ion-row>
-                </div>
-                <div class="mt-12">
-                    <ion-row>
-                        <ion-col size="12" class="p-0">
-                            <div class="fw-400 sub-heading-sm ternary">As soon as job completed and approved,you will be
-                                able to see them here.</div>
-                        </ion-col>
-                    </ion-row>
+                <div class="center-card-wrap">
+                    <div class="pb-0">
+                        <ion-row>
+                            <ion-col size="12">
+                                <img src="../../assets/imgs/no-earnings.svg">
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col size="12" class="p-0">
+                                <div class="secondary fw-600 sub-heading-xl">No earnings available yet</div>
+                            </ion-col>
+                        </ion-row>
+                    </div>
+                    <div class="mt-12">
+                        <ion-row>
+                            <ion-col size="12" class="p-0">
+                                <div class="fw-400 sub-heading-sm ternary">As soon as job completed and approved,you
+                                    will be
+                                    able to see them here.</div>
+                            </ion-col>
+                        </ion-row>
+                    </div>
                 </div>
             </div>
         </div>

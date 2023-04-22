@@ -19,10 +19,10 @@ export class AvailableJobsListPage implements OnInit {
   ngOnInit() {
   }
 
-  ionViewWillEnter() {
+  async ionViewWillEnter() {
     this.availableJobsService.jobLists = [];
     this.availableJobsService.page = 0;
-    this.availableJobsService.getAllJobsList();
+    await this.availableJobsService.getAllJobsList();
   }
 
   async searchAvailableJobs(event) {
@@ -40,8 +40,8 @@ export class AvailableJobsListPage implements OnInit {
   }
 
   goToJobDetails(selectedJob) {
-    this.availableJobsService.selectedJobId = selectedJob.employmentId;
-    this.router.navigateByUrl("available-job-details/" + this.availableJobsService.selectedJobId)
+    this.availableJobsService.employmentId = selectedJob.employmentId;
+    this.router.navigateByUrl("available-job-details/" + this.availableJobsService.employmentId)
   }
 
   async doRefresh(event) {

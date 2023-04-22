@@ -20,6 +20,7 @@ export class SetHourlyRatePage implements OnInit {
   updatedRate: any = 0;
   estimatedIncome: any = 0;
   diableSubmitBtn: boolean = false;
+  initialEstimatedIncome: any = 0;
 
   constructor(
     public modalCtrl: ModalController,
@@ -74,6 +75,7 @@ export class SetHourlyRatePage implements OnInit {
         // if (prefType.status != "Pending") {
         this.diableSubmitBtn = false;
         this.estimatedIncome = 0;
+        this.initialEstimatedIncome = 0;
         this.hourlyRate = prefType.maxHourlyRate;
         if (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate <= prefType.maxHourlyRate) {
           this.updatedRate = 0;
@@ -82,6 +84,7 @@ export class SetHourlyRatePage implements OnInit {
           for (let date of this.availableJobsService.selectedJobDetails?.dates) {
             let hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
             this.estimatedIncome = this.estimatedIncome + Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.updatedRate * hours));
+            this.initialEstimatedIncome = this.initialEstimatedIncome + Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.updatedRate * hours));
           }
         }
         // } else {
@@ -119,12 +122,11 @@ export class SetHourlyRatePage implements OnInit {
       let hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
       this.estimatedIncome = this.estimatedIncome + (this.hourlyRate * hours) + this.availableJobsService.selectedJobDetails?.basePrice;
       this.estimatedIncome = Math.round(Math.abs(this.estimatedIncome));
-      console.log(this.availableJobsService.selectedJobDetails, this.availableJobsService.selectedJobDetails?.basePrice, this.hourlyRate, hours)
     }
     this.cdr.tick();
   }
 
   disable() {
-    return this.estimatedIncome <= 0;
+    return this.estimatedIncome <= 0 || this.estimatedIncome == this.initialEstimatedIncome || this.hourlyRate <= 0;
   }
 }

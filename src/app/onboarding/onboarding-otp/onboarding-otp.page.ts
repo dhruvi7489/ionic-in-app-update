@@ -20,7 +20,6 @@ export class OnboardingOtpPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.onboardingService.otp = null;
     this.onboardingService.otp_input_1 = null;
     this.onboardingService.otp_input_2 = null;
     this.onboardingService.otp_input_3 = null;
@@ -30,7 +29,6 @@ export class OnboardingOtpPage implements OnInit {
   }
 
   otpEnter(otp) {
-    console.log("++++++++++", otp)
     this.onboardingService.otp = otp;
     let otpArray = otp.split("");
     this.onboardingService.otp_input_1 = otpArray[0];

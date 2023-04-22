@@ -37,7 +37,7 @@ export class AvailableJobsHeaderPage implements OnInit {
     this.location.back();
   }
 
-  shareSelectedJobDetails() {
-    this.availableJobsService.shareSelectedJobDetails();
+  async shareSelectedJobDetails() {
+    await this.availableJobsService.shareSelectedJobDetails();
   }
 }

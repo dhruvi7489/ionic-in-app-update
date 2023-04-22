@@ -15,7 +15,7 @@ export class ProfilePage implements OnInit {
   ngOnInit() {
   }
 
-  ionViewWillEnter() {
-    this.profileService.getProfileData();
+  async ionViewWillEnter() {
+    await this.profileService.getProfileData();
   }
 }

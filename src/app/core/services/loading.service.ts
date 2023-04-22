@@ -17,6 +17,10 @@ export class LoadingService {
     }
 
     dismiss() {
-        this.loadingCtrl.dismiss();
+        if (this.loading) {
+            this.loadingCtrl.dismiss(this.loading);
+        } else {
+            this.loadingCtrl.dismiss();
+        }
     }
 }

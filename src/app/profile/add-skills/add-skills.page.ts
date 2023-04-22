@@ -34,9 +34,7 @@ export class AddSkillsPage implements OnInit {
   }
 
   async saveJobTypes() {
-    await this.loadingService.show();
     await this.onboardingService.saveJobTypes(true);
     await this.profileService.getJobPreference();
-    await this.loadingService.dismiss();
   }
 }

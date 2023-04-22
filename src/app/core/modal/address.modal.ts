@@ -7,10 +7,9 @@ export class Address {
     placeId: string;
     region: string;
     zip: string;
-
     distance: number;
 
-    constructor(latitude: any, longitude: any) {
+    constructor(latitude?: any, longitude?: any) {
         this.latitude = latitude;
         this.longitude = longitude;
     }

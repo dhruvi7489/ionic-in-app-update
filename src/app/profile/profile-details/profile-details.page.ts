@@ -16,6 +16,8 @@ import { PhotosVideosPage } from '../photos-videos/photos-videos.page';
 })
 export class ProfileDetailsPage implements OnInit {
   preferencesEditDisabled: boolean = false;
+  show: boolean = false;
+
   constructor(
     public router: Router,
     public profileService: ProfileService,

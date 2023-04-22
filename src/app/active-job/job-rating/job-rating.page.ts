@@ -20,8 +20,8 @@ export class JobRatingPage implements OnInit {
     this.activeJobService.leftCharactersForjobRatingDescription = this.activeJobService?.maxlengthjobRatingDescription - this.activeJobService?.jobRatingDescription?.length;
   }
 
-  submitFeedback() {
-    this.activeJobService.submitActiveJobRatingPayment();
+  async submitFeedback() {
+    await this.activeJobService.submitActiveJobRatingPayment();
   }
 
   removeRate() {

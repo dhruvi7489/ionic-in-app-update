@@ -1,7 +1,7 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { AlertController, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
+import { AlertController, IonRouterOutlet, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
 import { NetworkService } from './core/services/network.service';
 // import { PushNotificationService } from './core/services/push-notifications.service';
 import { CommonProvider } from './core/common';
@@ -18,6 +18,7 @@ import { LoadingService } from './core/services/loading.service';
 import { LocalNotifications } from '@capacitor/local-notifications';
 // import { Deeplinks } from '@awesome-cordova-plugins/deeplinks/ngx';
 import { AvailableJobDetailsPage } from './available-jobs/available-job-details/available-job-details.page';
+import { environment } from 'src/environments/environment';
 
 declare var UXCam: any;
 @Component({
@@ -48,6 +49,7 @@ export class AppComponent {
     public navCtrl: NavController,
     public loadingService: LoadingService,
     // private deeplinks: Deeplinks
+    @Optional() private routerOutlet?: IonRouterOutlet
   ) {
     this.initializeApp();
   }
@@ -58,24 +60,38 @@ export class AppComponent {
   async initializeApp() {
     // Deep linking
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
-      this.zone.run(() => {
-        const slug = event.url.split("uatapp.hour4u.com/#/").pop();
+      this.zone.run(async () => {
+        let slug = null;
+        if (environment.apiUrl == 'https://uatapi.hour4u.com/api/') { // UAT 
+          slug = event.url.split("uatapp.hour4u.com/#/").pop();
+        } else {
+          slug = event.url.split("app.hour4u.com/#/").pop();
+        }
+
         if (slug) {
+          // this.loadingService.show();
           setTimeout(async () => {
+            // this.loadingService.dismiss();
+            this.appUpdateService.forDeepLink = true;
             const loginUserId = await this.storage.get('loginUserId');
             if (loginUserId) {
-              this.router.navigateByUrl("available-job-details/" + event.url.split("uatapp.hour4u.com/#/available-job-details-global/").pop())
+              let url = null;
+              if (environment.apiUrl == 'https://uatapi.hour4u.com/api/') { // UAT 
+                url = event.url.split("uatapp.hour4u.com/#/").pop();
+              } else {
+                url = event.url.split("app.hour4u.com/#/").pop();
+              }
+              slug = slug.replace('available-job-details-global/', 'available-job-details/');
+              this.router.navigateByUrl(slug);
             } else {
               this.router.navigateByUrl(slug);
             }
-          }, 2300)
+          }, 2500)
         }
       });
     });
 
     this.platform.ready().then(async () => {
-      // this.setupDeepLinks();
-      console.log(Capacitor.getPlatform())
       if (Capacitor.getPlatform() !== 'web') {
         // Splash screen duration
         await SplashScreen.show({
@@ -114,43 +130,80 @@ export class AppComponent {
         // Network connection change
         this.networkService.initializeNetworkEvents();
 
+        this.platform.backButton.subscribeWithPriority(9999, () => {
+          document.addEventListener('backbutton', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+          }, false);
+        });
+
         // Device Back button logic
         App.addListener('backButton', ({ canGoBack }) => {
-          console.log("canGoBack-", canGoBack)
-          this.modalCtrl.getTop().then((res: any) => {
-            if (res) {
-              this.modalCtrl.dismiss();
-            } else {
-              if (this.router.url.includes('/tabs')) {
-                let alert = this.alertCtrl.create({
-                  header: 'Exit',
-                  message: 'Are you sure you want to exit app?',
-                  buttons: [
-                    {
-                      text: 'Cancel',
-                      role: 'cancel',
-                      handler: () => {
-                        console.log('Cancel clicked');
-                      }
-                    },
-                    {
-                      text: 'Exit App',
-                      handler: () => {
-                        App.exitApp();
-                      }
-                    }
-                  ]
-                });
-                alert.then(res => {
-                  res.present();
-                });
+          if (canGoBack) {
+            this.modalCtrl.getTop().then((res: any) => {
+              if (res) {
+                this.modalCtrl.dismiss();
               } else {
-                window.history.back();
+                if (this.router.url.includes('tabs/available-jobs') || this.router.url.includes('launch-screen') || this.router.url.includes('onboarding/onboarding-phone-number')) {
+                  let alert = this.alertCtrl.create({
+                    header: 'Exit',
+                    cssClass: 'exit-alert',
+                    id: 'exit-alert',
+                    message: 'Are you sure you want to exit app?',
+                    buttons: [
+                      {
+                        text: 'Cancel',
+                        role: 'cancel',
+                        cssClass: 'cancel-btn',
+                        handler: () => {
+                          console.log('Cancel clicked');
+                        }
+                      },
+                      {
+                        text: 'Exit App',
+                        cssClass: 'exit-btn',
+                        handler: () => {
+                          App.exitApp();
+                        }
+                      }
+                    ]
+                  });
+                  alert.then(res => {
+                    res.present();
+                  });
+                } else {
+                  window.history.back();
+                }
               }
-            }
-          }).catch((err: any) => {
-            console.log(err);
-          })
+            }).catch((err: any) => {
+              console.log(err);
+            })
+          } else {
+            let alert = this.alertCtrl.create({
+              header: 'Exit',
+              message: 'Are you sure you want to exit app?',
+              buttons: [
+                {
+                  text: 'Cancel',
+                  role: 'cancel',
+                  cssClass: 'cancel-btn',
+                  handler: () => {
+                    console.log('Cancel clicked');
+                  }
+                },
+                {
+                  text: 'Exit App',
+                  cssClass: 'exit-btn',
+                  handler: () => {
+                    App.exitApp();
+                  }
+                }
+              ]
+            });
+            alert.then(res => {
+              res.present();
+            });
+          }
         });
 
         // SMS send
@@ -159,7 +212,6 @@ export class AppComponent {
         //     string: "Hello World!"
         //   });
         // };
-        // console.log("calllllllllllllllllllllllll===============", Clipboard.read())
         // const checkClipboard = async () => {
         // const { type, value } = await Clipboard.read();
 
@@ -278,10 +330,10 @@ export class AppComponent {
   // Perform action on notification - When app running in BACKGROUND or KILL MODE
   async performRedirectionOnNotification(notification) {
     console.log("notification---------", notification)
-    setTimeout(() => {
+    setTimeout(async () => {
+      const loginUserId = await this.storage.get('loginUserId');
       this.loadingService.dismiss();
       if (notification && notification?.data) {
-        console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", notification?.data);
         if (notification?.data?.title == 'Profile Approved') {
           this.router.navigateByUrl('set-hourly-rates');
         }
@@ -292,7 +344,11 @@ export class AppComponent {
           this.router.navigateByUrl('tabs/active-job');
         }
         if (notification?.data?.title == 'We found you a new job') {
-          this.router.navigateByUrl("available-job-details/" + notification?.data?.jobId)
+          if (loginUserId) {
+            this.router.navigateByUrl("available-job-details/" + notification?.data?.employmentId);
+          } else {
+            this.router.navigateByUrl("available-job-details-global/" + notification?.data?.employmentId);
+          }
         }
       }
     }, 2300);
@@ -300,11 +356,11 @@ export class AppComponent {
 
   // Localnotification action performed - When app is OPEN
   async performRedirectionOnLocalNotification(notification) {
-    console.log("performRedirectionOnLocalNotification===========", notification)
-    setTimeout(() => {
+    console.log("local notification---------", notification)
+    setTimeout(async () => {
+      const loginUserId = await this.storage.get('loginUserId');
       this.loadingService.dismiss();
       if (notification && notification?.notification) {
-        console.log("22222222222222222222222222222", notification?.notification);
         if (notification?.notification?.title == 'Profile Approved') {
           this.router.navigateByUrl('set-hourly-rates');
         }
@@ -315,7 +371,11 @@ export class AppComponent {
           this.router.navigateByUrl('tabs/active-job');
         }
         if (notification?.notification?.title == 'We found you a new job') {
-          this.router.navigateByUrl("available-job-details/" + notification?.notification?.extra?.jobId)
+          if (loginUserId) {
+            this.router.navigateByUrl("available-job-details/" + notification?.notification?.extra?.employmentId);
+          } else {
+            this.router.navigateByUrl("available-job-details-global/" + notification?.notification?.extra?.employmentId);
+          }
         }
       }
     }, 1000);

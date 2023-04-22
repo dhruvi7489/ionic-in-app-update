@@ -401,7 +401,12 @@
         <div *ngFor="let experience of profileService.profileData?.workExperiences">
           <ion-row class="mt-20 mb-8" *ngIf="experience.summary">
             <ion-col class="p-0" size="12">
-              <div class="fw-500 secondary sub-heading-md">{{experience.summary}}</div>
+              <div class="fw-500 secondary sub-heading-md work-exp" [class.show]="show"
+                [ngClass]="{'h-auto' : experience?.summary?.length < 50}">{{experience.summary}}</div>
+              <div *ngIf="experience.summary?.length > 50"
+                class="fw-400 sub-heading-sm primary mt-2 text-decoration-underline" appDebounceClick
+                (debounceClick)="show = !show" [debounceTimeConst]="300">{{ show ? 'Read less': 'Read more' }}
+              </div>
             </ion-col>
           </ion-row>
           <ion-row class="mt-12 mb-12" *ngIf="experience.workLink?.length">

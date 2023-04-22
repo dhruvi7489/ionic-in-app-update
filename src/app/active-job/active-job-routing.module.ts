@@ -10,35 +10,35 @@ const routes: Routes = [
   },
   {
     path: 'active-job-header',
-    loadChildren: () => import('./active-job-header/active-job-header.module').then( m => m.ActiveJobHeaderPageModule)
+    loadChildren: () => import('./active-job-header/active-job-header.module').then(m => m.ActiveJobHeaderPageModule)
   },
   {
     path: 'active-job-flow-stepper',
-    loadChildren: () => import('./active-job-flow-stepper/active-job-flow-stepper.module').then( m => m.ActiveJobFlowStepperPageModule)
+    loadChildren: () => import('./active-job-flow-stepper/active-job-flow-stepper.module').then(m => m.ActiveJobFlowStepperPageModule)
   },
   {
     path: 'active-job-summary',
-    loadChildren: () => import('./active-job-summary/active-job-summary.module').then( m => m.ActiveJobSummaryPageModule)
+    loadChildren: () => import('./active-job-summary/active-job-summary.module').then(m => m.ActiveJobSummaryPageModule)
   },
   {
     path: 'no-active-job',
-    loadChildren: () => import('./no-active-job/no-active-job.module').then( m => m.NoActiveJobPageModule)
+    loadChildren: () => import('./no-active-job/no-active-job.module').then(m => m.NoActiveJobPageModule)
   },
   {
     path: 'active-job-location',
-    loadChildren: () => import('./active-job-location/active-job-location.module').then( m => m.ActiveJobLocationPageModule)
+    loadChildren: () => import('./active-job-location/active-job-location.module').then(m => m.ActiveJobLocationPageModule)
   },
   {
     path: 'active-job-common-header',
-    loadChildren: () => import('./active-job-common-header/active-job-common-header.module').then( m => m.ActiveJobCommonHeaderPageModule)
+    loadChildren: () => import('./active-job-common-header/active-job-common-header.module').then(m => m.ActiveJobCommonHeaderPageModule)
   },
   {
     path: 'active-job-mark-attendance',
-    loadChildren: () => import('./active-job-mark-attendance/active-job-mark-attendance.module').then( m => m.ActiveJobMarkAttendancePageModule)
+    loadChildren: () => import('./active-job-mark-attendance/active-job-mark-attendance.module').then(m => m.ActiveJobMarkAttendancePageModule)
   },
   {
     path: 'active-job-end',
-    loadChildren: () => import('./active-job-end/active-job-end.module').then( m => m.ActiveJobEndPageModule)
+    loadChildren: () => import('./active-job-end/active-job-end.module').then(m => m.ActiveJobEndPageModule)
   },
 ];
 
@@ -46,4 +46,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ActiveJobPageRoutingModule {}
+export class ActiveJobPageRoutingModule { }

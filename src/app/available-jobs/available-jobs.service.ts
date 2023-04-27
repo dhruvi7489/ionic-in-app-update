@@ -410,6 +410,7 @@ export class AvailableJobsService {
   removeBookMark() {
     if (this.jobApplicationId) {
       this.commonProvider.PutMethod(Apiurl.RemoveBookMark + this.jobApplicationId, null).then((res: any) => {
+        this.toastService.showMessage('You removed this job from saved!');
         this.getSelectedJobById();
       }).catch((err: HttpErrorResponse) => {
         console.log(err);

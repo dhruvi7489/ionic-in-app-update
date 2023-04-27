@@ -139,7 +139,8 @@
             </ion-col>
           </ion-row> -->
 
-          <div class="pb-16" *ngIf="availableJobsService.selectedJobDetails?.tasks?.length != 0">
+          <div class="pb-16"
+            *ngIf="availableJobsService.selectedJobDetails?.tasks?.length != 0 && availableJobsService.selectedJobDetails?.tasks[0] != ''">
             <ion-row>
               <ion-col class="p-0">
                 <ion-chip class="in-active-chip"
@@ -201,11 +202,11 @@
         <div class="bookmark-wrap">
           <!-- (click)="bookmarkJob()" -->
           <img *ngIf="availableJobsService.selectedJobDetails?.applicationStatus != 'APPLY_LATER'" appDebounceClick
-            (debounceClick)="bookmarkJob()" [debounceTimeConst]="300"
+            [disabled]="disableApplyJobBtn()" (debounceClick)="bookmarkJob()" [debounceTimeConst]="300"
             src="../../assets/imgs/Iconsax/Svg/All/outline/archive-bookmark.svg">
           <!-- (click)="removeBookmark()" -->
           <img *ngIf="availableJobsService.selectedJobDetails?.applicationStatus == 'APPLY_LATER'" appDebounceClick
-            (debounceClick)="removeBookmark()" [debounceTimeConst]="300"
+            [disabled]="disableApplyJobBtn()" (debounceClick)="removeBookmark()" [debounceTimeConst]="300"
             src="../../assets/imgs/Iconsax/Svg/All/outline/bookmark-filled.svg">
         </div>
       </ion-col>

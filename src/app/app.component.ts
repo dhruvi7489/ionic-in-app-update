@@ -345,9 +345,9 @@ export class AppComponent {
         }
         if (notification?.data?.title == 'We found you a new job') {
           if (loginUserId) {
-            this.router.navigateByUrl("available-job-details/" + notification?.data?.employmentId);
+            this.router.navigateByUrl("available-job-details/" + notification?.data?.jobId);
           } else {
-            this.router.navigateByUrl("available-job-details-global/" + notification?.data?.employmentId);
+            this.router.navigateByUrl("available-job-details-global/" + notification?.data?.jobId);
           }
         }
       }
@@ -372,9 +372,9 @@ export class AppComponent {
         }
         if (notification?.notification?.title == 'We found you a new job') {
           if (loginUserId) {
-            this.router.navigateByUrl("available-job-details/" + notification?.notification?.extra?.employmentId);
+            this.router.navigateByUrl("available-job-details/" + notification?.notification?.extra?.jobId);
           } else {
-            this.router.navigateByUrl("available-job-details-global/" + notification?.notification?.extra?.employmentId);
+            this.router.navigateByUrl("available-job-details-global/" + notification?.notification?.extra?.jobId);
           }
         }
       }

@@ -31,4 +31,9 @@ export class TabsPage {
   goToRoute(route) {
     this.router.navigateByUrl(route);
   }
+
+  tabsClick(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 }

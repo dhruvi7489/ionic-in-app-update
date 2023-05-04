@@ -19,17 +19,14 @@
                             <ion-row class="pt-8">
                                 <ion-col class="p-0">
                                     <div class="primary fw-600 main-body-heading-lg">
-                                        &#x20b9;{{myEarningsService.availableAmountForWithdraw?.toFixed(2)}}
+                                        &#x20b9;{{myEarningsService.availableAmountForWithdraw ?
+                                        myEarningsService.availableAmountForWithdraw?.toFixed(2) : 00}}
                                     </div>
                                 </ion-col>
                             </ion-row>
                         </ion-col>
                         <ion-col class="p-0 ion-align-self-center" size="4"
                             *ngIf="myEarningsService.availableAmountForWithdraw != 0">
-                            <!-- <custom-button [title]="'Withdraw'" [button]="'secondary'" [disabled]="false"
-                                (btnClick)="withdrawAmount()">
-                            </custom-button> -->
-                            <!-- (btnClick)="withdrawAmount()" -->
                             <custom-button [title]="'Withdraw'" [button]="'primary'" [disabled]="false" appDebounceClick
                                 (debounceClick)="withdrawAmount()" [debounceTimeConst]="300">
                             </custom-button>
@@ -49,7 +46,8 @@
                             <ion-row class="pt-8">
                                 <ion-col class="p-0">
                                     <div class="primary fw-600 sub-heading-md">
-                                        &#x20b9;{{myEarningsService.earningStatus?.approved.toFixed(2)}}
+                                        &#x20b9;{{myEarningsService.earningStatus?.approved ?
+                                        myEarningsService.earningStatus?.approved.toFixed(2) : 00}}
                                     </div>
                                 </ion-col>
                             </ion-row>
@@ -66,7 +64,8 @@
                             <ion-row class="pt-8">
                                 <ion-col class="p-0">
                                     <div class="primary fw-600 sub-heading-md">
-                                        &#x20b9;{{myEarningsService.earningStatus?.unapproved.toFixed(2)}}
+                                        &#x20b9;{{myEarningsService.earningStatus?.unapproved ?
+                                        myEarningsService.earningStatus?.unapproved.toFixed(2) : 00}}
                                     </div>
                                 </ion-col>
                             </ion-row>
@@ -267,25 +266,28 @@
         <div class="ml-16 mr-16"
             *ngIf="!myEarningsService.earningStatus && myEarningsService.earningRecords?.length == 0">
             <div class="data-not-found-wrap">
-                <div class="pb-0">
-                    <ion-row>
-                        <ion-col size="12">
-                            <img src="../../assets/imgs/no-earnings.svg">
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col size="12" class="p-0">
-                            <div class="secondary fw-600 sub-heading-xl">No earnings available yet</div>
-                        </ion-col>
-                    </ion-row>
-                </div>
-                <div class="mt-12">
-                    <ion-row>
-                        <ion-col size="12" class="p-0">
-                            <div class="fw-400 sub-heading-sm ternary">As soon as job completed and approved,you will be
-                                able to see them here.</div>
-                        </ion-col>
-                    </ion-row>
+                <div class="center-card-wrap">
+                    <div class="pb-0">
+                        <ion-row>
+                            <ion-col size="12">
+                                <img src="../../assets/imgs/no-earnings.svg">
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col size="12" class="p-0">
+                                <div class="secondary fw-600 sub-heading-xl">No earnings available yet</div>
+                            </ion-col>
+                        </ion-row>
+                    </div>
+                    <div class="mt-12">
+                        <ion-row>
+                            <ion-col size="12" class="p-0">
+                                <div class="fw-400 sub-heading-sm ternary">As soon as job completed and approved,you
+                                    will be
+                                    able to see them here.</div>
+                            </ion-col>
+                        </ion-row>
+                    </div>
                 </div>
             </div>
         </div>

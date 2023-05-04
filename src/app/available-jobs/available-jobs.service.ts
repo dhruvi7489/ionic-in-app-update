@@ -93,9 +93,7 @@ export class AvailableJobsService {
     this.selectedJobDetails = null;
     this.jobApplicationId = null;
 
-    if (!employmentId) {
-      this.loadingService.show();
-    }
+    await this.loadingService.show();
     if (this.employmentId && loginUserId) {
       let params = this.employmentId + '/' + loginUserId;
       let param = { "gender": loginUserGender }
@@ -401,7 +399,7 @@ export class AvailableJobsService {
         console.log(err);
       })
     } else {
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       await this.toastService.showMessage('Please select valid hourly rate!');
     }
   }
@@ -423,43 +421,44 @@ export class AvailableJobsService {
   async shareSelectedJobDetails() {
     let url = this.router.url
     url = this.router.url.replace('available-job-details', 'available-job-details-global');
-    let pageUrl = encodeURIComponent(url);
-    let jobType = encodeURIComponent(this.selectedJobDetails?.jobTypeName);
-
+    // let pageUrl = encodeURIComponent(url);
+    let jobType = encodeURIComponent(this.selectedJobDetails?.employmentTitle ? this.selectedJobDetails?.employmentTitle : this.selectedJobDetails?.title);
     // send message in App whatsapp
     // window.open("https://api.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20https%3A%2F%2Fuatapp.hour4u.com" + pageUrl);
 
     // send message in Web whatsapp
-    if (Capacitor.getPlatform() == 'web') {
-      let webUrl = 'https%3A%2F%2Fuatapp.hour4u.com/#';
-      if (environment.apiUrl == 'https://uatapi.hour4u.com/api/') { // UAT 
-        webUrl = 'https%3A%2F%2Fuatapp.hour4u.com/#';
-      }
-      if (environment.apiUrl == 'https://api.hour4u.com/api/') { // PROD
-        webUrl = 'https%3A%2F%2Fapp.hour4u.com/#';
-      }
-      window.open("https://web.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20" + webUrl + pageUrl);
-    }
+    // if (Capacitor.getPlatform() == 'web') {
+    //   let webUrl = 'https%3A%2F%2Fuatapp.hour4u.com/#';
+    //   if (environment.apiUrl == 'https://uatapi.hour4u.com/api/') { // UAT 
+    //     webUrl = 'https%3A%2F%2Fuatapp.hour4u.com/#';
+    //   }
+    //   if (environment.apiUrl == 'https://api.hour4u.com/api/') { // PROD
+    //     webUrl = 'https%3A%2F%2Fapp.hour4u.com/#';
+    //   }
+    //   // window.open("https://web.whatsapp.com/send/?text=Hey!%20I%20found%20a%20" + jobType + "%20job%20on%20hour4U.%20check%20it%20out%20here%20%F0%9F%91%87%0A%20" + webUrl + pageUrl);
+    // }
 
     // send message in social share
-    if (Capacitor.getPlatform() !== 'web') {
-      let webUrl = 'https://uatapp.hour4u.com/#';
-      if (environment.apiUrl == 'https://uatapi.hour4u.com/api/') { // UAT 
-        webUrl = 'https://uatapp.hour4u.com/#';
-      }
-      if (environment.apiUrl == 'https://api.hour4u.com/api/') { // PROD
-        webUrl = 'https://app.hour4u.com/#';
-      }
-      await Share.share({
-        title: jobType,
-        text: 'Hey! I found ' + this.selectedJobDetails?.jobTypeName + ' job on Hour4U. check it out here 👇\n',
-        url: webUrl + url,
-        dialogTitle: 'hour4u.com',
-      }).then(res => {
-        console.log(res)
-      }).catch(err => {
-        console.log(err);
-      });
+    // if (Capacitor.getPlatform() !== 'web') {
+    let webUrl = 'https://uatapp.hour4u.com/#';
+    if (environment.apiUrl == 'https://uatapi.hour4u.com/api/') { // UAT 
+      webUrl = 'https://uatapp.hour4u.com/#';
     }
+    if (environment.apiUrl == 'https://api.hour4u.com/api/') { // PROD
+      webUrl = 'https://app.hour4u.com/#';
+    }
+
+    const title = 'Hey! I found ' + (this.selectedJobDetails?.employmentTitle ? this.selectedJobDetails?.employmentTitle : this.selectedJobDetails?.title) + ' job on Hour4U. check it out here 👇\n'
+    await Share.share({
+      title: jobType,
+      text: title,
+      url: webUrl + url,
+      dialogTitle: 'hour4u.com',
+    }).then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.log(err);
+    });
+    // }
   }
 }

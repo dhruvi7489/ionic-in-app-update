@@ -117,7 +117,9 @@ export class SetHourlyRatePage implements OnInit {
   rateSliderChanged(event) {
     this.hourlyRate = 0;
     this.estimatedIncome = 0;
-    this.hourlyRate += event.target.value;
+    if (!isNaN(event.target.value)) {
+      this.hourlyRate += event.target.value;
+    }
     for (let date of this.availableJobsService.selectedJobDetails?.dates) {
       let hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
       this.estimatedIncome = this.estimatedIncome + (this.hourlyRate * hours) + this.availableJobsService.selectedJobDetails?.basePrice;

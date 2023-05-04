@@ -15,8 +15,8 @@
         <ion-label class="sub-heading-md fw-400" [ngClass]="{'ternary':!subJobTypeCategory.active}">
           {{subJobTypeCategory.jobTypeName}}
         </ion-label>
-        <ion-icon name="add" *ngIf="!subJobTypeCategory.active"></ion-icon>
-        <ion-icon name="close" *ngIf="subJobTypeCategory.active"></ion-icon>
+        <ion-icon name="add" color="ternary" *ngIf="!subJobTypeCategory.active"></ion-icon>
+        <ion-icon name="close" color="ternary" *ngIf="subJobTypeCategory.active"></ion-icon>
       </ion-chip>
 
       <ion-chip *ngIf="jobType?.jobTypes?.length == 0" class="in-active-chip">

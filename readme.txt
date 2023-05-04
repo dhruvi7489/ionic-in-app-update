@@ -10,13 +10,23 @@ ionic cap sync android
 cd ./android
 gradlew assemble
 cd ..
-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore hour4u-app-release-key.keystore ./android/app/build/outputs/apk/release/app-release-unsigned.apk hour4u
+New keystore = jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore hour4u-app-release-key.keystore ./android/app/build/outputs/apk/release/app-release-unsigned.apk hour4u (currently we are not using this)
+Old keystore = jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore hour4u-keystore.jsk ./android/app/build/outputs/apk/release/app-release-unsigned.apk hour4u
 pwd: hour4u
+
 #Option1 
+
+1. 
 ionic cap open android
 build signin app with hour4u-app-release-key.keystore
 keystore pwd: hour4u 
 alias : hour4u
+
+2.
+build signin app with hour4u-keystore.jsk
+keystore pwd: hour4u 
+alias : hour4u
+
 #Option2
 zipalign -v 4 ./android/app/build/outputs/apk/release/app-release-unsigned.apk hour4u.apk
 

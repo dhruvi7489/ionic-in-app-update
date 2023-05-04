@@ -54,7 +54,9 @@ export class OnboardingPersonalInfoPage implements OnInit {
     this.onboardingService.referralCode = event.ngModelData;
   }
 
-  savePersonalInfo() {
+  savePersonalInfo(event) {
+    event.preventDefault();
+    event.stopPropagation();
     if (!this.onboardingService.full_name || !this.onboardingService.email_address || !this.onboardingService.emailValid
       || !this.onboardingService.gender || !this.onboardingService.dob) {
       this.showError = true;

@@ -26,7 +26,6 @@ export class MyEarningsPage implements OnInit {
     await this.myEarningsService.getPaymentRecords();
     await this.myEarningsService.fetchUserWallet();
     await this.myEarningsService.fetchUserPayouts(false);
-    // this.myEarningsService.getAllPaymentRecords();
   }
 
   ngOnInit(): void {
@@ -47,9 +46,9 @@ export class MyEarningsPage implements OnInit {
       block: 'center',
       inline: 'center'
     });
-    this.myEarningsService.resetPayload();
+    await this.myEarningsService.resetPayload();
     if (event.target.value == 'Paid') {
-      this.myEarningsService.fetchUserPayouts(true);
+      await this.myEarningsService.fetchUserPayouts(true);
     } else {
       await this.myEarningsService.getPaymentRecords();
     }

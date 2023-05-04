@@ -34,20 +34,36 @@ export class AvailableJobDetailsPage implements OnInit {
 
   getMinTotal() {
     this.minTotal = 0;
-    this.availableJobsService.selectedJobDetails?.dates?.forEach(date => {
-      const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
-      this.minTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate * hours));
-    });
-    return this.minTotal;
+    try {
+      if (this.availableJobsService.selectedJobDetails && this.availableJobsService.selectedJobDetails?.dates?.length) {
+        this.availableJobsService.selectedJobDetails?.dates?.forEach(date => {
+          const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
+          this.minTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate * hours));
+        });
+        return this.minTotal;
+      } else {
+        return this.minTotal;
+      }
+    } catch (err) {
+      return this.minTotal;
+    }
   }
 
   getMaxTotal() {
     this.maxTotal = 0;
-    this.availableJobsService.selectedJobDetails?.dates?.forEach(date => {
-      const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
-      this.maxTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate * hours));
-    });
-    return this.maxTotal;
+    try {
+      if (this.availableJobsService.selectedJobDetails && this.availableJobsService.selectedJobDetails?.dates?.length) {
+        this.availableJobsService.selectedJobDetails?.dates?.forEach(date => {
+          const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
+          this.maxTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate * hours));
+        });
+        return this.maxTotal;
+      } else {
+        return this.maxTotal;
+      }
+    } catch (err) {
+      return this.maxTotal;
+    }
   }
 
   async applyForJob() {
@@ -69,17 +85,21 @@ export class AvailableJobDetailsPage implements OnInit {
   }
 
   disableApplyJobBtn() {
-    if (this.availableJobsService.selectedJobDetails?.applicationStatus == 'PENDING'
-      || this.availableJobsService.selectedJobDetails?.applicationStatus == 'IN_REVIEW'
-      || this.availableJobsService.selectedJobDetails?.applicationStatus == 'STAND_BY'
-      || this.availableJobsService.selectedJobDetails?.applicationStatus == 'APPROVED'
-      || this.availableJobsService.selectedJobDetails?.applicationStatus == 'REJECTED'
-      || this.availableJobsService.selectedJobDetails?.applicationStatus == 'COMPLETED') {
-      this.btnTitle = "Applied";
-      return true;
+    if (this.availableJobsService.selectedJobDetails) {
+      if (this.availableJobsService.selectedJobDetails?.applicationStatus == 'PENDING'
+        || this.availableJobsService.selectedJobDetails?.applicationStatus == 'IN_REVIEW'
+        || this.availableJobsService.selectedJobDetails?.applicationStatus == 'STAND_BY'
+        || this.availableJobsService.selectedJobDetails?.applicationStatus == 'APPROVED'
+        || this.availableJobsService.selectedJobDetails?.applicationStatus == 'REJECTED'
+        || this.availableJobsService.selectedJobDetails?.applicationStatus == 'COMPLETED') {
+        this.btnTitle = "Applied";
+        return true;
+      } else {
+        this.btnTitle = "Apply";
+        return false;
+      }
     } else {
-      this.btnTitle = "Apply";
-      return false;
+      return true;
     }
   }
 
@@ -89,21 +109,23 @@ export class AvailableJobDetailsPage implements OnInit {
     //   this.toastService.showMessage(`You can't save this job now, please wait for approval.`)
     //   return;
     // }
-    if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
-      await this.availableJobsService.JobPreference(true);
+    // if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
+    //   console.log("@@@@@@@@")
+    //   await this.availableJobsService.JobPreference(true);
+    // }
+    // else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
+    //   console.log("%%%%%%%%%%%%")
+    //   this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
+    //   return;
+    // }
+    // else {
+    if (this.availableJobsService.selectedJobPreferences) {
+      await this.jobBookMark();
+    } else {
+      await this.availableJobsService.JobPreference(false);
+      await this.jobBookMark();
     }
-    else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
-      this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
-      return;
-    }
-    else {
-      if (this.availableJobsService.selectedJobPreferences) {
-        await this.jobBookMark();
-      } else {
-        await this.availableJobsService.JobPreference(false);
-        await this.jobBookMark();
-      }
-    }
+    // }
   }
 
   async jobBookMark() {

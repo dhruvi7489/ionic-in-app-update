@@ -10,6 +10,7 @@ import { Apiurl } from '../core/route';
 import { LoadingService } from '../core/services/loading.service';
 import { ToastService } from '../core/services/toast.service';
 import { WithdrawPage } from './withdraw/withdraw.page';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,8 @@ export class MyEarningsService {
   selectedTab: string = 'Unapproved';
   noEarningFound: boolean = false;
 
-  phone_no: string = '917048450515';
-  message: string = 'Hello world!';
+  phone_no: string = environment.contactSuppportNumber;
+  message: string = '';
 
   page = 0;
   pageSize = 10;
@@ -103,6 +104,7 @@ export class MyEarningsService {
   // Go To Contact
   async goToContact() {
 
+    window.open('https://api.whatsapp.com/send?phone=' + this.phone_no + '&amp;' + 'text=' + this.message, "_blank");
   }
 
   // Reset Data

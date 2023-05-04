@@ -21,6 +21,8 @@ import { Storage } from '@ionic/storage';
 import * as moment from 'moment';
 import { Address } from '../core/modal/address.modal';
 import { AppUpdateService } from '../core/services/app-update.service';
+import { Capacitor } from '@capacitor/core';
+
 declare var google;
 
 @Injectable({
@@ -91,7 +93,8 @@ export class OnboardingService {
     query: ''
   };
   profileData: any = null;
-  locationCheck: boolean = false;
+  locationCheckClick: boolean = false;
+  // clickToGetLocation: boolean = false;
 
   constructor(
     public commonProvider: CommonProvider,
@@ -111,6 +114,8 @@ export class OnboardingService {
     // Location cordinates subscribe if get
     this.locationService.getLocationCordinates().subscribe(async (res) => {
       if (res) {
+        // this.clickToGetLocation = false;
+        this.locationCheckClick = false;
         await this.getAddress(res?.coords?.latitude, res?.coords?.longitude);
         return;
       }
@@ -150,20 +155,22 @@ export class OnboardingService {
       } else {
         this.toastService.showMessage('Google maps location failed due to: ' + status, 2000);
       }
-      if (this.locationCheck) {
+      if (this.locationCheckClick) {
         await this.savePersonalInfoAfterLocationFetch();
         await this.locationService.clearWatch();
-        this.locationCheck = false;
+        this.locationCheckClick = false;
         return;
       } else {
         // const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
         // if (loginUserMobileNo) {
         //   await this.getPersonalInfo();
         //   await this.locationService.clearWatch();
-        //   this.locationCheck = false;
+        // this.locationCheckClick = false;
         //   return;
         // }
       }
+    }, (err: any) => {
+      console.log(err);
     });
   }
 
@@ -171,8 +178,7 @@ export class OnboardingService {
   async savePersonalInfoAfterLocationFetch() {
     const loginUserInfo = await this.storage.get('loginUserInfo');
     this.loadingService.show();
-
-    if (!JSON.parse(loginUserInfo) && this.locationCheck) {
+    if (!JSON.parse(loginUserInfo) && this.locationCheckClick) {
       await this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referralCode)).then(async (res: any) => {
         this.loadingService.dismiss();
         await this.getPersonalInfo();
@@ -183,6 +189,28 @@ export class OnboardingService {
         console.log(err);
       })
     } else {
+      await this.updateProfile();
+      return;
+    }
+  }
+
+  // Save login user personal Information without location fetch
+  async savePersonalInfoWithoutLocationFetch() {
+    const loginUserInfo = await this.storage.get('loginUserInfo');
+    this.loadingService.show();
+    if (!JSON.parse(loginUserInfo)) {
+      await this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referralCode)).then(async (res: any) => {
+        this.loadingService.dismiss();
+        this.toastService.showMessage("Personal information saved successfully");
+        this.router.navigateByUrl('onboarding/onboarding-profile-picture');
+        await this.getPersonalInfo();
+        return;
+      }).catch((err: HttpErrorResponse) => {
+        this.loadingService.dismiss();
+        console.log(err);
+      })
+    } else {
+      this.loadingService.dismiss();
       await this.updateProfile();
       return;
     }
@@ -243,11 +271,11 @@ export class OnboardingService {
       // if (res) {
       this.storage.set(TOKEN_KEY, res.jwtToken)
       this.storage.set(TOKEN_TYPE, res.tokentype)
-      this.toastService.showMessage("Login successfully");
-      // await this.router.navigateByUrl('onboarding/onboarding-personal-info');
-      await this.getPersonalInfo();
       await this.updateToken();
+      await this.getPersonalInfo();
       await this.checkRedirection();
+      await this.toastService.showMessage("Login successfully");
+      // await this.router.navigateByUrl('onboarding/onboarding-personal-info');
 
       // }
     }).catch((err: HttpErrorResponse) => {
@@ -336,16 +364,57 @@ export class OnboardingService {
 
   // Get login user location before save personal info
   async savePersonalInfo() {
-    this.locationCheck = true;
-    if (!this.locationService.locationPermissionGranted) {
-      await this.locationService.requestLocationPermission(true);
-    } else {
-      if (this.locationService.locationCordinates) {
-        await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
+    this.locationCheckClick = true;
+    if (Capacitor.getPlatform() !== 'web') {
+      if (!this.locationService.locationPermissionGranted) {
+        await this.locationService.requestLocationPermission(true);
       } else {
-        await this.locationService.getCurrentLocationPosition();
-        await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
+        if (this.locationService.locationCordinates) {
+          await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
+        } else {
+          // await this.locationService.requestLocationPermission(true);
+          // await this.locationService.getCurrentLocationPosition(true);
+          await this.savePersonalInfoWithoutLocationFetch();
+        }
       }
+    } else {
+      await this.setCurrentLocation();
+    }
+  }
+
+  // Get Current Location Coordinates
+  private setCurrentLocation() {
+    let self = this;
+    navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+      if (result.state == 'granted') {
+        self.getLocation();
+      } else if (result.state == 'prompt') {
+        self.getLocation();
+      } else if (result.state == 'denied') {
+        self.getLocation();
+      }
+    }, ((err) => {
+      this.toastService.showMessage(err?.message);
+    }))
+  }
+
+  getLocation() {
+    if ('geolocation' in navigator) {
+      if (this.locationService.locationCordinates) {
+        this.addressObj.latitude = this.locationService.locationCordinates?.coords?.latitude;
+        this.addressObj.longitude = this.locationService.locationCordinates?.coords?.longitude;
+        this.getAddress(this.addressObj.latitude, this.addressObj.longitude);
+      } else {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.addressObj.latitude = position.coords.latitude;
+          this.addressObj.longitude = position.coords.longitude;
+          this.getAddress(this.addressObj.latitude, this.addressObj.longitude);
+        }, (err) => {
+          console.log("err", err)
+          this.toastService.showMessage(err.message);
+        });
+      }
+    } else {
     }
   }
 
@@ -732,8 +801,9 @@ export class OnboardingService {
   async updateToken() {
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     const FCMToken = await this.storage.get('FCMToken');
+    console.log("FCMToken", FCMToken)
     if (FCMToken) {
-      if (loginUserMobileNo != null) {
+      if (loginUserMobileNo) {
         let obj = {
           deviceToken: FCMToken,
           mobile: loginUserMobileNo

@@ -76,7 +76,7 @@
 
 <ion-footer>
   <!-- (btnClick)="savePersonalInfo()" -->
-  <custom-button [title]="'Next'" appDebounceClick (debounceClick)="savePersonalInfo()" [debounceTimeConst]="300"
+  <custom-button [title]="'Next'" appDebounceClick (debounceClick)="savePersonalInfo($event)" [debounceTimeConst]="300"
     [disabled]="false" [button]="'primary'">
   </custom-button>
 </ion-footer>

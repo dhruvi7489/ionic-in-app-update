@@ -6,6 +6,7 @@ import { OnboardingService } from '../onboarding.service';
 
 import { CommonProvider } from 'src/app/core/common';
 import { Storage } from '@ionic/storage';
+import { environment } from 'src/environments/environment';
 // import { Base64 } from '@ionic-native/base64';
 
 @Component({
@@ -16,6 +17,7 @@ import { Storage } from '@ionic/storage';
 export class OnboardingPhoneNumberPage implements OnInit {
   data = null;
   loginUserId: any = null;
+  version = '';
 
   constructor(
     private toastService: ToastService,
@@ -35,6 +37,12 @@ export class OnboardingPhoneNumberPage implements OnInit {
 
   async ionViewWillEnter() {
     this.data = "All API calls mentioned in this guide must be authenticated with an access token. Developers can authenticate their API calls with the access token generated in the App Dashboard >"
+    if (environment.apiUrl == 'https://uatapi.hour4u.com/api/') { // UAT 
+      this.version = environment.version;
+    } else {
+      this.version = '';
+    }
+
   }
 
   onKeyUp(event) {

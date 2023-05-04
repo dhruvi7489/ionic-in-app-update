@@ -18,6 +18,9 @@
       <img class="mt-14 mb-14 pr-8" src="../../../assets/imgs/help-contact.svg">
     </a> -->
   </div>
+  <div class="version-wrap ion-text-center" *ngIf="version">
+    <div class="sub-heading-sm bold-graphik-font fw-400 ion-text-center">V{{version}}</div>
+  </div>
 </ion-content>
 
 <ion-footer *ngIf="!loginUserId">

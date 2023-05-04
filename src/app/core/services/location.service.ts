@@ -43,9 +43,9 @@ export class LocationService {
                 (res.location === 'granted') {
                 this.locationPermissionGranted = true;
                 this.getCurrentLocationPosition(showErrorMsg);
-                setInterval(async () => {
-                    this.getCurrentLocationPosition(showErrorMsg);
-                }, 5000);
+                // setInterval(async () => {
+                //     this.getCurrentLocationPosition(showErrorMsg);
+                // }, 5000);
             } else {
                 this.locationPermissionGranted = false;
             }
@@ -59,13 +59,19 @@ export class LocationService {
     async getCurrentLocationPosition(showErrorMsg?) {
         this.locationCordinates = null;
         Geolocation.getCurrentPosition().then((res: any) => {
+            console.log("location get=", res)
             this.locationCordinates = res;
             this.watchPosition();
             this.setLocationCordinates(res);
         }).catch((err: HttpErrorResponse) => {
             this.setLocationCordinates(null);
+            console.log("location fetch err=", err)
             if (showErrorMsg) {
-                this.toastService.showMessage(err.message);
+                if (err.message.includes('disabled')) {
+                    this.toastService.showMessage("Please enable your device location");
+                } else {
+                    this.toastService.showMessage(err.message);
+                }
             }
         });
     }

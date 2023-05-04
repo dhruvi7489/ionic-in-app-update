@@ -59,11 +59,11 @@ export class MyEarningsPage implements OnInit {
     if (this.myEarningsService.loadedMyEarningsRecords != this.myEarningsService.totalEarningRecords) {
       this.myEarningsService.page += 1;
       // this.myEarningsService.pageSize += 10;
-      if (this.myEarningsService.selectedTab != 'Paid') {
-        await this.myEarningsService.getPaymentRecords();
-      } else {
-        await this.myEarningsService.fetchUserPayouts();
-      }
+      // if (this.myEarningsService.selectedTab != 'Paid') {
+      await this.myEarningsService.getPaymentRecords();
+      // } else {
+      // await this.myEarningsService.fetchUserPayouts();
+      // }
       await setTimeout(() => {
         infiniteScroll.target.complete();
       }, 500)

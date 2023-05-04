@@ -25,7 +25,7 @@ export class AddSkillsPage implements OnInit {
   ionViewWillEnter() {
     this.onboardingService.getJobCategory();
     this.onboardingService.checkCounterActive();
-    this.pageTitle = this.navParams.get('editSkill') ? 'Edit skill' : 'Add skill'
+    this.pageTitle = this.navParams.get('editSkill') ? 'Edit skill' : 'Add skill';
   }
 
   addSubJobCategory(data) {

@@ -249,7 +249,7 @@ export class AppComponent {
         // On success, we should be able to receive notifications
         await PushNotifications.addListener('registration', async (token) => {
           console.info('Registration token: ', token.value);
-          this.storage.set('FCMToken', token.value);
+          await this.storage.set('FCMToken', token.value);
           await this.updateToken(token.value)
         });
 
@@ -311,9 +311,9 @@ export class AppComponent {
 
   // Update device token for notification
   async updateToken(token) {
+    const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     if (token) {
-      const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
-      if (loginUserMobileNo != null) {
+      if (loginUserMobileNo) {
         let obj = {
           deviceToken: token,
           mobile: loginUserMobileNo

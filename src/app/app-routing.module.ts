@@ -21,10 +21,6 @@ const routes: Routes = [
     path: 'onboarding/onboarding-phone-number',
     loadChildren: () => import('./onboarding/onboarding-phone-number/onboarding-phone-number.module').then(m => m.OnboardingPhoneNumberPageModule)
   },
-  // {
-  //   path: 'onboarding/onboarding-header',
-  //   loadChildren: () => import('./onboarding/onboarding-header/onboarding-header.module').then(m => m.OnboardingHeaderPageModule)
-  // },
   {
     path: 'onboarding/onboarding-otp',
     loadChildren: () => import('./onboarding/onboarding-otp/onboarding-otp.module').then(m => m.OnboardingOtpPageModule)

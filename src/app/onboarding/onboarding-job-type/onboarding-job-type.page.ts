@@ -40,7 +40,7 @@ export class OnboardingJobTypePage implements OnInit {
 
   addDescription(event) {
     this.onboardingService.description = event.ngModelData;
-    this.onboardingService.leftCharacters = this.onboardingService.maxlengthDescription - this.onboardingService.description.length;
+    this.onboardingService.leftCharacters = this.onboardingService?.maxlengthDescription - this.onboardingService.description?.length;
   }
 
   addLink(event) {

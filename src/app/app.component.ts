@@ -1,9 +1,8 @@
 import { Component, NgZone, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { AlertController, IonRouterOutlet, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
+import { AlertController, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
 import { NetworkService } from './core/services/network.service';
-// import { PushNotificationService } from './core/services/push-notifications.service';
 import { CommonProvider } from './core/common';
 import { Apiurl } from './core/route';
 import { AvailableJobsService } from './available-jobs/available-jobs.service';
@@ -16,9 +15,8 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { ActionPerformed, PushNotifications, PushNotificationSchema } from '@capacitor/push-notifications';
 import { LoadingService } from './core/services/loading.service';
 import { LocalNotifications } from '@capacitor/local-notifications';
-// import { Deeplinks } from '@awesome-cordova-plugins/deeplinks/ngx';
-import { AvailableJobDetailsPage } from './available-jobs/available-job-details/available-job-details.page';
 import { environment } from 'src/environments/environment';
+import { OnboardingService } from './onboarding/onboarding.service';
 
 declare var UXCam: any;
 @Component({
@@ -27,10 +25,7 @@ declare var UXCam: any;
   styleUrls: ['app.component.scss'],
 })
 
-
 export class AppComponent {
-
-  // public pushPayload: INotificationPayload = null;
 
   constructor(
     public platform: Platform,
@@ -48,8 +43,6 @@ export class AppComponent {
     public modalCtrl: ModalController,
     public navCtrl: NavController,
     public loadingService: LoadingService,
-    // private deeplinks: Deeplinks
-    @Optional() private routerOutlet?: IonRouterOutlet
   ) {
     this.initializeApp();
   }
@@ -95,7 +88,7 @@ export class AppComponent {
       if (Capacitor.getPlatform() !== 'web') {
         // Splash screen duration
         await SplashScreen.show({
-          showDuration: 1500,
+          showDuration: 1800,
           autoHide: true,
         });
 
@@ -130,6 +123,7 @@ export class AppComponent {
         // Network connection change
         this.networkService.initializeNetworkEvents();
 
+        // Device Back button logic
         this.platform.backButton.subscribeWithPriority(9999, () => {
           document.addEventListener('backbutton', function (event) {
             event.preventDefault();
@@ -137,14 +131,14 @@ export class AppComponent {
           }, false);
         });
 
-        // Device Back button logic
         App.addListener('backButton', ({ canGoBack }) => {
           if (canGoBack) {
             this.modalCtrl.getTop().then((res: any) => {
               if (res) {
                 this.modalCtrl.dismiss();
               } else {
-                if (this.router.url.includes('tabs/available-jobs') || this.router.url.includes('launch-screen') || this.router.url.includes('onboarding/onboarding-phone-number')) {
+                if (this.router.url.includes('tabs/available-jobs') || this.router.url.includes('launch-screen') ||
+                  this.router.url.includes('onboarding/onboarding-phone-number') || this.router.url.includes('onboarding/onboarding-personal-info')) {
                   let alert = this.alertCtrl.create({
                     header: 'Exit',
                     cssClass: 'exit-alert',
@@ -250,6 +244,7 @@ export class AppComponent {
         await PushNotifications.addListener('registration', async (token) => {
           console.info('Registration token: ', token.value);
           await this.storage.set('FCMToken', token.value);
+          localStorage.setItem('FCMToken', token.value);
           await this.updateToken(token.value)
         });
 
@@ -305,9 +300,7 @@ export class AppComponent {
         // PUSH NOTIFICATION END
       }
     })
-
   }
-
 
   // Update device token for notification
   async updateToken(token) {
@@ -330,6 +323,11 @@ export class AppComponent {
   // Perform action on notification - When app running in BACKGROUND or KILL MODE
   async performRedirectionOnNotification(notification) {
     console.log("notification---------", notification)
+    this.modalCtrl.getTop().then((res: any) => {
+      if (res) {
+        this.modalCtrl.dismiss();
+      }
+    })
     setTimeout(async () => {
       const loginUserId = await this.storage.get('loginUserId');
       this.loadingService.dismiss();
@@ -357,6 +355,11 @@ export class AppComponent {
   // Localnotification action performed - When app is OPEN
   async performRedirectionOnLocalNotification(notification) {
     console.log("local notification---------", notification)
+    this.modalCtrl.getTop().then((res: any) => {
+      if (res) {
+        this.modalCtrl.dismiss();
+      }
+    })
     setTimeout(async () => {
       const loginUserId = await this.storage.get('loginUserId');
       this.loadingService.dismiss();

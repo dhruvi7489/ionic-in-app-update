@@ -3,7 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: 'launch-screen', pathMatch: 'full'
+    path: '', redirectTo: 'launch-screen1', pathMatch: 'full'
   },
   {
     path: 'tabs',
@@ -120,6 +120,10 @@ const routes: Routes = [
   {
     path: 'launch-screen',
     loadChildren: () => import('./launch-screen/launch-screen.module').then(m => m.LaunchScreenPageModule)
+  },
+  {
+    path: 'launch-screen1',
+    loadChildren: () => import('./launch-screen1/launch-screen1.module').then(m => m.LaunchScreen1PageModule)
   },
   {
     path: '**',

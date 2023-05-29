@@ -35,6 +35,8 @@ export class AvailableJobsService {
   totalAvailableRecords = 0;
   loadedMyAvailablesRecords = 0;
 
+  showNoJobFound: boolean = false;
+
   constructor(
     public commonProvider: CommonProvider,
     public router: Router,
@@ -56,6 +58,7 @@ export class AvailableJobsService {
 
   // Get all jobs list
   async getAllJobsList(search?) {
+    this.showNoJobFound = false;
     const loginUserGender = await this.storage.get('loginUserGender');
     if (search) {
       this.jobLists = [];
@@ -75,12 +78,18 @@ export class AvailableJobsService {
         res.content?.forEach((element) => {
           this.jobLists.push(element);
         });
+        if (this.jobLists.length == 0) {
+          this.showNoJobFound = true;
+        } else {
+          this.showNoJobFound = false;
+        }
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
       this.jobLists = [];
       this.page = 0;
       this.errorInApiCall = true;
+      this.showNoJobFound = false;
       console.log(err);
     })
   }
@@ -93,12 +102,12 @@ export class AvailableJobsService {
     this.selectedJobDetails = null;
     this.jobApplicationId = null;
 
-    await this.loadingService.show();
+    // await this.loadingService.show();
     if (this.employmentId && loginUserId) {
       let params = this.employmentId + '/' + loginUserId;
       let param = { "gender": loginUserGender }
       this.commonProvider.GetMethod(Apiurl.GetJobByJobId + params, param).then((res: any) => {
-        this.loadingService.dismiss();
+        // this.loadingService.dismiss();
         if (res) {
           this.selectedJobDetails = res;
           this.jobApplicationId = this.selectedJobDetails?.jobApplicationId;
@@ -107,12 +116,12 @@ export class AvailableJobsService {
           })
         }
       }).catch((err: HttpErrorResponse) => {
-        this.loadingService.dismiss();
+        // this.loadingService.dismiss();
         console.log(err);
       })
     } else {
       // this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       this.toastService.showMessage("Employment Id not found!")
     }
   }
@@ -125,25 +134,27 @@ export class AvailableJobsService {
     this.selectedJobDetails = null;
     this.jobApplicationId = null;
 
-    this.loadingService.show();
+    // await this.loadingService.show();
     if (this.employmentId) {
       let params = this.employmentId;
       this.commonProvider.GetMethod(Apiurl.GetJobDetailsGlobally + params, null).then((res: any) => {
-        this.loadingService.dismiss();
+        // this.loadingService.dismiss();
         if (res) {
           this.selectedJobDetails = res;
+          console.log("*************", this.selectedJobDetails)
+
           this.jobApplicationId = this.selectedJobDetails?.jobApplicationId;
           this.selectedJobDetails?.dates?.forEach(date => {
             this.jobUtilService.shiftDayChange(date.date, date.timeFrom, date.timeTo);
           })
         }
       }).catch((err: HttpErrorResponse) => {
-        this.loadingService.dismiss();
+        // this.loadingService.dismiss();
         console.log(err);
       })
     } else {
       // this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       this.toastService.showMessage("Employment Id not found!")
     }
   }

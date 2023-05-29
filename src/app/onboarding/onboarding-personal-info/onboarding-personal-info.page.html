@@ -1,4 +1,4 @@
-<app-onboarding-header></app-onboarding-header>
+<app-onboarding-header [headerTitle]="''"></app-onboarding-header>
 
 <ion-content class="container" id="personal-info">
   <div class="c-container-body mt-24 ml-16 mr-16 mb-16">
@@ -77,6 +77,6 @@
 <ion-footer>
   <!-- (btnClick)="savePersonalInfo()" -->
   <custom-button [title]="'Next'" appDebounceClick (debounceClick)="savePersonalInfo($event)" [debounceTimeConst]="300"
-    [disabled]="false" [button]="'primary'">
+    [disabled]="onboardingService.savePersonalInfoBtnDisabled" [button]="'primary'">
   </custom-button>
 </ion-footer>

@@ -14,8 +14,9 @@
     <ion-row class="d-flex" *ngIf="!router.url.includes('onboarding-phone-number')">
       <ion-col class="d-flex pl-16 pr-16 pt-16 pb-4" size="12">
         <ion-row class="d-contents">
-          <ion-col size="3" class="ion-align-self-center pr-0 pb-0 pt-0">
-            <div class="d-flex">
+          <ion-col size="3" class="ion-align-self-center pr-0 pb-0 pt-0"
+            *ngIf="!router.url.includes('onboarding-personal-info')">
+            <div class="d-flex" *ngIf="!router.url.includes('onboarding-personal-info')">
               <!-- (click)="back()" -->
               <img src="../../assets/imgs/Iconsax/Svg/All/outline/arrow-left.svg" appDebounceClick
                 (debounceClick)="back()" [debounceTimeConst]="300">
@@ -24,6 +25,17 @@
               </div>
             </div>
           </ion-col>
+          <div class="d-flex" *ngIf="router.url.includes('onboarding-personal-info')">
+            <div>
+              <img class="img" src="../../assets/imgs/logo.svg">
+            </div>
+            <div class="ion-align-self-center">
+              <div class="header-title d-flex ml-10">
+                <div class="main-body-heading-sm fw-500 secondary">hour</div>
+                <div class="main-body-heading-sm fw-400 secondary">4u</div>
+              </div>
+            </div>
+          </div>
           <ion-col size="6" class="ion-text-align-center pl-0 pr-0 pb-0 pt-0 ion-text-center">
             <div class="main-body-heading-sm fw-600 secondary mr-8 ml-0">{{headerTitle}}</div>
           </ion-col>

@@ -38,11 +38,11 @@ export class MyJobsService {
     }
     await this.commonProvider.GetMethod(Apiurl.GetMyJobs + params, null).then(async (res: any) => {
       await this.loadingService.dismiss();
+      this.errorInApiCall = false;
+      this.noDataFound = res?.content?.length == 0 ? true : false;
       if (res && res.content?.length != 0) {
         this.totalMyJobsRecords = res.totalElements;
-        this.noDataFound = res?.content?.length == 0 ? true : false;
         this.loadedMyJobsRecords = res?.content.length;
-        this.errorInApiCall = false;
         res.content.forEach((element) => {
           this.myJobsList.push(element);
         });
@@ -53,7 +53,6 @@ export class MyJobsService {
       this.errorInApiCall = true;
       this.myJobsList = [];
       this.page = 0;
-
     })
   }
 

@@ -12,16 +12,17 @@
     <div class="secondary fw-500 sub-heading-sm secondary mt-24 mb-8">
       <ion-label>Account number*</ion-label>
     </div>
-    <custom-input [inputType]="'text'" [placeholder]="'Enter your account number'"
-      [ngModelData]="myEarningsService.accountNumber" [id]="'accountNumber'" (keyUp)="getAccountNumber($event)">
+    <custom-input (pasteData)="pasteGetAccountNumber($event)" [inputType]="'text'"
+      [placeholder]="'Enter your account number'" [ngModelData]="myEarningsService.accountNumber" [id]="'accountNumber'"
+      (keyUp)="getAccountNumber($event)">
     </custom-input>
 
     <div class="secondary fw-500 sub-heading-sm secondary mt-16 mb-8">
       <ion-label>Confirm account number*</ion-label>
     </div>
-    <custom-input [inputType]="'text'" [placeholder]="'Confirm your account number'"
-      [ngModelData]="myEarningsService.confirm_accountNumber" [id]="'confirm_accountNumber'"
-      (keyUp)="getConfirmAccountNumber($event)">
+    <custom-input (pasteData)="pasteGetConfirmAccountNumber($event)" [inputType]="'text'"
+      [placeholder]="'Confirm your account number'" [ngModelData]="myEarningsService.confirm_accountNumber"
+      [id]="'confirm_accountNumber'" (keyUp)="getConfirmAccountNumber($event)">
     </custom-input>
     <div *ngIf="myEarningsService.confirm_accountNumber != myEarningsService.accountNumber"
       class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Account number not match </div>
@@ -29,15 +30,17 @@
     <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
       <ion-label>IFSC Code*</ion-label>
     </div>
-    <custom-input [inputType]="'text'" [placeholder]="'Enter IFSC code of your bank branch'"
-      [ngModelData]="myEarningsService.ifscCode" [id]="'ifscCode'" (keyUp)="getIFSCCode($event)">
+    <custom-input (pasteData)="pasteGetIFSCCode($event)" [inputType]="'text'"
+      [placeholder]="'Enter IFSC code of your bank branch'" [ngModelData]="myEarningsService.ifscCode" [id]="'ifscCode'"
+      (keyUp)="getIFSCCode($event)">
     </custom-input>
 
     <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
       <ion-label>Name on account*</ion-label>
     </div>
-    <custom-input [inputType]="'text'" [placeholder]="'Enter your full name'"
-      [ngModelData]="myEarningsService.nameOnAccount" [id]="'nameOnAccount'" (keyUp)="getAccountentName($event)">
+    <custom-input (pasteData)="pasteGetAccountentName($event)" [inputType]="'text'"
+      [placeholder]="'Enter your full name'" [ngModelData]="myEarningsService.nameOnAccount" [id]="'nameOnAccount'"
+      (keyUp)="getAccountentName($event)">
     </custom-input>
 
     <div class="mt-24">

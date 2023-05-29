@@ -10,5 +10,17 @@
                 "F0:DE:80:4E:A7:AE:E3:AF:03:D3:44:28:DD:92:F3:76:40:4C:0A:83:53:BE:BB:7A:79:C1:E2:5C:51:A5:D3:6E"
             ]
         }
+    },
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.hour4u.app",
+            "sha256_cert_fingerprints": [
+                "89:54:15:9A:23:D9:58:96:97:D1:20:E2:5E:55:A1:DA:30:C8:BF:C2:15:49:F5:44:10:D1:7D:25:B4:36:9B:2B"
+            ]
+        }
     }
 ]

@@ -93,8 +93,11 @@ export class ActiveJobService {
     // Location cordinates subscribe if get
     this.locationService.getLocationCordinates().subscribe(async (res) => {
       if (res) {
-        this.locationCheckClick = false;
+        // this.locationCheckClick = false;
         await this.checkLocationCordinates();
+        if (this.locationCheckClick) {
+          await this.getAddress(res?.coords?.latitude, res?.coords?.longitude);
+        }
       } else {
         this.navigateLocation = false;
       }
@@ -447,41 +450,6 @@ export class ActiveJobService {
     })
   }
 
-  // Get Current Location Coordinates
-  private setCurrentLocation() {
-    let self = this;
-    navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
-      if (result.state == 'granted') {
-        self.getLocation();
-      } else if (result.state == 'prompt') {
-        self.getLocation();
-      } else if (result.state == 'denied') {
-        self.getLocation();
-      }
-    }, ((err) => {
-      this.toastService.showMessage(err?.message);
-    }))
-  }
-
-  getLocation() {
-    if ('geolocation' in navigator) {
-      if (this.locationService.locationCordinates) {
-        this.addressObj.latitude = this.locationService.locationCordinates?.coords?.latitude;
-        this.addressObj.longitude = this.locationService.locationCordinates?.coords?.longitude;
-        this.getAddress(this.addressObj.latitude, this.addressObj.longitude);
-      } else {
-        navigator.geolocation.getCurrentPosition((position) => {
-          this.addressObj.latitude = position.coords.latitude;
-          this.addressObj.longitude = position.coords.longitude;
-          this.getAddress(this.addressObj.latitude, this.addressObj.longitude);
-        }, (err) => {
-          this.toastService.showMessage(err.message);
-        });
-      }
-    } else {
-    }
-  }
-
   // Mark attendance(Check-in)
   async markAttendance() {
     await this.getEmployeeAttendance();
@@ -686,12 +654,13 @@ export class ActiveJobService {
         if (this.locationService.locationCordinates) {
           await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
         } else {
-          await this.locationService.getCurrentLocationPosition(true);
+          await this.locationService.requestLocationPermission(true);
           await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
         }
       }
     } else {
-      await this.setCurrentLocation();
+      await this.locationService.fetchLocationFromWebPermisssion();
+      await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
     }
   }
 

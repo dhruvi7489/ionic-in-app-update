@@ -487,8 +487,10 @@ export class ProfileService {
 
   // Delete Work Experience
   async deleteWorkExperience(index) {
+    this.loadingService.show();
     const loginUserId = await this.storage.get('loginUserId');
     await this.commonProvider.PutMethod(Apiurl.DeleteWorkExperience + loginUserId, index).then(async (res: any) => {
+      this.loadingService.dismiss();
       if (res) {
         this.toastService.showMessage('Work Experience deleted successfully');
         this.modalCtrl.dismiss();
@@ -497,6 +499,7 @@ export class ProfileService {
         this.toastService.showMessage('Work Experience not deleted!');
       }
     }).catch((err: HttpErrorResponse) => {
+      this.loadingService.dismiss();
       this.toastService.showMessage('Work Experience not deleted, Something went wrong...');
       console.log(err);
     })

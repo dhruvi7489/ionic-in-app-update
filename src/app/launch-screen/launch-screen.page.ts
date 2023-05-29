@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonSlides } from '@ionic/angular';
-import { OnboardingService } from '../onboarding/onboarding.service';
 
 @Component({
   selector: 'app-launch-screen',
@@ -31,8 +30,7 @@ export class LaunchScreenPage implements OnInit {
     }
   ];
 
-  constructor(public router: Router,
-    public onboardingService: OnboardingService) { }
+  constructor(public router: Router) { }
 
   ngOnInit() {
     this.btnTitle = `Let's Start`;
@@ -42,7 +40,7 @@ export class LaunchScreenPage implements OnInit {
     this.slides.getActiveIndex().then(
       (index) => {
         this.currentIndex = index;
-        // if (this.currentIndex == 2) {
+        // if (this.currentIndex == 3) {
         //   this.router.navigateByUrl('onboarding/onboarding-phone-number');
         // }
         // else {
@@ -53,7 +51,12 @@ export class LaunchScreenPage implements OnInit {
   }
 
   letsStart() {
-    this.getSlideIndex();
+    this.slides.getActiveIndex().then(res => {
+      if (res == 2) {
+        this.router.navigateByUrl('onboarding/onboarding-phone-number');
+      }
+    })
+    this.slides.slideNext();
   }
 
   skip() {

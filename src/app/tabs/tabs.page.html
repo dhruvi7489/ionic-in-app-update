@@ -9,7 +9,7 @@
       <ion-label>Jobs</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="active-job" (click)="tabsClick($event)">
+    <ion-tab-button tab="active-job" (click)="goToRoute('tabs/active-job')">
       <img *ngIf="onboardingService?.activeTab !== 'active-job'" src="../../assets/imgs/tabs/active-job-inactive.svg">
       <img *ngIf="onboardingService?.activeTab === 'active-job'" src="../../assets/imgs/tabs/active-job-active.svg">
       <ion-label>Active job</ion-label>

@@ -18,12 +18,12 @@ export class ActiveJobMarkAttendancePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (Capacitor.getPlatform() == 'web') {
-      this.isWeb = true;
-    }
   }
 
   ionViewWillEnter() {
+    if (Capacitor.getPlatform() == 'web') {
+      this.isWeb = true;
+    }
     if (!this.activeJobService.activeJob?.job) {
       this.router.navigateByUrl('tabs/active-job')
     }

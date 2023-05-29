@@ -36,9 +36,10 @@ export class MyEarningsService {
   totalEarningRecords = 0;
   loadedMyEarningsRecords = 0;
 
-  availableAmountForWithdraw = null;
+  availableAmountForWithdraw = 0;
   wantAmountForWithdraw = null;
   totalWithdrwnAmount = 0;
+  showNoEarningsFound: boolean = false;
 
   constructor(
     public commonProvider: CommonProvider,
@@ -82,6 +83,7 @@ export class MyEarningsService {
 
   // Get All Payment Records
   async getPaymentRecords() {
+    this.showNoEarningsFound = false;
     const loginUserId = await this.storage.get('loginUserId');
     this.loadingService.show();
     let param = '?page=' + this.page + '&size=' + this.pageSize + '&sort=createdOn,desc' + '&' + 'jobSeekerId=' + loginUserId
@@ -89,21 +91,27 @@ export class MyEarningsService {
     return await this.commonProvider.GetMethod(Apiurl.Payment + param, null).then(async (res: any) => {
       this.loadingService.dismiss();
       if (res) {
+        this.earningRecords = [];
         this.loadedMyEarningsRecords = res?.numberOfElements;
         this.totalEarningRecords = res?.totalElements;
         res?.content?.forEach(element => {
           this.earningRecords.push(element);
         });
+        if (this.earningRecords.length == 0) {
+          this.showNoEarningsFound = true;
+        } else {
+          this.showNoEarningsFound = false;
+        }
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
+      this.showNoEarningsFound = false;
       console.log(err);
     })
   }
 
   // Go To Contact
   async goToContact() {
-
     window.open('https://api.whatsapp.com/send?phone=' + this.phone_no + '&amp;' + 'text=' + this.message, "_blank");
   }
 
@@ -215,6 +223,7 @@ export class MyEarningsService {
     this.commonProvider.GetMethod(Apiurl.GetPayoutHistory + param, null).then((res: any) => {
       this.loadingService.dismiss();
       if (isFortTotalWithdrawnAmount) {
+        this.earningRecords = [];
         res?.result?.forEach(element => {
           element.bankDetails = JSON.parse(JSON.parse(element?.payoutMeta)?.bankAccountDetails);
         });
@@ -252,6 +261,7 @@ export class MyEarningsService {
       }, 500);
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
+      this.toastService.showMessage(err.error.statusMessage)
       console.log(err);
     })
   }

@@ -21,6 +21,7 @@ export class MyEarningsPage implements OnInit {
   }
 
   async ionViewWillEnter() {
+    this.myEarningsService.selectedTab = 'Unapproved';
     await this.myEarningsService.getPaymentStatus();
     await this.myEarningsService.resetPayload();
     await this.myEarningsService.getPaymentRecords();

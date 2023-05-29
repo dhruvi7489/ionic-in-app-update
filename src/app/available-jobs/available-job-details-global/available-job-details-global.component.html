@@ -9,9 +9,9 @@
         <ion-row class="bottom-border pb-16">
           <ion-col size="12">
             <div class="secondary fw-600 sub-heading-xl ion-text-capitalize">
-              {{availableJobsService.selectedJobDetails?.employmentTitle ?
-              availableJobsService.selectedJobDetails?.employmentTitle :
-              availableJobsService.selectedJobDetails?.title}}
+              {{availableJobsService?.selectedJobDetails?.employmentTitle ?
+              availableJobsService?.selectedJobDetails?.employmentTitle :
+              availableJobsService?.selectedJobDetails?.title}}
             </div>
           </ion-col>
         </ion-row>
@@ -24,8 +24,8 @@
               <div class="pr-8">
                 <img src="../../assets/imgs/Iconsax/Svg/All/outline/location.svg">
               </div>
-              <div class="ternary sub-heading-sm fw-400">
-                {{availableJobsService.selectedJobDetails?.location.address | Description : 100}}
+              <div class="ternary sub-heading-sm fw-400 ion-align-self-center">
+                {{availableJobsService?.selectedJobDetails?.location.address | Description : 100}}
               </div>
             </div>
           </ion-col>
@@ -39,16 +39,16 @@
                 <img src="../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg">
               </div>
               <div *ngIf="!jobUtilService.dayChange" class="ion-align-self-center ternary sub-heading-sm fw-400">
-                {{availableJobsService.selectedJobDetails?.dates[0].date | formatDate | date: 'MMM dd, yyyy'}}
-                {{availableJobsService.selectedJobDetails?.dates[0].timeFrom | formatTime | date: 'hh:mm a' }} to
-                {{availableJobsService.selectedJobDetails?.dates[0].timeTo |
+                {{availableJobsService?.selectedJobDetails?.dates[0].date | formatDate | date: 'MMM dd, yyyy'}}
+                {{availableJobsService?.selectedJobDetails?.dates[0].timeFrom | formatTime | date: 'hh:mm a' }} to
+                {{availableJobsService?.selectedJobDetails?.dates[0].timeTo |
                 formatTime | date: 'hh:mm a'}}
               </div>
               <div *ngIf="jobUtilService.dayChange" class="ion-align-self-center ternary sub-heading-sm fw-400">
-                {{availableJobsService.selectedJobDetails?.dates[0].date | formatDate | date: 'MMM dd, yyyy'}}
-                {{availableJobsService.selectedJobDetails?.dates[0].timeFrom | formatTime | date: 'hh:mm a' }} to
+                {{availableJobsService?.selectedJobDetails?.dates[0].date | formatDate | date: 'MMM dd, yyyy'}}
+                {{availableJobsService?.selectedJobDetails?.dates[0].timeFrom | formatTime | date: 'hh:mm a' }} to
                 {{jobUtilService?.newDayDate | formatDate | date: 'MMM dd, yyyy'}}
-                {{availableJobsService.selectedJobDetails?.dates[0].timeTo |
+                {{availableJobsService?.selectedJobDetails?.dates[0].timeTo |
                 formatTime | date: 'hh:mm a'}}
               </div>
             </div>
@@ -65,20 +65,20 @@
           <ion-row>
             <ion-col size="12" class="pt-0 pb-0">
               <div class="fw-400 sub-heading-sm ternary">Category</div>
-              <div class="fw-500 sub-heading-md secondary">{{availableJobsService.selectedJobDetails?.jobTypeName}}
+              <div class="fw-500 sub-heading-md secondary">{{availableJobsService?.selectedJobDetails?.jobTypeName}}
               </div>
             </ion-col>
             <!-- <ion-col size="6" class="pt-0 pb-0">
               <div class="fw-400 sub-heading-sm ternary">Level</div>
               <div class="fw-500 sub-heading-md secondary">
-                {{availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo?.level}}</div>
+                {{availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level}}</div>
             </ion-col> -->
           </ion-row>
           <!-- <ion-row class="pt-12 pb-16">
             <ion-col size="6" class="pt-0 pb-0">
               <div class="fw-400 sub-heading-sm ternary">Base Pay</div>
               <div class="fw-500 sub-heading-md secondary">
-                &#x20b9;{{availableJobsService.selectedJobDetails?.basePrice}}
+                &#x20b9;{{availableJobsService?.selectedJobDetails?.basePrice}}
               </div>
             </ion-col>
             <ion-col size="6" class="pt-0 pb-0">
@@ -102,11 +102,11 @@
           <ion-row class="pb-16">
             <ion-col size="12" class="pt-0 pb-0">
               <div class="job-description ternary sub-heading-md fw-400" [class.show]="show"
-                [ngClass]="{'h-auto' : availableJobsService.selectedJobDetails?.description?.length < 100}">
-                {{availableJobsService.selectedJobDetails?.description}}
+                [ngClass]="{'h-auto' : availableJobsService?.selectedJobDetails?.description?.length < 100}">
+                {{availableJobsService?.selectedJobDetails?.description}}
               </div>
               <!-- (click)="show = !show" -->
-              <div *ngIf="availableJobsService.selectedJobDetails?.description?.length > 100"
+              <div *ngIf="availableJobsService?.selectedJobDetails?.description?.length > 100"
                 class="fw-400 sub-heading-sm primary mt-2 text-decoration-underline" appDebounceClick
                 (debounceClick)="show = !show" [debounceTimeConst]="300">{{ show ? 'Read less': 'Read more' }}
               </div>
@@ -120,29 +120,30 @@
               <div class="d-flex ion-align-self-center">
                 <div class="secondary fw-600 sub-heading-lg">Tasks</div>
                 <div class="counter-bedge ion-align-self-center primary ml-8">
-                  <div class="pt-4 pb-4 pl-12 pr-12 fw-400">{{availableJobsService.selectedJobDetails?.tasks?.length &&
-                    availableJobsService.selectedJobDetails?.tasks[0] !=
-                    ''?availableJobsService.selectedJobDetails?.tasks?.length: 0}}
+                  <div class="pt-4 pb-4 pl-12 pr-12 fw-400">{{availableJobsService?.selectedJobDetails?.tasks?.length &&
+                    availableJobsService?.selectedJobDetails?.tasks[0] !=
+                    ''?availableJobsService?.selectedJobDetails?.tasks?.length: 0}}
                   </div>
                 </div>
               </div>
             </ion-col>
           </ion-row>
-          <!-- <ion-row class="pb-16" *ngIf="availableJobsService.selectedJobDetails?.tasks?.length &&
-          availableJobsService.selectedJobDetails?.tasks[0] != ''">
+          <!-- <ion-row class="pb-16" *ngIf="availableJobsService?.selectedJobDetails?.tasks?.length &&
+          availableJobsService?.selectedJobDetails?.tasks[0] != ''">
             <ion-col size="12" class="pt-0 pb-0"
-              *ngFor="let task of availableJobsService.selectedJobDetails?.tasks;let i= index;">
+              *ngFor="let task of availableJobsService?.selectedJobDetails?.tasks;let i= index;">
               <ion-chip class="mt-12" [ngCalss]="{'m-0': i == 0, 'ml-4': i > 0}">
                 <ion-label class="sub-heading-md secondary fw-400 ml-4" *ngIf="task">{{task || '-'}}</ion-label>
               </ion-chip>
             </ion-col>
           </ion-row> -->
 
-          <div class="pb-16" *ngIf="availableJobsService.selectedJobDetails?.tasks?.length != 0">
+          <div class="pb-16"
+            *ngIf="availableJobsService.selectedJobDetails?.tasks?.length != 0 && availableJobsService.selectedJobDetails?.tasks[0] != ''">
             <ion-row>
               <ion-col class="p-0">
                 <ion-chip class="in-active-chip"
-                  *ngFor="let task of availableJobsService.selectedJobDetails?.tasks;let i=index;">
+                  *ngFor="let task of availableJobsService?.selectedJobDetails?.tasks;let i=index;">
                   <ion-label class="sub-heading-md secondary fw-400">{{ task }}</ion-label>
                 </ion-chip>
               </ion-col>
@@ -161,8 +162,12 @@
           <ion-row class="pb-16">
             <ion-col size="12" class="pt-0 pb-0">
               <div class="ternary sub-heading-md fw-400">
-                <div class="fw-400 sub-heading-sm ternary">Female :</div>
-                {{availableJobsService.selectedJobDetails?.dressCodeFemale || '-'}}
+                <div class="fw-400 sub-heading-sm secondary">Female :</div>
+                <div class="fw-400 sub-heading-sm ternary">
+                  {{availableJobsService?.selectedJobDetails?.dressCodeFemale ?
+                  availableJobsService?.selectedJobDetails?.dressCodeFemale :
+                  availableJobsService?.selectedJobDetails?.dressCode || '-'}}
+                </div>
               </div>
             </ion-col>
           </ion-row>
@@ -170,8 +175,12 @@
           <ion-row class="pb-16">
             <ion-col size="12" class="pt-0 pb-0">
               <div class="ternary sub-heading-md fw-400">
-                <div class="fw-400 sub-heading-sm ternary">Male :</div>
-                {{availableJobsService.selectedJobDetails?.dressCodeMale || '-'}}
+                <div class="fw-400 sub-heading-sm secondary">Male :</div>
+                <div class="fw-400 sub-heading-sm ternary">
+                  {{availableJobsService?.selectedJobDetails?.dressCodeMale ?
+                  availableJobsService?.selectedJobDetails?.dressCodeMale :
+                  availableJobsService?.selectedJobDetails?.dressCode || '-'}}
+                </div>
               </div>
             </ion-col>
           </ion-row>
@@ -188,10 +197,10 @@
 
           <ion-row>
             <ion-col size="12" class="pt-0 pb-0">
-              <ul class="m-0 mt-12 pl-16 primary" *ngIf="availableJobsService.selectedJobDetails?.prerequisites">
+              <ul class="m-0 mt-12 pl-16 primary" *ngIf="availableJobsService?.selectedJobDetails?.prerequisites">
                 <li>
                   <ion-label class="sub-heading-md secondary fw-400">
-                    {{availableJobsService.selectedJobDetails?.prerequisites ||'-'}}
+                    {{availableJobsService?.selectedJobDetails?.prerequisites ||'-'}}
                   </ion-label>
                 </li>
               </ul>
@@ -208,10 +217,10 @@
     <ion-row class="w-100">
       <!-- <ion-col size="2" class="ion-align-self-center p-0 m-0">
         <div class="bookmark-wrap">
-          <img *ngIf="availableJobsService.selectedJobDetails?.applicationStatus != 'APPLY_LATER'" appDebounceClick
+          <img *ngIf="availableJobsService?.selectedJobDetails?.applicationStatus != 'APPLY_LATER'" appDebounceClick
             (debounceClick)="bookmarkJob()" [debounceTimeConst]="300"
             src="../../assets/imgs/Iconsax/Svg/All/outline/archive-bookmark.svg">
-          <img *ngIf="availableJobsService.selectedJobDetails?.applicationStatus == 'APPLY_LATER'" appDebounceClick
+          <img *ngIf="availableJobsService?.selectedJobDetails?.applicationStatus == 'APPLY_LATER'" appDebounceClick
             (debounceClick)="removeBookmark()" [debounceTimeConst]="300"
             src="../../assets/imgs/Iconsax/Svg/All/outline/bookmark-filled.svg">
         </div>

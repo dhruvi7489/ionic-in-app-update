@@ -35,3 +35,8 @@ zipalign -v 4 ./android/app/build/outputs/apk/release/app-release-unsigned.apk h
 ionic Build
 npx cap sync ios
 npx cap open ios
+
+
+------------ Check key value from keystore file
+
+keytool -list -v -keystore hour4u-keystore.jsk

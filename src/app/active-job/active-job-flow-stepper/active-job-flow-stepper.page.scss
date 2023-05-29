@@ -8,6 +8,14 @@
         margin-left: 5%;
         border: 1px solid #080A52;
         transition: 0.4s;
+
+        @media screen and (min-width: 430px) and (max-width: 1024px) {
+            margin-left: 2.2% !important;
+        }
+
+        @media screen and (min-width: 1025px) {
+            margin-left: 1.1% !important;
+        }
     }
 
     .process-step-cont {

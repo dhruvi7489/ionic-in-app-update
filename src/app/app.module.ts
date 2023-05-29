@@ -13,6 +13,7 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 import { AppUpdate } from '@ionic-native/app-update/ngx';
 import { CommonModule } from '@angular/common';
 import { NgOtpInputModule } from 'ng-otp-input';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -40,6 +41,7 @@ import { NgOtpInputModule } from 'ng-otp-input';
     Storage,
     AppVersion,
     AppUpdate,
+    LocationAccuracy
   ],
   bootstrap: [AppComponent],
 })

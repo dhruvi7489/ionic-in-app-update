@@ -25,9 +25,9 @@
                                 </ion-col>
                             </ion-row>
                         </ion-col>
-                        <ion-col class="p-0 ion-align-self-center" size="4"
-                            *ngIf="myEarningsService.availableAmountForWithdraw != 0">
-                            <custom-button [title]="'Withdraw'" [button]="'primary'" [disabled]="false" appDebounceClick
+                        <ion-col class="p-0 ion-align-self-center" size="4">
+                            <custom-button [title]="'Withdraw'" [button]="'primary'"
+                                [disabled]="myEarningsService.availableAmountForWithdraw <= 0" appDebounceClick
                                 (debounceClick)="withdrawAmount()" [debounceTimeConst]="300">
                             </custom-button>
                         </ion-col>
@@ -263,8 +263,7 @@
             <ion-infinite-scroll-content></ion-infinite-scroll-content>
         </ion-infinite-scroll>
 
-        <div class="ml-16 mr-16"
-            *ngIf="!myEarningsService.earningStatus && myEarningsService.earningRecords?.length == 0">
+        <div class="ml-16 mr-16" *ngIf="!myEarningsService.earningStatus && myEarningsService.showNoEarningsFound">
             <div class="data-not-found-wrap">
                 <div class="center-card-wrap">
                     <div class="pb-0">

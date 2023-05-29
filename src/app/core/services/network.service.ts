@@ -59,7 +59,8 @@ export class NetworkService {
                     if (this.modal) {
                         this.modalCtrl.dismiss();
                     }
-                    if (tokenKey) {
+                    const onboringFlowVisited = await this.storage.get('onboringFlowVisited');
+                    if (tokenKey && onboringFlowVisited) {
                         this.router.navigateByUrl("tabs/available-jobs/available-jobs-list");
                     }
                 }

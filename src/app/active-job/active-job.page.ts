@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CameraSource } from '@capacitor/camera';
-import { AvailableJobsService } from '../available-jobs/available-jobs.service';
 import { LocationService } from '../core/services/location.service';
 import { ActiveJobService } from './active-job.service';
 

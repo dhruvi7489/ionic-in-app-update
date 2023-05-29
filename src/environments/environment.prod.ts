@@ -16,8 +16,8 @@ export const environment = {
   },
   log: true,
   environmentName: 'local',
-  version: "1.0.31",
-  contactSuppportNumber: "917397998705",
+  version: "1.0.32",
+  contactSuppportNumber: "918178582667",
   apiUrl:
     // 'https://uatapi.hour4u.com/api/', // UAT Api url
     'https://api.hour4u.com/api/', // Production Api url

@@ -49,8 +49,7 @@
 
   <div class="c-container-wrap" [ngClass]="{'backgroud-color': myJobsService.myJobsList?.length != 0, 
     'h-550' : myJobsService.myJobsList?.length != 0 }">
-    <div class="data-not-found-wrap pt-20 pb-20"
-      *ngIf="myJobsService.myJobsList.length == 0 && !myJobsService.errorInApiCall">
+    <div class="data-not-found-wrap pt-20 pb-20" *ngIf="myJobsService.noDataFound && !myJobsService.errorInApiCall">
       <div class="center-card-wrap">
         <div class="pb-0">
           <ion-row>
@@ -76,8 +75,8 @@
           <ion-row>
             <ion-col size="12" class="p-0">
               <!-- (btnClick)="findJobs()" -->
-              <custom-button [title]="'Find jobs'" [button]="'primary'" [disabled]="myJobsService.noDataFound"
-                appDebounceClick (debounceClick)="findJobs()" [debounceTimeConst]="300">
+              <custom-button [title]="'Find jobs'" [button]="'primary'" appDebounceClick (debounceClick)="findJobs()"
+                [debounceTimeConst]="300">
               </custom-button>
             </ion-col>
           </ion-row>
@@ -186,7 +185,7 @@
                   <div class="pr-8">
                     <img src="../../assets/imgs/Iconsax/Svg/All/outline/location.svg">
                   </div>
-                  <div class="ternary sub-heading-xs fw-400">
+                  <div class="ternary sub-heading-xs fw-400 ion-align-self-center">
                     {{job?.location?.address | Description : 100}}
                   </div>
                 </div>

@@ -9,10 +9,10 @@
         <ion-refresher-content refreshingSpinner="lines"></ion-refresher-content>
     </ion-refresher>
 
-    <div class="c-container-wrap"
-        [ngClass]="{'backgroud-color': availableJobsService?.jobLists?.length != 0 , 'h-540' : availableJobsService?.jobLists?.length != 0 && availableJobsService?.jobLists?.length <= 2}">
+    <div class="c-container-wrap" [ngClass]="{'backgroud-color': availableJobsService?.jobLists?.length != 0 , 
+        'h-540' : availableJobsService?.jobLists?.length != 0 && availableJobsService?.jobLists?.length <= 2}">
         <div class="data-not-found-wrap pt-20 pb-20"
-            *ngIf="availableJobsService?.jobLists.length == 0 && !availableJobsService?.errorInApiCall">
+            *ngIf="availableJobsService?.showNoJobFound && !availableJobsService?.errorInApiCall">
             <div class="center-card-wrap">
                 <div class="pb-0">
                     <ion-row>

@@ -61,6 +61,7 @@ export class PushNotificationService {
       await PushNotifications.addListener('registration', token => {
         console.info('Registration token: ', token.value);
         this.storage.set('FCMToken', token.value);
+        localStorage.setItem('FCMToken', token.value);
         this.updateToken(token.value)
       });
 

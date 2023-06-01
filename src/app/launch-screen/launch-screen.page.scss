@@ -9,3 +9,11 @@ ion-slides {
         height: 84vh !important;
     }
 }
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+
+    /* CSS specific to Safari browser */
+    ::ng-deep .swiper-wrapper {
+        height: 84vh !important;
+    }
+}

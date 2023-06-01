@@ -40,3 +40,10 @@ npx cap open ios
 ------------ Check key value from keystore file
 
 keytool -list -v -keystore hour4u-keystore.jsk
+
+
+-------------------- Resources geneerate for IOS & ANDROID
+$ cordova-res ios --skip-config --copy
+$ cordova-res android --skip-config --copy
+
+npx capacitor-assets generate // Add to android folder

@@ -34,7 +34,7 @@ export class AppComponent {
     public commonProvider: CommonProvider,
     public availableJobsService: AvailableJobsService,
     public navParams: NavParams,
-    public locationService: LocationService,
+    // public locationService: LocationService,
     private alertCtrl: AlertController,
     public storage: Storage,
     private zone: NgZone,
@@ -44,6 +44,9 @@ export class AppComponent {
     public navCtrl: NavController,
     public loadingService: LoadingService,
   ) {
+    SplashScreen.show({
+      autoHide: false,
+    });
     this.initializeApp();
   }
 
@@ -87,10 +90,10 @@ export class AppComponent {
     this.platform.ready().then(async () => {
       if (Capacitor.getPlatform() !== 'web') {
         // Splash screen duration
-        await SplashScreen.show({
-          showDuration: 1800,
-          autoHide: true,
-        });
+        // await SplashScreen.show({
+        //   showDuration: 1800,
+        //   autoHide: true,
+        // });
 
         // Statusbar background and icons color change
         StatusBar.setBackgroundColor({

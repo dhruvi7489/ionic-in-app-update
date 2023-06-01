@@ -12,7 +12,11 @@
 			]
 		},
 		"SplashScreen": {
-			"launchShowDuration": 0
+			"launchAutoHide": false,
+			"splashFullScreen": false,
+			"splashImmersive": false,
+			"backgroundColor": "#080A52",
+			"useDialog": false
 		},
 		"LocalNotifications": {
 			"smallIcon": "icon.png",

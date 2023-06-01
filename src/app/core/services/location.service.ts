@@ -153,7 +153,10 @@ export class LocationService {
                     this.setLocationCordinates(position);
                 }, (err) => {
                     console.log("err", err)
-                    this.toastService.showMessage(err.message);
+                    if (!err.message)
+                        this.toastService.showMessage("User denied to acceess location!");
+                    else
+                        this.toastService.showMessage(err.message);
                 });
             }
         } else {

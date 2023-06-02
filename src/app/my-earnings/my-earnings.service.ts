@@ -258,7 +258,7 @@ export class MyEarningsService {
         await this.modalCtrl.dismiss();
         await this.fetchUserWallet();
         await this.fetchUserPayouts(false);
-      }, 1000);
+      }, 500);
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
       this.toastService.showMessage(err.error.statusMessage)

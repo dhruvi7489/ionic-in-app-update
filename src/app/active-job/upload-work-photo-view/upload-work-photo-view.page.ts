@@ -20,8 +20,17 @@ export class UploadWorkPhotoViewPage implements OnInit {
   ionViewWillEnter() {
     this.activeJobService.workPictureDescription = null;
   }
-  
+
   addDescription(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
+    this.activeJobService.workPictureDescription = event.ngModelData;
+    this.activeJobService.leftworkPictureDescriptionCharacters = this.activeJobService.maxlengthworkPictureDescription - this.activeJobService.workPictureDescription.length;
+  }
+
+  onPasteAddDescription(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
     this.activeJobService.workPictureDescription = event.ngModelData;
     this.activeJobService.leftworkPictureDescriptionCharacters = this.activeJobService.maxlengthworkPictureDescription - this.activeJobService.workPictureDescription.length;
   }

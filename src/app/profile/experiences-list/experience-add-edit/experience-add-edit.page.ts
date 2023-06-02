@@ -44,11 +44,28 @@ export class ExperienceAddEditPage implements OnInit {
   }
 
   addExperienceDescription(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
+    this.profileService.experienceDescription = event.ngModelData;
+    this.profileService.leftCharactersExperienceDescription = this.profileService.maxlengthExperienceDescription - this.profileService.experienceDescription.length;
+  }
+
+  onPasteAddExperienceDescription(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
     this.profileService.experienceDescription = event.ngModelData;
     this.profileService.leftCharactersExperienceDescription = this.profileService.maxlengthExperienceDescription - this.profileService.experienceDescription.length;
   }
 
   addLink(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
+    this.profileService.links[event.id].url = event.ngModelData;
+  }
+
+  onPasteAddLink(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
     this.profileService.links[event.id].url = event.ngModelData;
   }
 

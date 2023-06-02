@@ -36,6 +36,14 @@ export class OnboardingPersonalInfoPage implements OnInit {
   }
 
   getFullName(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
+    this.onboardingService.full_name = event.ngModelData;
+  }
+
+  onPasteGetFullName(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
     this.onboardingService.full_name = event.ngModelData;
   }
 

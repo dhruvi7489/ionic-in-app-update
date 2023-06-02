@@ -88,7 +88,8 @@
         </ion-row>
         <custom-input [inputType]="'textarea'" [placeholder]="'Type a feedback here'"
           [ngModelData]="activeJobService.jobRatingDescription" [id]="'jobRatingDescription'" [rows]="'5'"
-          (keyUp)="addJobRatingDescription($event)" [maxlength]="activeJobService.maxlengthjobRatingDescription">
+          (keyUp)="addJobRatingDescription($event)" (pasteData)="onPasteAddJobRatingDescription($event)"
+          [maxlength]="activeJobService.maxlengthjobRatingDescription">
         </custom-input>
         <div class="sub-heading-sm ternary fw-400 mt-8 ml-4">
           {{activeJobService.leftCharactersForjobRatingDescription}} characters left</div>

@@ -22,7 +22,7 @@
           <ion-label>Enter your phone or email</ion-label>
         </div>
         <custom-input [inputType]="'text'" [placeholder]="'Phone or Email'" [ngModelData]="mobile" [id]="'mobile'"
-          (keyUp)="onKeyUp($event)"></custom-input>
+          (keyUp)="onKeyUp($event)" (pasteData)="onPasteOnKeyUp($event)"></custom-input>
         <div class="c-button-wrapper">
           <custom-button [title]="'Next'" (btnClick)="openOTPPage()" [disabled]="!mobile" [button]="'primary'">
           </custom-button>

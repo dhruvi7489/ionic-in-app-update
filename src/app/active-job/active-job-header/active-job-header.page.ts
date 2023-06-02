@@ -27,6 +27,15 @@ export class ActiveJobHeaderPage implements OnInit {
   }
 
   searchKeyUp(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
+    this.search = event.ngModelData;
+    this.searchData.emit(this.search);
+  }
+
+  onPaste(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
     this.search = event.ngModelData;
     this.searchData.emit(this.search);
   }

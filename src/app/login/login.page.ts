@@ -30,6 +30,14 @@ export class LoginPage implements OnInit {
   }
 
   onKeyUp(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
+    this.mobile = event.ngModelData;
+  }
+
+  onPasteOnKeyUp(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
     this.mobile = event.ngModelData;
   }
 }

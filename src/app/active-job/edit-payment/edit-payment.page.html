@@ -35,7 +35,8 @@
         <ion-row>
           <ion-col size="12" class="pl-0">
             <custom-input [inputType]="'number'" [placeholder]="'&#x20b9; 0'" [ngModelData]="expectedAmount"
-              [id]="'expectedAmount'" (keyUp)="addExpectedAmount($event)">
+              (pasteData)="onPasteAddExpectedAmount($event)" [id]="'expectedAmount'"
+              (keyUp)="addExpectedAmount($event)">
             </custom-input>
           </ion-col>
         </ion-row>
@@ -49,7 +50,8 @@
         </ion-row>
         <custom-input [inputType]="'textarea'" [placeholder]="'Type a reason here'"
           [ngModelData]="activeJobService.reasonForExpectedAmount" [id]="'reasonForExpectedAmount'" [rows]="'5'"
-          (keyUp)="addReasonForExpectedAmount($event)" [maxlength]="activeJobService.maxlengthReasonForExpectedAmount">
+          (pasteData)="onPasteReasonForExpectedAmount($event)" (keyUp)="addReasonForExpectedAmount($event)"
+          [maxlength]="activeJobService.maxlengthReasonForExpectedAmount">
         </custom-input>
         <div class="sub-heading-sm ternary fw-400 mt-8 ml-4">
           {{activeJobService.leftCharactersForExpectedAmount}} characters left</div>

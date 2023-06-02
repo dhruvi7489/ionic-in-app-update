@@ -44,8 +44,8 @@
       <ion-col size="12">
         <div class="ml-16 mr-16 mb-8 search-wrap">
           <custom-input [inputType]="'text'" [placeholder]="'Search'" [ngModelData]="search"
-            (keyUp)="searchKeyUp($event)" [iconPosition]="'left'" [id]="'search'"
-            [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/search-normal-1.svg'">
+            (keyUp)="searchKeyUp($event)" (pasteData)="onPasteSearchKeyUp($event)" [iconPosition]="'left'"
+            [id]="'search'" [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/search-normal-1.svg'">
           </custom-input>
         </div>
       </ion-col>

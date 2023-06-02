@@ -22,10 +22,27 @@ export class EditPaymentPage implements OnInit {
   }
 
   addExpectedAmount(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
+    this.expectedAmount = event.ngModelData ? parseFloat(parseFloat(event.ngModelData).toFixed(2)) : null;
+  }
+
+  onPasteAddExpectedAmount(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
     this.expectedAmount = event.ngModelData ? parseFloat(parseFloat(event.ngModelData).toFixed(2)) : null;
   }
 
   addReasonForExpectedAmount(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
+    this.activeJobService.reasonForExpectedAmount = event.ngModelData;
+    this.activeJobService.leftCharactersForExpectedAmount = this.activeJobService.maxlengthReasonForExpectedAmount - this.activeJobService.reasonForExpectedAmount.length;
+  }
+
+  onPasteReasonForExpectedAmount(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
     this.activeJobService.reasonForExpectedAmount = event.ngModelData;
     this.activeJobService.leftCharactersForExpectedAmount = this.activeJobService.maxlengthReasonForExpectedAmount - this.activeJobService.reasonForExpectedAmount.length;
   }

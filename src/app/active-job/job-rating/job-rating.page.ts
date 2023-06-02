@@ -16,6 +16,15 @@ export class JobRatingPage implements OnInit {
   }
 
   addJobRatingDescription(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
+    this.activeJobService.jobRatingDescription = event?.ngModelData;
+    this.activeJobService.leftCharactersForjobRatingDescription = this.activeJobService?.maxlengthjobRatingDescription - this.activeJobService?.jobRatingDescription?.length;
+  }
+
+  onPasteAddJobRatingDescription(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
     this.activeJobService.jobRatingDescription = event?.ngModelData;
     this.activeJobService.leftCharactersForjobRatingDescription = this.activeJobService?.maxlengthjobRatingDescription - this.activeJobService?.jobRatingDescription?.length;
   }

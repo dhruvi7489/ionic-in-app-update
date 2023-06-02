@@ -46,10 +46,14 @@ export class OnboardingPhoneNumberPage implements OnInit {
   }
 
   onKeyUp(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
     this.onboardingService.mobile = event.ngModelData;
   }
 
   onPaste(event) {
+    event.event.preventDefault();
+    event.event.stopPropagation();
     this.onboardingService.mobile = event.ngModelData;
   }
 

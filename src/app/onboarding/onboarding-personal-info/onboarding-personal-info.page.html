@@ -18,7 +18,7 @@
       <ion-label>Your name*</ion-label>
     </div>
     <custom-input [inputType]="'text'" [placeholder]="'Full name'" [ngModelData]="onboardingService.full_name"
-      [id]="'full_name'" (keyUp)="getFullName($event)">
+      [id]="'full_name'" (keyUp)="getFullName($event)" (pasteData)="onPasteGetFullName($event)">
     </custom-input>
     <!-- <div *ngIf="!onboardingService.full_name" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter user name</div> -->
     <div *ngIf="showError && !onboardingService.full_name" class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Please enter

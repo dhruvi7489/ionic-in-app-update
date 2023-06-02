@@ -11,7 +11,7 @@
     </div>
     <custom-input [inputType]="'textarea'" [placeholder]="'Description'"
       [ngModelData]="profileService.experienceDescription" [id]="'experienceDescription'" [rows]="'5'"
-      (keyUp)="addExperienceDescription($event)">
+      (keyUp)="addExperienceDescription($event)" (pasteData)="onPasteAddExperienceDescription($event)">
       <!-- [maxlength]="profileService.maxlengthExperienceDescription" -->
     </custom-input>
     <!-- <div class="sub-heading-sm ternary fw-400 mt-8">
@@ -25,8 +25,8 @@
     </div>
     <div *ngFor="let link of profileService.links; let i=index;" [ngClass]="{'mt-10': profileService.links.length > 1}">
       <custom-input [inputType]="'text'" [placeholder]="'Link'" [ngModelData]="link.url" (keyUp)="addLink($event)"
-        [id]="link.id" [imgPath]="link.imgPath" [imgPath1]="link.imgPath1" (imgPathIconClick)="addNewLink(i)"
-        (imgPath1IconClick)="minusNewLink(i)">
+        (pasteData)="onPasteAddLink($event)" [id]="link.id" [imgPath]="link.imgPath" [imgPath1]="link.imgPath1"
+        (imgPathIconClick)="addNewLink(i)" (imgPath1IconClick)="minusNewLink(i)">
       </custom-input>
     </div>
     <!-- <div class="d-flex mt-10">

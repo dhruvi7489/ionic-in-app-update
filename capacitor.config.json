@@ -12,7 +12,7 @@
 			]
 		},
 		"SplashScreen": {
-			"launchAutoHide": false,
+			"launchAutoHide": true,
 			"splashFullScreen": false,
 			"splashImmersive": false,
 			"backgroundColor": "#080A52",

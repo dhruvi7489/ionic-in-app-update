@@ -45,7 +45,7 @@ export class AppComponent {
     public loadingService: LoadingService,
   ) {
     SplashScreen.show({
-      autoHide: false,
+      autoHide: true,
     });
     this.initializeApp();
   }

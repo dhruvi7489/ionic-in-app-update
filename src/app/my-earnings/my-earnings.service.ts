@@ -248,17 +248,17 @@ export class MyEarningsService {
       "amount": this.wantAmountForWithdraw
     }
     this.loadingService.show();
-    this.commonProvider.PostMethod(Apiurl.WithdrawAmount, param).then((res: any) => {
+    this.commonProvider.PostMethod(Apiurl.WithdrawAmount, param).then(async (res: any) => {
       this.toastService.showMessage("Your withdrawal request sent successfully!")
-      this.loadingService.dismiss();
-      this.modalCtrl.dismiss();
+      await this.loadingService.dismiss();
+      await this.modalCtrl.dismiss();
       this.wantAmountForWithdraw = null;
       setTimeout(async () => {
         this.selectedTab = 'Unapproved';
-        this.modalCtrl.dismiss();
+        await this.modalCtrl.dismiss();
         await this.fetchUserWallet();
         await this.fetchUserPayouts(false);
-      }, 500);
+      }, 1000);
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();
       this.toastService.showMessage(err.error.statusMessage)

@@ -69,12 +69,10 @@ export class AvailableJobsService {
     let param = { "gender": loginUserGender, "query": search }
     this.commonProvider.PostMethod(Apiurl.GetJobsList + params, param).then((res: any) => {
       this.loadingService.dismiss();
-      // this.jobLists = [];
+      this.errorInApiCall = false;
       if (res && res.content?.length != 0) {
-        // this.jobLists = res.content;
         this.totalAvailableRecords = res?.totalElements;
         this.loadedMyAvailablesRecords = res?.content?.length;
-        this.errorInApiCall = false;
         res.content?.forEach((element) => {
           this.jobLists.push(element);
         });
@@ -83,6 +81,8 @@ export class AvailableJobsService {
         } else {
           this.showNoJobFound = false;
         }
+      } else {
+        this.showNoJobFound = true;
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();

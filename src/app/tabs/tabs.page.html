@@ -6,25 +6,25 @@
         src="../../assets/imgs/tabs/available-job-search-inactive.svg">
       <img *ngIf="onboardingService?.activeTab === 'available-jobs'"
         src="../../assets/imgs/tabs/available-job-search-active.svg">
-      <ion-label>Jobs</ion-label>
+      <ion-label [ngClass]="{'primary' : onboardingService?.activeTab == 'available-jobs'}">Jobs</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="active-job" (click)="goToRoute('tabs/active-job')">
       <img *ngIf="onboardingService?.activeTab !== 'active-job'" src="../../assets/imgs/tabs/active-job-inactive.svg">
       <img *ngIf="onboardingService?.activeTab === 'active-job'" src="../../assets/imgs/tabs/active-job-active.svg">
-      <ion-label>Active job</ion-label>
+      <ion-label [ngClass]="{'primary' : onboardingService?.activeTab == 'active-job'}">Active job</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="my-earnings" (click)="tabsClick($event)">
       <img *ngIf="onboardingService?.activeTab !== 'my-earnings'" src="../../assets/imgs/tabs/earning-inactive.svg">
       <img *ngIf="onboardingService?.activeTab === 'my-earnings'" src="../../assets/imgs/tabs/earning-active.svg">
-      <ion-label>Earnings</ion-label>
+      <ion-label [ngClass]="{'primary' : onboardingService?.activeTab == 'my-earnings'}">Earnings</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="my-jobs" (click)="tabsClick($event)">
       <img *ngIf="onboardingService?.activeTab !== 'my-jobs'" src="../../assets/imgs/tabs/my-jobs-inactive.svg">
       <img *ngIf="onboardingService?.activeTab === 'my-jobs'" src="../../assets/imgs/tabs/my-jobs-active.svg">
-      <ion-label>My jobs</ion-label>
+      <ion-label [ngClass]="{'primary' : onboardingService?.activeTab == 'my-jobs'}">My jobs</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="profile" (click)="tabsClick($event);">
@@ -35,8 +35,8 @@
           {{onboardingService?.initial}}
         </div>
       </div>
-      <ion-label [ngClass]="{'mt-1': onboardingService?.initial?.length === 1}">Profile</ion-label>
+      <ion-label
+        [ngClass]="{'mt-1': onboardingService?.initial?.length === 1 , 'primary' : onboardingService?.activeTab == 'profile'}">Profile</ion-label>
     </ion-tab-button>
   </ion-tab-bar>
-
 </ion-tabs>

@@ -32,7 +32,9 @@ export class EditProfilePage implements OnInit {
       };
       this.profileService.getProfileData();
     }
+    console.log(this.profileService.dob)
   }
+
   disable() {
     this.disabled = true;
     if (this.profileService.full_name && this.profileService.email_address && this.profileService.gender && this.profileService.phone_no
@@ -52,6 +54,7 @@ export class EditProfilePage implements OnInit {
   }
 
   getDOB(event) {
+    console.log(event.ngModelData)
     this.profileService.dob = event.ngModelData;
     this.disable();
   }

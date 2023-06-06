@@ -192,6 +192,7 @@ export class OnboardingService {
         this.loadingService.dismiss();
         this.locationCheckClick = false;
         this.savePersonalInfoBtnDisabled = false;
+        await this.updateToken();
         await this.getPersonalInfo();
         await this.updateProfile();
         return;

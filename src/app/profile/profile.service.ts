@@ -115,7 +115,7 @@ export class ProfileService {
         this.profileData = res;
         this.full_name = this.profileData.name;
         this.email_address = this.profileData.email;
-        this.dob = moment(new Date(this.profileData?.dob)).format('YYYY-MM-DD');
+        this.dob = this.profileData?.dob?.length ? moment(new Date(this.profileData?.dob[0], this.profileData?.dob[1] - 1, this.profileData?.dob[2])).format('YYYY-MM-DD') : '';
         this.phone_no = this.profileData.mobile;
         this.gender = this.profileData.gender;
         this.location = this.profileData.address?.address;

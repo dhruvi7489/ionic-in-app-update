@@ -69,8 +69,6 @@
     <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">
       <ion-label>Date of birth*</ion-label>
     </div>
-
-    <div> {{profileService.dob | date:'dd-MM-YYYY'}}</div>
     <custom-input [inputType]="'date'" [placeholder]="'DOB'" [ngModelData]="profileService.dob"
       (dateChange)="getDOB($event)" [id]="'dob'" [name]="'dob'"
       [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/calendar-1.svg'" [for]="true">

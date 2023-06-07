@@ -31,10 +31,13 @@ alias : hour4u
 zipalign -v 4 ./android/app/build/outputs/apk/release/app-release-unsigned.apk hour4u.apk
 
 
+
 ------------ Build IOS APK 
-ionic Build
+ Also follow this doc : https://capacitorjs.com/docs/ios
+ionic build
 npx cap sync ios
 npx cap open ios
+
 
 
 ------------ Check key value from keystore file
@@ -42,8 +45,9 @@ npx cap open ios
 keytool -list -v -keystore hour4u-keystore.jsk
 
 
+
 -------------------- Resources geneerate for IOS & ANDROID
 $ cordova-res ios --skip-config --copy
 $ cordova-res android --skip-config --copy
 
-npx capacitor-assets generate // Add to android folder
+npx capacitor-assets generate // Add to ANDROID & IOS & PWA folder

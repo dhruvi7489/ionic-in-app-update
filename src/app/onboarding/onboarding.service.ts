@@ -56,7 +56,7 @@ export class OnboardingService {
   full_name: string = null;
   email_address: string = null;
   dob: any = moment(new Date()).format("YYYY-MM-DD");
-  referralCode: string = null;
+  referralId: string = null;
   gender: any;
   id: string = null;
   loginUserPersonalInfo = null;
@@ -188,7 +188,7 @@ export class OnboardingService {
     console.log(this.addressObj)
     this.loadingService.show();
     if (!JSON.parse(loginUserInfo) && this.locationCheckClick) {
-      await this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referralCode)).then(async (res: any) => {
+      this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referralId)).then(async (res: any) => {
         this.loadingService.dismiss();
         this.locationCheckClick = false;
         this.savePersonalInfoBtnDisabled = false;
@@ -215,7 +215,7 @@ export class OnboardingService {
     const loginUserInfo = await this.storage.get('loginUserInfo');
     this.loadingService.show();
     if (!JSON.parse(loginUserInfo)) {
-      await this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referralCode)).then(async (res: any) => {
+      this.commonProvider.PostMethod(Apiurl.SavePersonalInfo, new PersonalInfoRequest(this.dob, this.email_address, this.gender, this.mobile, this.full_name, this.referralId)).then(async (res: any) => {
         this.loadingService.dismiss();
         this.toastService.showMessage("Personal information saved successfully");
         this.router.navigateByUrl('onboarding/onboarding-profile-picture');
@@ -246,7 +246,7 @@ export class OnboardingService {
         address: this.addressObj,
         mobile: JSON.parse(loginUserInfo)?.mobile
       }
-      await this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + JSON.parse(loginUserInfo)?.id, obj).then(async (res: any) => {
+      this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + JSON.parse(loginUserInfo)?.id, obj).then(async (res: any) => {
         this.loadingService.dismiss();
         this.toastService.showMessage("Personal information saved successfully");
         this.router.navigateByUrl('onboarding/onboarding-profile-picture');
@@ -270,7 +270,7 @@ export class OnboardingService {
   // Send OTP to give mobile Number
   async sendOtp() {
     this.loadingService.show();
-    await this.commonProvider.GetMethod(Apiurl.SendOTPUrl + this.mobile, null).then(async (res) => {
+    this.commonProvider.GetMethod(Apiurl.SendOTPUrl + this.mobile, null).then(async (res) => {
       this.loadingService.dismiss();
       this.storage.set('loginUserMobileNo', this.mobile);
       this.toastService.showMessage("OTP send to " + this.mobile);
@@ -285,7 +285,7 @@ export class OnboardingService {
   async login() {
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     this.loadingService.show();
-    return await this.commonProvider.PostMethod(Apiurl.LoginWithOTPUrl, new LoginRequest(loginUserMobileNo, this.otp)).then(async (res: LoginResponse) => {
+    this.commonProvider.PostMethod(Apiurl.LoginWithOTPUrl, new LoginRequest(loginUserMobileNo, this.otp)).then(async (res: LoginResponse) => {
       this.loadingService.dismiss();
       await this.toastService.showMessage("Login successfully");
       // if (res) {
@@ -306,7 +306,7 @@ export class OnboardingService {
   // Get login user Information by Mobile Number
   async getPersonalInfo(i?) {
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
-    return await this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
       if (res) {
         this.loginUserPersonalInfo = res;
         this.id = this.loginUserPersonalInfo?.id;
@@ -316,7 +316,7 @@ export class OnboardingService {
         this.mobile = this.loginUserPersonalInfo?.mobile;
         this.full_name = this.loginUserPersonalInfo?.name;
         // this.full_name = null
-        this.referralCode = this.loginUserPersonalInfo?.referralCode;
+        this.referralId = this.loginUserPersonalInfo?.referralId;
         this.storage.set('loginUserInfo', JSON.stringify(this.loginUserPersonalInfo));
         this.storage.set('loginUserId', this.id);
         this.storage.set('loginUserGender', this.gender);
@@ -452,10 +452,10 @@ export class OnboardingService {
     this.loginUserPersonalInfo.gender = this.gender;
     this.loginUserPersonalInfo.mobile = this.mobile;
     this.loginUserPersonalInfo.name = this.full_name;
-    this.loginUserPersonalInfo.referralCode = this.referralCode;
+    this.loginUserPersonalInfo.referralId = this.referralId;
     this.loginUserPersonalInfo.profilePhoto = this.profile_picture;
     await this.loadingService.show();
-    return await this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + this.id, this.loginUserPersonalInfo).then(async (res: any) => {
+    this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + this.id, this.loginUserPersonalInfo).then(async (res: any) => {
       await this.loadingService.dismiss();
       this.router.navigateByUrl('onboarding/onboarding-profile-picture');
       if (res) {
@@ -574,14 +574,14 @@ export class OnboardingService {
     formData.append('id', loginUserId);
     formData.append('profile', blobData, filename);
     await this.loadingService.show();
-    await this.commonProvider.PostMethod(Apiurl.UploadProfilePicture + loginUserId, formData).then(async (res: S3Object) => {
+    this.commonProvider.PostMethod(Apiurl.UploadProfilePicture + loginUserId, formData).then(async (res: S3Object) => {
       await this.loadingService.dismiss();
       if (res) {
         this.zone.run(() => {
           s3Object = res;
           this.profile_picture = S3Util.getFileUrl(res);
         })
-        await this.commonProvider.PutMethod(Apiurl.UpdateProfilePicture + loginUserId, s3Object.key).then(async (res: any) => {
+        this.commonProvider.PutMethod(Apiurl.UpdateProfilePicture + loginUserId, s3Object.key).then(async (res: any) => {
           await this.loadingService.dismiss();
           if (res) {
             this.loginUserPersonalInfo.profilePhoto = s3Object.key;
@@ -614,7 +614,7 @@ export class OnboardingService {
         this.gender = this.loginUserPersonalInfo?.gender;
         this.mobile = this.loginUserPersonalInfo?.mobile;
         this.full_name = this.loginUserPersonalInfo?.name;
-        this.referralCode = this.loginUserPersonalInfo?.referralCode;
+        this.referralId = this.loginUserPersonalInfo?.referralId;
         if (this.loginUserPersonalInfo?.workExperiences && this.loginUserPersonalInfo?.workExperiences?.length != 0) {
           this.description = this.loginUserPersonalInfo?.workExperiences[0]?.summary;
           this.leftCharacters = this.maxlengthDescription - this.description?.length;
@@ -666,11 +666,11 @@ export class OnboardingService {
     this.jobCategories = [];
     const loginUserId = await this.storage.get('loginUserId');
     let params = "?page=0&size=500&sort=createdOn,asc"
-    await this.commonProvider.GetMethod(Apiurl.GetJobCategory + params, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.GetJobCategory + params, null).then(async (res: any) => {
       if (res) {
         this.jobCategories = res.content;
         let obj = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
-        await this.commonProvider.GetMethod(Apiurl.JobPreference + obj, null).then(async (res: any) => {
+        this.commonProvider.GetMethod(Apiurl.JobPreference + obj, null).then(async (res: any) => {
           if (res) {
             this.jobPreferences = res.content[0];
             this.jobCategories.forEach(ele => {
@@ -738,7 +738,7 @@ export class OnboardingService {
       "jobTypeRequests": this.jobTypePreferencesRequests
     }
     if (this.jobPreferences?.id) {
-      await this.commonProvider.PutMethod(Apiurl.JobPreference + '/' + this.jobPreferences?.id, params).then(async (res: any) => {
+      this.commonProvider.PutMethod(Apiurl.JobPreference + '/' + this.jobPreferences?.id, params).then(async (res: any) => {
         await this.loadingService.dismiss();
         if (modal) {
           this.modalCtrl.dismiss();
@@ -748,7 +748,7 @@ export class OnboardingService {
         console.log(err);
       })
     } else {
-      await this.commonProvider.PostMethod(Apiurl.JobPreference, params).then(async (res: S3Object) => {
+      this.commonProvider.PostMethod(Apiurl.JobPreference, params).then(async (res: S3Object) => {
         await this.loadingService.dismiss();
         if (modal) {
           this.modalCtrl.dismiss();
@@ -774,7 +774,7 @@ export class OnboardingService {
         "summary": this.description,
         "workLink": workLink
       }
-      await this.commonProvider.PutMethod(Apiurl.EditWorkExperience + loginUserId + '?updateIndex=' + index, params).then(async (res: any) => {
+      this.commonProvider.PutMethod(Apiurl.EditWorkExperience + loginUserId + '?updateIndex=' + index, params).then(async (res: any) => {
         if (res) {
           this.toastService.showMessage('Work Experience edited successfully')
           await this.getProfileData();
@@ -808,7 +808,7 @@ export class OnboardingService {
         "summary": this.description,
         "workLink": workLink
       }
-      await this.commonProvider.PutMethod(Apiurl.SaveWorkExperience + loginUserId, params).then(async (res: any) => {
+      this.commonProvider.PutMethod(Apiurl.SaveWorkExperience + loginUserId, params).then(async (res: any) => {
         if (res) {
           this.toastService.showMessage('Work Experience added successfully')
           await this.getProfileData();
@@ -839,7 +839,7 @@ export class OnboardingService {
           deviceToken: FCMToken,
           mobile: loginUserMobileNo
         }
-        await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
+        this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
           if (res) {
           }
         }).catch((err: HttpErrorResponse) => {
@@ -861,7 +861,7 @@ export class OnboardingService {
       if (loginUserInfo) {
         await this.redirectToPage(JSON.parse(loginUserInfo));
       } else {
-        await this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
+        this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
           if (res) {
             await this.redirectToPage(res);
           } else {
@@ -872,6 +872,7 @@ export class OnboardingService {
         })
       }
     } else {
+      console.log("++++++++++++++++++++++++++++++++++++++++")
       // await this.loadingService.dismiss();
       //Location access permission 
       if (!this.locationService.locationPermissionGranted) {
@@ -881,7 +882,13 @@ export class OnboardingService {
       if (loginUserMobileNo && !TokenKey) {
         this.router.navigateByUrl('onboarding/onboarding-otp');
       } else {
-        this.router.navigateByUrl('launch-screen');
+        const lanchScreensVisited = await this.storage.get('lanchScreensVisited');
+        if (!lanchScreensVisited) {
+          console.log("+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+          this.router.navigateByUrl('launch-screen');
+        } else {
+          this.router.navigateByUrl('onboarding/onboarding-phone-number');
+        }
       }
     }
   }
@@ -904,7 +911,7 @@ export class OnboardingService {
         console.log("this.jobPreferences", this.jobPreferences)
         if (!this.jobPreferences) {
           let obj = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
-          await this.commonProvider.GetMethod(Apiurl.JobPreference + obj, null).then(async (res: any) => {
+          this.commonProvider.GetMethod(Apiurl.JobPreference + obj, null).then(async (res: any) => {
             if (res.content.length == 0) {
               this.router.navigateByUrl('onboarding/onboarding-job-type');
             } else {
@@ -960,7 +967,7 @@ export class OnboardingService {
     this.full_name = null;
     this.email_address = null;
     this.dob = moment(new Date()).format("YYYY-MM-DD");
-    this.referralCode = null;
+    this.referralId = null;
     this.gender;
     this.id = null;
     this.loginUserPersonalInfo = null;

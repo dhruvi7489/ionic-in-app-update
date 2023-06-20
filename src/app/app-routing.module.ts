@@ -126,6 +126,14 @@ const routes: Routes = [
     loadChildren: () => import('./launch-screen1/launch-screen1.module').then(m => m.LaunchScreen1PageModule)
   },
   {
+    path: 'launch-screen1',
+    loadChildren: () => import('./launch-screen1/launch-screen1.module').then(m => m.LaunchScreen1PageModule)
+  },
+  {
+    path: 'supervisor-admin/champs/:id',
+    loadChildren: () => import('./launch-screen1/launch-screen1.module').then(m => m.LaunchScreen1PageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundPageModule)
   }

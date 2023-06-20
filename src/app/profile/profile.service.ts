@@ -109,7 +109,7 @@ export class ProfileService {
   async getProfileData(i?) {
     this.loadingService.show();
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
-    await this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
       this.loadingService.dismiss();
       if (res) {
         this.profileData = res;
@@ -207,7 +207,7 @@ export class ProfileService {
     }
     this.profileData.vaccineCertID = this.vaccineCertID;
 
-    return await this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + this.profileData.id, this.profileData).then(async (res: any) => {
+    this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + this.profileData.id, this.profileData).then(async (res: any) => {
       await this.loadingService.dismiss();
       if (res) {
         this.toastService.showMessage('Personal information updated successfully');
@@ -248,7 +248,7 @@ export class ProfileService {
     await this.loadingService.show();
     const loginUserId = await this.storage.get('loginUserId');
     let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
-    await this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
       await this.loadingService.dismiss();
       if (res) {
         this.jobPreferences = res.content[0];
@@ -350,13 +350,13 @@ export class ProfileService {
     formData.append('id', loginUserId);
     formData.append('profile', blobData, filename);
 
-    await this.commonProvider.PostMethod(Apiurl.UploadProfilePicture + loginUserId, formData).then(async (res: S3Object) => {
+    this.commonProvider.PostMethod(Apiurl.UploadProfilePicture + loginUserId, formData).then(async (res: S3Object) => {
       if (res) {
         this.zone.run(() => {
           s3Object = res;
           this.profile_picture = S3Util.getFileUrl(res);
         })
-        await this.commonProvider.PutMethod(Apiurl.UpdateProfilePicture + loginUserId, s3Object.key).then(async (res: any) => {
+        this.commonProvider.PutMethod(Apiurl.UpdateProfilePicture + loginUserId, s3Object.key).then(async (res: any) => {
           if (res) {
             await this.getProfileData();
             this.toastService.showMessage('Profile picture saved successfully');
@@ -379,7 +379,7 @@ export class ProfileService {
     formData.append('id', loginUserId);
     formData.append('photo', blobData, filename);
 
-    await this.commonProvider.PostMethod(Apiurl.UploadProfilePictures + loginUserId, formData).then(async (res: S3Object) => {
+    this.commonProvider.PostMethod(Apiurl.UploadProfilePictures + loginUserId, formData).then(async (res: S3Object) => {
       if (res) {
         this.photos.push(S3Util.getFileUrl(res));
         await this.updatePhotos();
@@ -392,7 +392,7 @@ export class ProfileService {
   async updatePhotos(flag = 'save') {
     const loginUserId = await this.storage.get('loginUserId');
     await this.loadingService.show();
-    await this.commonProvider.PutMethod(Apiurl.UpdateProfilePhotos + loginUserId, this.photos).then(async (res: any) => {
+    this.commonProvider.PutMethod(Apiurl.UpdateProfilePhotos + loginUserId, this.photos).then(async (res: any) => {
       await this.loadingService.dismiss();
       if (res) {
         if (flag === 'save') {
@@ -437,7 +437,7 @@ export class ProfileService {
         'summary': this.experienceDescription,
         'workLink': workLink
       }
-      await this.commonProvider.PutMethod(Apiurl.EditWorkExperience + loginUserId + '?updateIndex=' + index, params).then(async (res: any) => {
+      this.commonProvider.PutMethod(Apiurl.EditWorkExperience + loginUserId + '?updateIndex=' + index, params).then(async (res: any) => {
         if (res) {
           this.toastService.showMessage('Work Experience edited successfully');
           this.modalCtrl.dismiss();
@@ -471,7 +471,7 @@ export class ProfileService {
       'summary': this.experienceDescription,
       'workLink': workLink
     }
-    await this.commonProvider.PutMethod(Apiurl.SaveWorkExperience + loginUserId, params).then(async (res: any) => {
+    this.commonProvider.PutMethod(Apiurl.SaveWorkExperience + loginUserId, params).then(async (res: any) => {
       if (res) {
         this.toastService.showMessage('Work Experience added successfully');
         this.modalCtrl.dismiss();
@@ -489,7 +489,7 @@ export class ProfileService {
   async deleteWorkExperience(index) {
     this.loadingService.show();
     const loginUserId = await this.storage.get('loginUserId');
-    await this.commonProvider.PutMethod(Apiurl.DeleteWorkExperience + loginUserId, index).then(async (res: any) => {
+    this.commonProvider.PutMethod(Apiurl.DeleteWorkExperience + loginUserId, index).then(async (res: any) => {
       this.loadingService.dismiss();
       if (res) {
         this.toastService.showMessage('Work Experience deleted successfully');

@@ -36,8 +36,8 @@ export class MyJobsService {
     if (this.selectedTab) {
       params += '&status=' + this.selectedTab
     }
-    await this.commonProvider.GetMethod(Apiurl.GetMyJobs + params, null).then(async (res: any) => {
-      await this.loadingService.dismiss();
+    this.commonProvider.GetMethod(Apiurl.GetMyJobs + params, null).then((res: any) => {
+      this.loadingService.dismiss();
       this.errorInApiCall = false;
       this.noDataFound = res?.content?.length == 0 ? true : false;
       if (res && res.content?.length != 0) {

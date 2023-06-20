@@ -165,7 +165,7 @@ export class AvailableJobsService {
     const loginUserId = await this.storage.get('loginUserId');
     await this.loadingService.show();
     let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
-    await this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
       await this.loadingService.dismiss();
       let typeIdFound = false;
       if (res) {
@@ -251,7 +251,7 @@ export class AvailableJobsService {
       timeTo: DateTime.local(date?.date[0], date?.date[1], date?.date[2], date?.timeTo[0], date?.timeTo[1])
     }));
     let params = loginUserId + '?sort=createdOn,desc&page=0&size=10000&status=APPROVED'
-    await this.commonProvider.GetMethod(Apiurl.GetMyJobs + params, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.GetMyJobs + params, null).then(async (res: any) => {
       this.loadingService.dismiss();
       await res?.content?.forEach(job => {
         job.dates.forEach(date => {

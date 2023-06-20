@@ -16,7 +16,7 @@ import { ActionPerformed, PushNotifications, PushNotificationSchema } from '@cap
 import { LoadingService } from './core/services/loading.service';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { environment } from 'src/environments/environment';
-import { OnboardingService } from './onboarding/onboarding.service';
+import { ToastService } from './core/services/toast.service';
 
 declare var UXCam: any;
 @Component({
@@ -26,6 +26,8 @@ declare var UXCam: any;
 })
 
 export class AppComponent {
+
+  loaderInterval: any = null;
 
   constructor(
     public platform: Platform,
@@ -43,6 +45,7 @@ export class AppComponent {
     public modalCtrl: ModalController,
     public navCtrl: NavController,
     public loadingService: LoadingService,
+    private toastService: ToastService
   ) {
     SplashScreen.show({
       autoHide: true,
@@ -54,6 +57,12 @@ export class AppComponent {
   }
 
   async initializeApp() {
+
+    // check loader available in app every particular time of interval
+    this.loaderInterval = setInterval(() => {
+      this.loadingService.getTop();
+    }, 3000)
+
     // Deep linking
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
       this.zone.run(async () => {
@@ -65,22 +74,27 @@ export class AppComponent {
         }
 
         if (slug) {
-          // this.loadingService.show();
           setTimeout(async () => {
-            // this.loadingService.dismiss();
             this.appUpdateService.forDeepLink = true;
             const loginUserId = await this.storage.get('loginUserId');
-            if (loginUserId) {
-              let url = null;
-              if (environment.apiUrl == 'https://uatapi.hour4u.com/api/') { // UAT 
-                url = event.url.split("uatapp.hour4u.com/#/").pop();
+            if (slug.includes('available-job-details')) {
+              if (loginUserId) {
+                let url = null;
+                if (environment.apiUrl == 'https://uatapi.hour4u.com/api/') { // UAT 
+                  url = event.url.split("uatapp.hour4u.com/#/").pop();
+                } else {
+                  url = event.url.split("app.hour4u.com/#/").pop();
+                }
+                slug = slug.replace('available-job-details-global/', 'available-job-details/');
+                this.router.navigateByUrl(slug);
               } else {
-                url = event.url.split("app.hour4u.com/#/").pop();
+                this.router.navigateByUrl(slug);
               }
-              slug = slug.replace('available-job-details-global/', 'available-job-details/');
+            }
+            if (slug.includes('supervisor-admin') && !loginUserId) {
               this.router.navigateByUrl(slug);
             } else {
-              this.router.navigateByUrl(slug);
+              this.toastService.showMessage("Job Seeker already logged in!")
             }
           }, 2500)
         }
@@ -314,7 +328,7 @@ export class AppComponent {
           deviceToken: token,
           mobile: loginUserMobileNo
         }
-        await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
+        this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
         }).catch(err => {
           console.log(err);
         })
@@ -385,5 +399,9 @@ export class AppComponent {
         }
       }
     }, 1000);
+  }
+
+  ngOnDestroy() {
+    this.loaderInterval.clear();
   }
 }

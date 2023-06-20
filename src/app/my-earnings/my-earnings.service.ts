@@ -55,7 +55,7 @@ export class MyEarningsService {
   // Get Payment Status
   async getPaymentStatus() {
     const loginUserId = await this.storage.get('loginUserId');
-    return await this.commonProvider.GetMethod(Apiurl.GetEarningStatus + loginUserId, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.GetEarningStatus + loginUserId, null).then(async (res: any) => {
       if (res) {
         this.earningStatus = res;
       }
@@ -69,7 +69,7 @@ export class MyEarningsService {
   //   console.log("calll 2")
   //   const loginUserId = await this.storage.get('loginUserId');
   //   // await this.loadingService.show();
-  //   return await this.commonProvider.GetMethod(Apiurl.GetAllPaymentsRecords + '?' + 'jobSeekerId=' + loginUserId, null).then(async (res: any) => {
+  //   this.commonProvider.GetMethod(Apiurl.GetAllPaymentsRecords + '?' + 'jobSeekerId=' + loginUserId, null).then(async (res: any) => {
   //     await this.loadingService.dismiss();
   //     console.log("1")
   //     if (res) {
@@ -88,7 +88,7 @@ export class MyEarningsService {
     this.loadingService.show();
     let param = '?page=' + this.page + '&size=' + this.pageSize + '&sort=createdOn,desc' + '&' + 'jobSeekerId=' + loginUserId
       + '&status=' + this.selectedTab;
-    return await this.commonProvider.GetMethod(Apiurl.Payment + param, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.Payment + param, null).then(async (res: any) => {
       this.loadingService.dismiss();
       if (res) {
         this.earningRecords = [];
@@ -128,7 +128,7 @@ export class MyEarningsService {
   async getAccountDetails() {
     const loginUserId = await this.storage.get('loginUserId');
     this.loadingService.show();
-    await this.commonProvider.GetMethod(Apiurl.GetAccountDetails + loginUserId, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.GetAccountDetails + loginUserId, null).then(async (res: any) => {
       this.loadingService.dismiss();
       if (res) {
         this.accountId = res?.id;
@@ -156,7 +156,7 @@ export class MyEarningsService {
         "authorizeBankDetails": this.authorizeBankDetails,
         "jobSeekerId": loginUserId,
       }
-      await this.commonProvider.PutMethod(Apiurl.UpdateAccountDetails + this.accountId, obj).then(async (res: any) => {
+      this.commonProvider.PutMethod(Apiurl.UpdateAccountDetails + this.accountId, obj).then(async (res: any) => {
         this.loadingService.dismiss();
         if (res) {
           await this.getAccountDetails();
@@ -175,7 +175,7 @@ export class MyEarningsService {
         "authorizeBankDetails": this.authorizeBankDetails,
         "jobSeekerId": loginUserId,
       }
-      await this.commonProvider.PostMethod(Apiurl.SaveAccountDetails, obj).then(async (res: any) => {
+      this.commonProvider.PostMethod(Apiurl.SaveAccountDetails, obj).then(async (res: any) => {
         this.loadingService.dismiss();
         if (res) {
           await this.getAccountDetails();

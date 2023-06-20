@@ -21,15 +21,15 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-slides pager (ionSlideDidChange)="getSlideIndex()" #slides>
-    <ion-slide *ngFor="let slide of slidesArray">
-      <div>
+  <swiper-container [pagination]="true" (slidechangetransitionend)="getSlideIndex()" #swiper>
+    <swiper-slide *ngFor="let slide of slidesArray">
+      <div class="wrap-content">
         <img [src]="slide.image">
         <div class="secondary fw-600 sub-heading-xl mt-24">{{slide?.headerText}}</div>
         <div class="fw-400 sub-heading-sm ternary mt-12">{{slide?.subText}}</div>
       </div>
-    </ion-slide>
-  </ion-slides>
+    </swiper-slide>
+  </swiper-container>
 </ion-content>
 
 <ion-footer>

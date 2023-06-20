@@ -1,19 +1,16 @@
-ion-slides {
-    height: -webkit-fill-available;
+swiper-container {
+    width: 100%;
+    height: 100%;
+    --swiper-pagination-color: var(--ion-color-primary);
 }
 
-@supports (-webkit-touch-callout: none) {
-
-    /* CSS specific to iOS devices */
-    ::ng-deep .swiper-wrapper {
-        height: 84vh !important;
-    }
+swiper-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-
-    /* CSS specific to Safari browser */
-    ::ng-deep .swiper-wrapper {
-        height: 84vh !important;
-    }
+.wrap-content {
+    text-align: center;
 }

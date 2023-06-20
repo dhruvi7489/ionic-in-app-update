@@ -100,7 +100,7 @@ export class PushNotificationService {
         deviceToken: token,
         mobile: loginUserMobileNo
       }
-      await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
+      this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
       }).catch(err => {
         console.log(err);
       })

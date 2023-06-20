@@ -59,7 +59,7 @@ export class OnboardingPersonalInfoPage implements OnInit {
   }
 
   getReferralCode(event) {
-    this.onboardingService.referralCode = event.ngModelData;
+    this.onboardingService.referralId = event.ngModelData;
   }
 
   savePersonalInfo(event) {

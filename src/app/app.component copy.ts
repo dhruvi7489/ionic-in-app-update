@@ -219,7 +219,7 @@ export class AppComponent {
           deviceToken: token,
           mobile: loginUserMobileNo
         }
-        await this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
+        this.commonProvider.PutMethod(Apiurl.UpdateToken, obj).then(async (res: any) => {
           console.log(res)
           if (res) {
           }

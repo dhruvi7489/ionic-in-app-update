@@ -42,7 +42,7 @@ export class AvailableJobsService {
     const loginUserGender = await this.storage.get('loginUserGender');
     let params = '?sort=createdOn,desc&page=0&size=11000';
     let param = { "gender": loginUserGender, "query": search }
-    return await this.commonProvider.PostMethod(Apiurl.GetJobsList + params, param).then(async (res: any) => {
+    this.commonProvider.PostMethod(Apiurl.GetJobsList + params, param).then(async (res: any) => {
       this.jobLists = [];
       if (res && res.length != 0) {
         this.jobLists = res;
@@ -60,7 +60,7 @@ export class AvailableJobsService {
     if (this.selectedJobId && loginUserId) {
       let params = this.selectedJobId + '/' + loginUserId;
       let param = { "gender": loginUserGender }
-      return await this.commonProvider.GetMethod(Apiurl.GetJobByJobId + params, param).then(async (res: any) => {
+      this.commonProvider.GetMethod(Apiurl.GetJobByJobId + params, param).then(async (res: any) => {
         if (res) {
           this.selectedJobDetails = res;
           this.errorInApiCall = false;
@@ -77,7 +77,7 @@ export class AvailableJobsService {
   async JobPreference(isDetailPage?: boolean) {
     const loginUserId = await this.storage.get('loginUserId');
     let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
-    return await this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
       let typeIdFound = false;
       if (res) {
         this.selectedJobPreferences = res;
@@ -143,7 +143,7 @@ export class AvailableJobsService {
       timeTo: DateTime.local(date.date[0], date.date[1], date.date[2], date.timeTo[0], date.timeTo[1])
     }));
     let params = loginUserId + '?sort=createdOn,desc&page=0&size=10000&status=APPROVED'
-    await this.commonProvider.GetMethod(Apiurl.GetMyJobs + params, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.GetMyJobs + params, null).then(async (res: any) => {
       await res.forEach(job => {
         job.dates.forEach(date => {
           const jobDateStart = DateTime.local(date.date[0], date.date[1], date.date[2], date.timeFrom[0], date.timeFrom[1]);
@@ -163,7 +163,7 @@ export class AvailableJobsService {
   }
 
   async updateHourlyRateRange(hourlyRate, isApplyLater) {
-    return await this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPref.id, { jobTypeHourlyRateRequests: this.jobPref?.jobTypePreferences }).then(async (res: any) => {
+    this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPref.id, { jobTypeHourlyRateRequests: this.jobPref?.jobTypePreferences }).then(async (res: any) => {
       if (res) {
         this.errorInApiCall = false;
         this.submitJobApplication(hourlyRate, isApplyLater);
@@ -184,7 +184,7 @@ export class AvailableJobsService {
     application.hourlyRate = hourlyRate;
     application.gender = loginUserGender;
 
-    return await this.commonProvider.PostMethod(Apiurl.SubmitJobApplication, application).then(async (res: any) => {
+    this.commonProvider.PostMethod(Apiurl.SubmitJobApplication, application).then(async (res: any) => {
       if (res && res.id) {
         this.errorInApiCall = false;
         if (!isApplyLater) {

@@ -8,6 +8,7 @@ const jobSeekerServiceUrl = 'job-seeker-service/v1/';
 const JobService = 'job-service/v1/';
 const ratingService = 'rating-service/v1/';
 const paymentService = 'payment-service/api/v1/';
+const referralService = 'referral-service/v1/';
 
 export const Apiurl = {
     RoutePath: RoutePath,
@@ -55,5 +56,6 @@ export const Apiurl = {
     UpdateProfilePhotos: jobSeekerServiceUrl + 'jobseeker/updatePhotos/',
     UpdateIntroVideo: jobSeekerServiceUrl + 'jobseeker/updateIntroVideo',
     DeleteIntroVideo: jobSeekerServiceUrl + 'jobseeker/removeIntroVideo',
-    GetDetailsByJobSeekerId: jobSeekerServiceUrl + 'jobtypepreference/getDetailByJobSeekerId/'
+    GetDetailsByJobSeekerId: jobSeekerServiceUrl + 'jobtypepreference/getDetailByJobSeekerId/',
+    CheckReferralCode: referralService + 'referral/'
 };

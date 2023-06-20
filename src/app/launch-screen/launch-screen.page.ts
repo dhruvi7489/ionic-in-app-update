@@ -1,6 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonSlides } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
+import { register } from 'swiper/element/bundle';
+
+register();
 
 @Component({
   selector: 'app-launch-screen',
@@ -8,7 +12,10 @@ import { IonSlides } from '@ionic/angular';
   styleUrls: ['./launch-screen.page.scss'],
 })
 export class LaunchScreenPage implements OnInit {
-  @ViewChild(IonSlides) slides: IonSlides;
+  // @ViewChild(IonSlides) slides: IonSlides;
+  @ViewChild('swiper')
+  swiperRef: ElementRef | undefined;
+
   currentIndex = 0;
   btnTitle: string = null;
 
@@ -30,36 +37,38 @@ export class LaunchScreenPage implements OnInit {
     }
   ];
 
-  constructor(public router: Router) { }
+  constructor(public router: Router, public storage: Storage) { }
 
   ngOnInit() {
     this.btnTitle = `Let's Start`;
   }
 
   getSlideIndex() {
-    this.slides.getActiveIndex().then(
-      (index) => {
-        this.currentIndex = index;
-        // if (this.currentIndex == 3) {
-        //   this.router.navigateByUrl('onboarding/onboarding-phone-number');
-        // }
-        // else {
-        //   this.currentIndex = this.currentIndex + 1;
-        //   this.slides.slideNext();
-        // }
-      });
+    this.currentIndex = this.swiperRef?.nativeElement.swiper.activeIndex;
+    // this.slides.getActiveIndex().then(
+    //   (index) => {
+    //     this.currentIndex = index;
+    //   });
   }
 
   letsStart() {
-    this.slides.getActiveIndex().then(res => {
-      if (res == 2) {
-        this.router.navigateByUrl('onboarding/onboarding-phone-number');
-      }
-    })
-    this.slides.slideNext();
+    // this.slides.getActiveIndex().then(res => {
+    //   if (res == 2) {
+    //     this.router.navigateByUrl('onboarding/onboarding-phone-number');
+    //   }
+    // })
+    // this.slides.slideNext();
+    if (this.swiperRef?.nativeElement.swiper.activeIndex == 2) {
+      this.storage.set('lanchScreensVisited', true);
+      this.router.navigateByUrl('onboarding/onboarding-phone-number');
+    }
+    else {
+      this.swiperRef?.nativeElement.swiper.slideTo(this.swiperRef?.nativeElement.swiper.activeIndex + 1)
+    }
   }
 
   skip() {
+    this.storage.set('lanchScreensVisited', true);
     this.router.navigateByUrl('onboarding/onboarding-phone-number');
   }
 }

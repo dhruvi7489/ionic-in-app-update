@@ -55,7 +55,7 @@ export class SetHourlyRatesService {
   // GET job preferences Detailss
   async getJobPreferences() {
     const loginUserId = await this.storage.get('loginUserId');
-    return await this.commonProvider.GetMethod(Apiurl.GetDetailsByJobSeekerId + loginUserId, null).then(async (res: any) => {
+    this.commonProvider.GetMethod(Apiurl.GetDetailsByJobSeekerId + loginUserId, null).then(async (res: any) => {
       if (res) {
         this.jobPreferenceId = res.jobPreferenceId;
         this.jobPreferences = [];
@@ -79,7 +79,7 @@ export class SetHourlyRatesService {
   // async getJobPreference() {
   // const loginUserId = await this.storage.get('loginUserId');
   //   let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
-  //   return await this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
+  //   this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
   //     if (res) {
   //       this.jobPreferences = [];
   //       res.content[0]?.jobTypePreferences.forEach((ele: any) => {

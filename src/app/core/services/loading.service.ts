@@ -13,14 +13,23 @@ export class LoadingService {
             message,
             cssClass: 'custom-loader',
         });
-        this.loading.present();
+        await this.loading.present();
     }
 
-    dismiss() {
+    async dismiss() {
         if (this.loading) {
-            this.loadingCtrl.dismiss(this.loading);
+            await this.loadingCtrl.dismiss(this.loading);
         } else {
-            this.loadingCtrl.dismiss();
+            await this.loadingCtrl.dismiss();
         }
+    }
+
+    // check loader available
+    getTop() {
+        this.loadingCtrl.getTop().then((res) => {
+            if (res) {
+                this.loadingCtrl.dismiss();
+            }
+        });
     }
 }

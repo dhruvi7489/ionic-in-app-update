@@ -31,7 +31,7 @@ export class MyJobsService {
   // Get My Jobs Data
   async getMyJobs() {
     const loginUserId = await this.storage.get('loginUserId');
-    await this.loadingService.show();
+    this.loadingService.show();
     let params = loginUserId + '?sort=createdOn,desc&page=' + this.page + '&size=' + this.pageSize;
     if (this.selectedTab) {
       params += '&status=' + this.selectedTab

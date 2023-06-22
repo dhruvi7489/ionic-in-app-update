@@ -507,6 +507,7 @@ export class ActiveJobService {
     this.selectedImg = image.dataUrl;
     this.blobData = this.b64toBlob(image.dataUrl.split('base64,')[1], `image/${image.format}`);
     this.enumType = enumType;
+    console.log("this.selectedImg", this.selectedImg);
     if (this.selectedImg) {
       await this.router.navigateByUrl('upload-work-photo-view')
     }
@@ -669,7 +670,7 @@ export class ActiveJobService {
   async saveMarkAttendanceWithLocationInfo() {
     const loginUserId = await this.storage.get('loginUserId');
     const loginUserInfo = await this.storage.get('loginUserInfo');
-    await this.loadingService.show();
+    this.loadingService.show();
     if (this.addressObj.latitude && this.addressObj.longitude) {
       let param: AttendanceBody = {
         employmentId: this.activeJob?.job?.employmentId,
@@ -680,7 +681,7 @@ export class ActiveJobService {
       }
       console.log("Mark attendance", param)
       this.commonProvider.PostMethod(Apiurl.MarkAttendance, param).then(async (res: any) => {
-        await this.loadingService.dismiss();
+        this.loadingService.dismiss();
         this.activeJob.attendance = res;
         // if(res){
         await this.getEmployeementHistory();

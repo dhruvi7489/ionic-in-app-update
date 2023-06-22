@@ -68,9 +68,9 @@ export class MyEarningsService {
   // async getAllPaymentRecords() {
   //   console.log("calll 2")
   //   const loginUserId = await this.storage.get('loginUserId');
-  //   // await this.loadingService.show();
+  //   // this.loadingService.show();
   //   this.commonProvider.GetMethod(Apiurl.GetAllPaymentsRecords + '?' + 'jobSeekerId=' + loginUserId, null).then(async (res: any) => {
-  //     await this.loadingService.dismiss();
+  //     this.loadingService.dismiss();
   //     console.log("1")
   //     if (res) {
   //       this.earningRecords = res.content;
@@ -250,7 +250,7 @@ export class MyEarningsService {
     this.loadingService.show();
     this.commonProvider.PostMethod(Apiurl.WithdrawAmount, param).then(async (res: any) => {
       this.toastService.showMessage("Your withdrawal request sent successfully!")
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       await this.modalCtrl.dismiss();
       this.wantAmountForWithdraw = null;
       setTimeout(async () => {

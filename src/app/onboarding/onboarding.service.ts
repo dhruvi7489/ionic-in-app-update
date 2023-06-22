@@ -115,17 +115,17 @@ export class OnboardingService {
     // Location cordinates subscribe if get
     this.locationService.getLocationCordinates().subscribe(async (res) => {
       console.log("Location Res============================", res)
-      await this.loadingService.show();
+      this.loadingService.show();
       this.savePersonalInfoBtnDisabled = false;
       if (res) {
-        await this.loadingService.dismiss();
+        this.loadingService.dismiss();
         if (this.locationCheckClick) {
           this.savePersonalInfoBtnDisabled = true;
           await this.getAddress(res?.coords?.latitude, res?.coords?.longitude);
         }
         return;
       } else {
-        await this.loadingService.dismiss();
+        this.loadingService.dismiss();
       }
     })
   }
@@ -192,9 +192,9 @@ export class OnboardingService {
         this.loadingService.dismiss();
         this.locationCheckClick = false;
         this.savePersonalInfoBtnDisabled = false;
+        this.id = res?.id;
         await this.updateToken();
-        await this.getPersonalInfo();
-        await this.updateProfile();
+        await this.getPersonalInfo(null, true);
         return;
       }).catch((err: HttpErrorResponse) => {
         this.locationCheckClick = false;
@@ -238,14 +238,22 @@ export class OnboardingService {
     const loginUserInfo = await this.storage.get('loginUserInfo');
     this.loadingService.show();
     if (!JSON.parse(loginUserInfo)?.address) {
+      console.log(JSON.parse(loginUserInfo), JSON.parse(loginUserInfo)?.dob)
+      let dobDate = null;
+      if (JSON.parse(loginUserInfo)?.dob?.length) {
+        dobDate = moment(new Date(JSON.parse(loginUserInfo)?.dob[0], JSON.parse(loginUserInfo)?.dob[1] - 1, JSON.parse(loginUserInfo)?.dob[2])).format("YYYY-MM-DD")
+      } else {
+        dobDate = moment(new Date(JSON.parse(loginUserInfo)?.dob)).format("YYYY-MM-DD")
+      }
       let obj = {
-        dob: moment(new Date(JSON.parse(loginUserInfo)?.dob)).format("YYYY-MM-DD"),
+        dob: dobDate,
         email: JSON.parse(loginUserInfo)?.email,
         gender: JSON.parse(loginUserInfo)?.gender,
         name: JSON.parse(loginUserInfo)?.name,
         address: this.addressObj,
         mobile: JSON.parse(loginUserInfo)?.mobile
       }
+      console.log("*****************************", obj, JSON.parse(loginUserInfo)?.id)
       this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + JSON.parse(loginUserInfo)?.id, obj).then(async (res: any) => {
         this.loadingService.dismiss();
         this.toastService.showMessage("Personal information saved successfully");
@@ -304,7 +312,7 @@ export class OnboardingService {
   }
 
   // Get login user Information by Mobile Number
-  async getPersonalInfo(i?) {
+  async getPersonalInfo(i?, isUpdateProfile?: boolean) {
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
       if (res) {
@@ -354,6 +362,9 @@ export class OnboardingService {
         }
         await this.checkEmailValidation();
         await this.setProfilePicture();
+        if (isUpdateProfile) {
+          this.updateProfile();
+        }
       } else {
         this.router.navigateByUrl('onboarding/onboarding-personal-info');
       }
@@ -454,9 +465,10 @@ export class OnboardingService {
     this.loginUserPersonalInfo.name = this.full_name;
     this.loginUserPersonalInfo.referralId = this.referralId;
     this.loginUserPersonalInfo.profilePhoto = this.profile_picture;
-    await this.loadingService.show();
+    this.loadingService.show();
+    console.log("#########################", this.dob, this.id, this.loginUserPersonalInfo)
     this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + this.id, this.loginUserPersonalInfo).then(async (res: any) => {
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       this.router.navigateByUrl('onboarding/onboarding-profile-picture');
       if (res) {
         this.toastService.showMessage("Personal information updated successfully");
@@ -573,16 +585,16 @@ export class OnboardingService {
     let filename = "IMG-" + this.rendomFileName(5) + ".jpg";
     formData.append('id', loginUserId);
     formData.append('profile', blobData, filename);
-    await this.loadingService.show();
+    this.loadingService.show();
     this.commonProvider.PostMethod(Apiurl.UploadProfilePicture + loginUserId, formData).then(async (res: S3Object) => {
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       if (res) {
         this.zone.run(() => {
           s3Object = res;
           this.profile_picture = S3Util.getFileUrl(res);
         })
         this.commonProvider.PutMethod(Apiurl.UpdateProfilePicture + loginUserId, s3Object.key).then(async (res: any) => {
-          await this.loadingService.dismiss();
+          this.loadingService.dismiss();
           if (res) {
             this.loginUserPersonalInfo.profilePhoto = s3Object.key;
             await this.getPersonalInfo();
@@ -710,7 +722,7 @@ export class OnboardingService {
   // Save selected job types and categories
   async saveJobTypes(modal?) {
     const loginUserId = await this.storage.get('loginUserId');
-    await this.loadingService.show();
+    this.loadingService.show();
     // let params:{"jobSeekerId":"6298989d3f1aa60aa83db2ab","jobTypeRequests":[{"typeId":"5fd9a452cb42211a2fd5d91e","typeName":"Product Demo Sales"},{"typeId":"5f97069ceb8c497cb290e241","typeName":"App promoter"}],"jobTypePreferences":[{"typeId":"5fd9a452cb42211a2fd5d91e","typeName":"Product Demo Sales"},{"typeId":"5f97069ceb8c497cb290e241","typeName":"App promoter"}]}
     this.jobTypeRequests = [];
     this.jobTypePreferencesRequests = [];
@@ -739,7 +751,7 @@ export class OnboardingService {
     }
     if (this.jobPreferences?.id) {
       this.commonProvider.PutMethod(Apiurl.JobPreference + '/' + this.jobPreferences?.id, params).then(async (res: any) => {
-        await this.loadingService.dismiss();
+        this.loadingService.dismiss();
         if (modal) {
           this.modalCtrl.dismiss();
         }
@@ -749,7 +761,7 @@ export class OnboardingService {
       })
     } else {
       this.commonProvider.PostMethod(Apiurl.JobPreference, params).then(async (res: S3Object) => {
-        await this.loadingService.dismiss();
+        this.loadingService.dismiss();
         if (modal) {
           this.modalCtrl.dismiss();
         }
@@ -851,13 +863,13 @@ export class OnboardingService {
 
   // Check Redirection
   async checkRedirection() {
-    // await this.loadingService.show();
+    // this.loadingService.show();
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     const TokenKey = await this.storage.get(TOKEN_KEY);
     const loginUserInfo = await this.storage.get('loginUserInfo');
 
     if (loginUserMobileNo && TokenKey) {
-      // await this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       if (loginUserInfo) {
         await this.redirectToPage(JSON.parse(loginUserInfo));
       } else {
@@ -873,7 +885,7 @@ export class OnboardingService {
       }
     } else {
       console.log("++++++++++++++++++++++++++++++++++++++++")
-      // await this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       //Location access permission 
       if (!this.locationService.locationPermissionGranted) {
         await this.locationService.requestLocationPermission(false);
@@ -895,11 +907,11 @@ export class OnboardingService {
 
   // Redirect To Page
   async redirectToPage(res) {
-    await this.loadingService.show();
+    // this.loadingService.show();
     const loginUserId = await this.storage.get('loginUserId');
     const onboringFlowVisited = await this.storage.get('onboringFlowVisited');
     if (res && res.status != "Active") {
-      await this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       // if (res != null && res.address != null) {
       //   this.router.navigateByUrl('tabs/profile');
       // }
@@ -935,7 +947,7 @@ export class OnboardingService {
       //   this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
       // }
     } else {
-      await this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       if (res == null) {
         this.router.navigateByUrl('onboarding/onboarding-personal-info');
       } else {

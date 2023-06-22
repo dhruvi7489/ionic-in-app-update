@@ -102,12 +102,12 @@ export class AvailableJobsService {
     this.selectedJobDetails = null;
     this.jobApplicationId = null;
 
-    // await this.loadingService.show();
+    this.loadingService.show();
     if (this.employmentId && loginUserId) {
       let params = this.employmentId + '/' + loginUserId;
       let param = { "gender": loginUserGender }
       this.commonProvider.GetMethod(Apiurl.GetJobByJobId + params, param).then((res: any) => {
-        // this.loadingService.dismiss();
+        this.loadingService.dismiss();
         if (res) {
           this.selectedJobDetails = res;
           this.jobApplicationId = this.selectedJobDetails?.jobApplicationId;
@@ -116,12 +116,12 @@ export class AvailableJobsService {
           })
         }
       }).catch((err: HttpErrorResponse) => {
-        // this.loadingService.dismiss();
+        this.loadingService.dismiss();
         console.log(err);
       })
     } else {
       // this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
-      // this.loadingService.dismiss();
+      this.loadingService.dismiss();
       this.toastService.showMessage("Employment Id not found!")
     }
   }
@@ -134,11 +134,11 @@ export class AvailableJobsService {
     this.selectedJobDetails = null;
     this.jobApplicationId = null;
 
-    // await this.loadingService.show();
+    this.loadingService.show();
     if (this.employmentId) {
       let params = this.employmentId;
       this.commonProvider.GetMethod(Apiurl.GetJobDetailsGlobally + params, null).then((res: any) => {
-        // this.loadingService.dismiss();
+        this.loadingService.dismiss();
         if (res) {
           this.selectedJobDetails = res;
           console.log("*************", this.selectedJobDetails)
@@ -149,12 +149,12 @@ export class AvailableJobsService {
           })
         }
       }).catch((err: HttpErrorResponse) => {
-        // this.loadingService.dismiss();
+        this.loadingService.dismiss();
         console.log(err);
       })
     } else {
       // this.router.navigateByUrl("tabs/available-jobs/available-jobs-list")
-      // this.loadingService.dismiss();
+      this.loadingService.dismiss();
       this.toastService.showMessage("Employment Id not found!")
     }
   }
@@ -163,10 +163,10 @@ export class AvailableJobsService {
   // Apply for selected job
   async JobPreference(isDetailPage?: boolean) {
     const loginUserId = await this.storage.get('loginUserId');
-    await this.loadingService.show();
+    this.loadingService.show();
     let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
     this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       let typeIdFound = false;
       if (res) {
         this.selectedJobPreferences = res;
@@ -182,9 +182,9 @@ export class AvailableJobsService {
 
   // Login user eligible for apply job or not that logic set here
   async logicForValidToApplyJob(res, typeIdFound) {
-    await this.loadingService.show();
+    this.loadingService.show();
     if (res && res.content.length != 0 && res.content[0]?.jobTypePreferences?.length != 0) {
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       for (let pref of res?.content[0]?.jobTypePreferences) {
         // if (pref.typeId == this.selectedJobDetails?.jobTypeId) {
         typeIdFound = true;
@@ -219,7 +219,7 @@ export class AvailableJobsService {
         // }
       }
     } else {
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       if (this.selectedJobDetails?.jobSeekerPaymentInfo?.level == 'Beginner') {
         this.goToSetHourlyRate();
         return;
@@ -288,7 +288,7 @@ export class AvailableJobsService {
         "jobTypeRequests": jobTypePreferencesRequests
       }
       this.commonProvider.PutMethod(Apiurl.JobPreference + '/' + this.jobPref.id, params).then(async (res: any) => {
-        await this.loadingService.dismiss();
+        this.loadingService.dismiss();
         await this.submitJobApplication(hourlyRate, isApplyLater);
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
@@ -342,7 +342,7 @@ export class AvailableJobsService {
       "jobTypeRequests": jobTypePreferencesRequests
     }
     this.commonProvider.PutMethod(Apiurl.JobPreference + '/' + this.jobPref.id, params).then(async (res: any) => {
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPref.id, { jobTypeHourlyRateRequests: this.jobPref?.jobTypePreferences }).then((res: any) => {
         this.submitJobApplication(hourlyRate, isApplyLater);
       }).catch((err: HttpErrorResponse) => {
@@ -367,7 +367,7 @@ export class AvailableJobsService {
     application.gender = loginUserGender;
     if (application.hourlyRate != 0) {
       this.commonProvider.PostMethod(Apiurl.SubmitJobApplication, application).then(async (res: any) => {
-        await this.loadingService.dismiss();
+        this.loadingService.dismiss();
         if (!isApplyLater) {
           if (res && res.id) {
             let obj = {

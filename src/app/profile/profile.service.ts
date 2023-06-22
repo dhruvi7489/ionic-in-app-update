@@ -193,7 +193,7 @@ export class ProfileService {
 
   // Update login user personal Information
   async updateProfile() {
-    await this.loadingService.show();
+    this.loadingService.show();
     this.profileData.dob = new Date(this.dob);
     this.profileData.email = this.email_address;
     this.profileData.gender = this.gender;
@@ -208,7 +208,7 @@ export class ProfileService {
     this.profileData.vaccineCertID = this.vaccineCertID;
 
     this.commonProvider.PutMethod(Apiurl.SavePersonalInfo + '/' + this.profileData.id, this.profileData).then(async (res: any) => {
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       if (res) {
         this.toastService.showMessage('Personal information updated successfully');
         this.modalCtrl.dismiss();
@@ -245,11 +245,11 @@ export class ProfileService {
 
   // Apply for selected job
   async getJobPreference() {
-    await this.loadingService.show();
+    this.loadingService.show();
     const loginUserId = await this.storage.get('loginUserId');
     let params = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
     this.commonProvider.GetMethod(Apiurl.JobPreference + params, null).then(async (res: any) => {
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       if (res) {
         this.jobPreferences = res.content[0];
       }
@@ -391,9 +391,9 @@ export class ProfileService {
 
   async updatePhotos(flag = 'save') {
     const loginUserId = await this.storage.get('loginUserId');
-    await this.loadingService.show();
+    this.loadingService.show();
     this.commonProvider.PutMethod(Apiurl.UpdateProfilePhotos + loginUserId, this.photos).then(async (res: any) => {
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       if (res) {
         if (flag === 'save') {
           this.toastService.showMessage('Profile photos saved successfully');

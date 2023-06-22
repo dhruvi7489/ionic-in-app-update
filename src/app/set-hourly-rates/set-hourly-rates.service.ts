@@ -136,7 +136,7 @@ export class SetHourlyRatesService {
     if (typePreferences?.length != 0) {
       this.commonProvider.PostMethod(Apiurl.UpdateHourlyRate + this.jobPreferenceId, { jobTypeHourlyRateRequests: typePreferences }
       ).then(async (res: any) => {
-        await this.loadingService.dismiss();
+        this.loadingService.dismiss();
         if (res) {
           await this.modalCtrl.getTop().then(res => {
             if (res) {

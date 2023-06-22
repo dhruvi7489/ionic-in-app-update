@@ -61,7 +61,7 @@ export class AppComponent {
     // check loader available in app every particular time of interval
     this.loaderInterval = setInterval(() => {
       this.loadingService.getTop();
-    }, 3000)
+    }, 7000)
 
     // Deep linking
     App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {

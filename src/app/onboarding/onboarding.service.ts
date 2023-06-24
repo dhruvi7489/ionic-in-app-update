@@ -278,7 +278,7 @@ export class OnboardingService {
   // Send OTP to give mobile Number
   async sendOtp() {
     this.loadingService.show();
-    this.commonProvider.GetMethod(Apiurl.SendOTPUrl + this.mobile, null).then(async (res) => {
+    this.commonProvider.GetMethod(Apiurl.SendOTPUrl + this.mobile, null).then((res) => {
       this.loadingService.dismiss();
       this.storage.set('loginUserMobileNo', this.mobile);
       this.toastService.showMessage("OTP send to " + this.mobile);
@@ -299,7 +299,6 @@ export class OnboardingService {
       // if (res) {
       this.storage.set(TOKEN_KEY, res.jwtToken)
       this.storage.set(TOKEN_TYPE, res.tokentype)
-      // await this.updateToken();
       await this.getPersonalInfo();
       await this.checkRedirection();
       // await this.router.navigateByUrl('onboarding/onboarding-personal-info');
@@ -316,6 +315,7 @@ export class OnboardingService {
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
       if (res) {
+        await this.updateToken();
         this.loginUserPersonalInfo = res;
         this.id = this.loginUserPersonalInfo?.id;
         this.dob = moment(new Date(this.loginUserPersonalInfo?.dob)).format("YYYY-MM-DD");
@@ -586,18 +586,19 @@ export class OnboardingService {
     formData.append('id', loginUserId);
     formData.append('profile', blobData, filename);
     this.loadingService.show();
-    this.commonProvider.PostMethod(Apiurl.UploadProfilePicture + loginUserId, formData).then(async (res: S3Object) => {
+    this.commonProvider.PostMethod(Apiurl.UploadProfilePicture + loginUserId, formData).then((res: S3Object) => {
       this.loadingService.dismiss();
       if (res) {
         this.zone.run(() => {
           s3Object = res;
           this.profile_picture = S3Util.getFileUrl(res);
         })
-        this.commonProvider.PutMethod(Apiurl.UpdateProfilePicture + loginUserId, s3Object.key).then(async (res: any) => {
+        this.loadingService.show();
+        this.commonProvider.PutMethod(Apiurl.UpdateProfilePicture + loginUserId, s3Object.key).then((res: any) => {
           this.loadingService.dismiss();
           if (res) {
             this.loginUserPersonalInfo.profilePhoto = s3Object.key;
-            await this.getPersonalInfo();
+            this.getPersonalInfo();
             this.toastService.showMessage("Profile picture saved successfully");
           }
         }).catch((err: HttpErrorResponse) => {

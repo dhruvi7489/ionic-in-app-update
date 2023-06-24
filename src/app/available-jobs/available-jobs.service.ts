@@ -182,9 +182,9 @@ export class AvailableJobsService {
 
   // Login user eligible for apply job or not that logic set here
   async logicForValidToApplyJob(res, typeIdFound) {
-    this.loadingService.show();
+    // this.loadingService.show();
     if (res && res.content.length != 0 && res.content[0]?.jobTypePreferences?.length != 0) {
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       for (let pref of res?.content[0]?.jobTypePreferences) {
         // if (pref.typeId == this.selectedJobDetails?.jobTypeId) {
         typeIdFound = true;
@@ -219,7 +219,7 @@ export class AvailableJobsService {
         // }
       }
     } else {
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       if (this.selectedJobDetails?.jobSeekerPaymentInfo?.level == 'Beginner') {
         this.goToSetHourlyRate();
         return;
@@ -431,7 +431,12 @@ export class AvailableJobsService {
   // Share job details to Whatsapp
   async shareSelectedJobDetails() {
     let url = this.router.url
-    url = this.router.url.replace('available-job-details', 'available-job-details-global');
+    if (url.includes('available-job-details-global')) {
+    } else {
+      if (url.includes('available-job-details')) {
+        url = this.router.url.replace('available-job-details', 'available-job-details-global');
+      }
+    }
     // let pageUrl = encodeURIComponent(url);
     let jobType = encodeURIComponent(this.selectedJobDetails?.employmentTitle ? this.selectedJobDetails?.employmentTitle : this.selectedJobDetails?.title);
     // send message in App whatsapp

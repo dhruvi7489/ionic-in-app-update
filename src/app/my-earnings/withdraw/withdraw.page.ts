@@ -22,7 +22,9 @@ export class WithdrawPage implements OnInit {
   }
 
   disable() {
-    if (!this.myEarningsService.wantAmountForWithdraw || this.myEarningsService.wantAmountForWithdraw > this.myEarningsService.availableAmountForWithdraw || this.myEarningsService.wantAmountForWithdraw <= 0) {
+    if (!this.myEarningsService.wantAmountForWithdraw ||
+      this.myEarningsService.wantAmountForWithdraw > this.myEarningsService.availableAmountForWithdraw
+      || this.myEarningsService.wantAmountForWithdraw <= 0 || this.myEarningsService.disabledWithdrawalAmount) {
       return true;
     } else {
       return false;

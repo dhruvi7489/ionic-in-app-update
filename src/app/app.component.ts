@@ -358,6 +358,9 @@ export class AppComponent {
         if (notification?.data?.title == 'Job Reminder') {
           this.router.navigateByUrl('tabs/active-job');
         }
+        if (notification?.data?.title == 'Your payment is approved!' || notification?.data?.title == 'Your money is waiting for you!') {
+          this.router.navigateByUrl('tabs/my-earnings');
+        }
         if (notification?.data?.title == 'We found you a new job') {
           if (loginUserId) {
             this.router.navigateByUrl("available-job-details/" + notification?.data?.jobId);
@@ -366,7 +369,7 @@ export class AppComponent {
           }
         }
       }
-    }, 2300);
+    }, 2500);
   }
 
   // Localnotification action performed - When app is OPEN
@@ -389,6 +392,9 @@ export class AppComponent {
         }
         if (notification?.notification?.title == 'Job Reminder') {
           this.router.navigateByUrl('tabs/active-job');
+        }
+        if (notification?.notification?.title == 'Your payment is approved!' || notification?.notification?.title == 'Your money is waiting for you!') {
+          this.router.navigateByUrl('tabs/my-earnings');
         }
         if (notification?.notification?.title == 'We found you a new job') {
           if (loginUserId) {

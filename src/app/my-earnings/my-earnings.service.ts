@@ -11,6 +11,7 @@ import { LoadingService } from '../core/services/loading.service';
 import { ToastService } from '../core/services/toast.service';
 import { WithdrawPage } from './withdraw/withdraw.page';
 import { environment } from 'src/environments/environment';
+import { WithdrawalResponseModalPage } from './withdrawal-response-modal/withdrawal-response-modal.page';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +41,7 @@ export class MyEarningsService {
   wantAmountForWithdraw = null;
   totalWithdrwnAmount = 0;
   showNoEarningsFound: boolean = false;
+  disabledWithdrawalAmount: boolean = false;
 
   constructor(
     public commonProvider: CommonProvider,
@@ -242,27 +244,78 @@ export class MyEarningsService {
 
   // Send request for withdrawal
   async withdrawAmount() {
+    this.disabledWithdrawalAmount = true;
     const loginUserId = await this.storage.get('loginUserId');
     let param = {
       "userId": loginUserId,
       "amount": this.wantAmountForWithdraw
     }
     this.loadingService.show();
-    this.commonProvider.PostMethod(Apiurl.WithdrawAmount, param).then(async (res: any) => {
-      this.toastService.showMessage("Your withdrawal request sent successfully!")
+    this.commonProvider.PostMethod(Apiurl.WithdrawAmount, param).then((res: any) => {
       this.loadingService.dismiss();
-      await this.modalCtrl.dismiss();
-      this.wantAmountForWithdraw = null;
-      setTimeout(async () => {
-        this.selectedTab = 'Unapproved';
-        await this.modalCtrl.dismiss();
-        await this.fetchUserWallet();
-        await this.fetchUserPayouts(false);
-      }, 500);
+      this.modalCtrl.dismiss();
+      this.withdrawalModal(res);
     }).catch((err: HttpErrorResponse) => {
+      console.log(err)
+      this.disabledWithdrawalAmount = false;
       this.loadingService.dismiss();
       this.toastService.showMessage(err.error.statusMessage)
       console.log(err);
     })
+  }
+
+  async withdrawalModal(res) {
+    if (res?.status == 'SUCCESS') {
+      this.wantAmountForWithdraw = null;
+      let obj = {
+        title: "Withdrawal request successful",
+        message: "Congratulations! Your withdrawal request for ₹" + this.wantAmountForWithdraw + " has been processed. You will receive the money in chosen account within 1-2 hours.",
+        subMessage: "Need help? Please contact our support team.",
+        okBtnText: 'Contact Support',
+        cancelBtnText: "Close",
+        img: "../../assets/imgs/withdrawal-successful.svg",
+        okBtnImg: "../../assets/imgs/contact-support.svg",
+        success: true
+      }
+      const modal = await this.modalCtrl.create({
+        component: WithdrawalResponseModalPage,
+        componentProps: obj
+      });
+      await modal.present();
+
+      const { data } = await modal.onWillDismiss();
+      if (data) {
+        this.selectedTab = 'Unapproved';
+        await this.modalCtrl.dismiss();
+        await this.modalCtrl.dismiss();
+        await this.fetchUserWallet();
+        await this.fetchUserPayouts(false);
+        this.disabledWithdrawalAmount = false;
+      }
+    } else {
+      this.disabledWithdrawalAmount = false;
+      let obj = {
+        title: "Something went wrong!",
+        message: "We are sorry! We couldn’t process your withdrawal request of ₹" + this.wantAmountForWithdraw + " due to an internal error. Please try again.",
+        okBtnText: 'Try again',
+        img: "../../assets/imgs/withdrawal-failed.svg",
+        okBtnImg: "../../assets/imgs/reload.svg",
+        success: false
+      }
+      const modal = await this.modalCtrl.create({
+        component: WithdrawalResponseModalPage,
+        componentProps: obj
+      });
+      await modal.present();
+      const { data } = await modal.onWillDismiss();
+      if (data) {
+        this.selectedTab = 'Unapproved';
+        await this.modalCtrl.dismiss();
+        await this.modalCtrl.dismiss();
+        await this.fetchUserWallet();
+        await this.fetchUserPayouts(false);
+        this.disabledWithdrawalAmount = false;
+      }
+    }
   }
 }

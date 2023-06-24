@@ -111,7 +111,7 @@ export class ActiveJobService {
     const loginUserId = await this.storage.get('loginUserId');
     const activeJob = await this.storage.get('activeJob');
 
-    this.commonProvider.GetMethod(Apiurl.GetActiveJob + loginUserId, null).then(async (res: any) => {
+    await this.commonProvider.GetMethod(Apiurl.GetActiveJob + loginUserId, null).then(async (res: any) => {
       this.loadingService.dismiss();
       this.activeJob = new ActiveJob();
       this.activeJob.job = res ? res : JSON.parse(activeJob);
@@ -256,13 +256,13 @@ export class ActiveJobService {
     const loginUserId = await this.storage.get('loginUserId');
     const loginUserGender = await this.storage.get('loginUserGender');
     let param = "?page=0&size=5&sort=createdOn,desc" + '&' + 'jobSeekerId=' + loginUserId + '&' + 'employmentId=' + this.activeJob?.job?.employmentId;
-    this.commonProvider.GetMethod(Apiurl.getEmployeeAttendance + param, null).then(async (res: any) => {
+    await this.commonProvider.GetMethod(Apiurl.getEmployeeAttendance + param, null).then(async (res: any) => {
       if (this.activeJob) {
         this.activeJob.attendance = res;
         if (res) {
           res.content.forEach(async (att) => {
             if (this.activeJob.activeDay?.date[0] == att.checkIn[0] && this.activeJob.activeDay?.date[1] == att.checkIn[1] && this.activeJob.activeDay?.date[2] == att.checkIn[2]) {
-
+              // try {
               this.inTime = Object.assign(this.inTime, this.activeJob.activeDay.timeFrom);
               this.inTime[0] = att.checkIn[3];
               this.inTime[1] = att.checkIn[4];
@@ -283,6 +283,11 @@ export class ActiveJobService {
                 }
                 this.showPaymentPage = true;
               }
+              // }
+              // catch (err) {
+              //   alert(err)
+              //   console.log(err)
+              // }
             }
           })
         }
@@ -296,7 +301,7 @@ export class ActiveJobService {
   async getEmployeementHistory() {
     const loginUserId = await this.storage.get('loginUserId');
     let param = "?page=0&size=10&sort=createdOn,desc" + '&' + 'employmentId=' + this.activeJob?.job.employmentId + '&' + 'jobSeekerId=' + loginUserId;
-    this.commonProvider.GetMethod(Apiurl.GetEmployeementHistory + param, null).then(async (res: any) => {
+    await this.commonProvider.GetMethod(Apiurl.GetEmployeementHistory + param, null).then(async (res: any) => {
       if (res) {
         res.content.forEach(hist => {
           if (this.activeJob.activeDay.date[0] == hist.historyDate[0] && this.activeJob.activeDay.date[1] == hist.historyDate[1] && this.activeJob.activeDay.date[2] == hist.historyDate[2]) {
@@ -327,7 +332,7 @@ export class ActiveJobService {
   async getPaymentInfo() {
     const loginUserId = await this.storage.get('loginUserId');
     let param = "?page=0&size=5&sort=createdOn,desc" + '&' + 'jobSeekerId=' + loginUserId + '&' + 'employmentId=' + this.activeJob?.job.employmentId;
-    this.commonProvider.GetMethod(Apiurl.Payment + param, null).then(async (res: any) => {
+    await this.commonProvider.GetMethod(Apiurl.Payment + param, null).then(async (res: any) => {
       const activeDay = this.activeJob?.job?.dates.filter(date => date.isActive)[0];
       // this.activeJob.payment = res;
       if (res?.content.length > 0) {
@@ -507,7 +512,6 @@ export class ActiveJobService {
     this.selectedImg = image.dataUrl;
     this.blobData = this.b64toBlob(image.dataUrl.split('base64,')[1], `image/${image.format}`);
     this.enumType = enumType;
-    console.log("this.selectedImg", this.selectedImg);
     if (this.selectedImg) {
       await this.router.navigateByUrl('upload-work-photo-view')
     }
@@ -554,7 +558,7 @@ export class ActiveJobService {
     let filename = "IMG-" + this.rendomFileName(5) + ".jpg";
     formData.append('image', blobData, filename);
 
-    this.commonProvider.PostMethod(Apiurl.UploadAttendancePicture + loginUserId, formData).then(async (res) => {
+    await this.commonProvider.PostMethod(Apiurl.UploadAttendancePicture + loginUserId, formData).then(async (res) => {
       this.loadingService.dismiss();
       this.setAttendancePicture(res);
       this.saveImage(enumType);
@@ -586,7 +590,7 @@ export class ActiveJobService {
       proofEnum: enumType,
       description: this.workPictureDescription
     }
-    this.commonProvider.PutMethod(Apiurl.SaveAttendanceImgProof, param).then(async (res) => {
+    await this.commonProvider.PutMethod(Apiurl.SaveAttendanceImgProof, param).then(async (res) => {
       if (res) {
         if (enumType == 'START') {
           await this.saveMarkAttendanceWithLocationInfo();
@@ -670,7 +674,7 @@ export class ActiveJobService {
   async saveMarkAttendanceWithLocationInfo() {
     const loginUserId = await this.storage.get('loginUserId');
     const loginUserInfo = await this.storage.get('loginUserInfo');
-    this.loadingService.show();
+    await this.loadingService.show();
     if (this.addressObj.latitude && this.addressObj.longitude) {
       let param: AttendanceBody = {
         employmentId: this.activeJob?.job?.employmentId,
@@ -680,8 +684,8 @@ export class ActiveJobService {
         address: this.addressObj,
       }
       console.log("Mark attendance", param)
-      this.commonProvider.PostMethod(Apiurl.MarkAttendance, param).then(async (res: any) => {
-        this.loadingService.dismiss();
+      await this.commonProvider.PostMethod(Apiurl.MarkAttendance, param).then(async (res: any) => {
+        await this.loadingService.dismiss();
         this.activeJob.attendance = res;
         // if(res){
         await this.getEmployeementHistory();
@@ -811,7 +815,7 @@ export class ActiveJobService {
 
   // complete the job
   async completeWork(att) {
-    this.commonProvider.PutMethod(Apiurl.getEmployeeAttendance + '/' + att.id, att).then(async (res: any) => {
+    await this.commonProvider.PutMethod(Apiurl.getEmployeeAttendance + '/' + att.id, att).then(async (res: any) => {
       if (res) {
         await this.getActiveJobDetails();
       }
@@ -822,11 +826,11 @@ export class ActiveJobService {
 
   // Job rating save
   async submitActiveJobRatingPayment() {
-    await this.loadingService.show();
+    this.loadingService.show();
     const loginUserId = await this.storage.get('loginUserId');
     const loginUserInfo = await this.storage.get('loginUserInfo');
     if (this.selectedJobRating == 0) {
-      await this.loadingService.dismiss();
+      this.loadingService.dismiss();
       await this.toastService.showMessage('Rating can not be empty!');
       return;
     } else {
@@ -837,8 +841,8 @@ export class ActiveJobService {
         "employerId": this.activeJob?.job?.employmentId,
         "rating": this.selectedJobRating
       }
-      this.commonProvider.PostMethod(Apiurl.SaveRating, param).then(async (res: any) => {
-        await this.loadingService.dismiss();
+      this.commonProvider.PostMethod(Apiurl.SaveRating, param).then((res: any) => {
+        this.loadingService.dismiss();
         if (res) {
           this.savePayment();
         }
@@ -865,7 +869,7 @@ export class ActiveJobService {
       "reasonForExpectedAmount": this.reasonForExpectedAmount,
       "feedback": this.jobRatingDescription
     }
-    this.commonProvider.PostMethod(Apiurl.Payment, param).then(async (res: any) => {
+    await this.commonProvider.PostMethod(Apiurl.Payment, param).then(async (res: any) => {
       await this.loadingService.dismiss();
       if (res) {
         await this.resetActiveJobData();
@@ -881,7 +885,7 @@ export class ActiveJobService {
   async getPaymentStatus() {
     const loginUserId = await this.storage.get('loginUserId');
     this.loadingService.show();
-    this.commonProvider.GetMethod(Apiurl.GetEarningStatus + loginUserId, null).then(async (res: any) => {
+    await this.commonProvider.GetMethod(Apiurl.GetEarningStatus + loginUserId, null).then(async (res: any) => {
       this.loadingService.dismiss();
       if (res) {
         this.activeJob = null;

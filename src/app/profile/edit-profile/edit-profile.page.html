@@ -79,7 +79,7 @@
     </div>
     <custom-input [inputType]="'text'" [placeholder]="'Location'" [ngModelData]="profileService.autocomplete.query"
       [id]="'location'" (keyUp)="updateSearch($event)"
-      [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/location.svg'">
+      [imgPath]="'../../assets/imgs/Iconsax/Svg/All/outline/location.svg'" (imgPathIconClick)="locationIconClick()">
     </custom-input>
     <div *ngIf="profileService.autocompleteItems?.length>0">
       <!-- (click)="chooseItem(item)" -->

@@ -1,7 +1,7 @@
 import { Component, NgZone, Optional } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { StatusBar, Style } from '@capacitor/status-bar';
-import { AlertController, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController, NavController, NavParams, Platform } from '@ionic/angular';
 import { NetworkService } from './core/services/network.service';
 import { CommonProvider } from './core/common';
 import { Apiurl } from './core/route';
@@ -17,6 +17,7 @@ import { LoadingService } from './core/services/loading.service';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { environment } from 'src/environments/environment';
 import { ToastService } from './core/services/toast.service';
+import { filter } from 'rxjs/operators';
 
 declare var UXCam: any;
 @Component({
@@ -45,11 +46,21 @@ export class AppComponent {
     public modalCtrl: ModalController,
     public navCtrl: NavController,
     public loadingService: LoadingService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    public actionSheetController: ActionSheetController
   ) {
     SplashScreen.show({
       autoHide: true,
     });
+
+    router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        if (event.url == 'launch-screen1') {
+          this.router.navigateByUrl('launch-screen');
+        }
+      });
+
     this.initializeApp();
   }
 
@@ -76,6 +87,8 @@ export class AppComponent {
         if (slug) {
           setTimeout(async () => {
             this.appUpdateService.forDeepLink = true;
+            this.appUpdateService.showListPage = false;
+
             const loginUserId = await this.storage.get('loginUserId');
             if (slug.includes('available-job-details')) {
               if (loginUserId) {
@@ -91,10 +104,12 @@ export class AppComponent {
                 this.router.navigateByUrl(slug);
               }
             }
+
             if (slug.includes('supervisor-admin') && !loginUserId) {
+              this.appUpdateService.showListPage = true;
               this.router.navigateByUrl(slug);
             } else {
-              this.toastService.showMessage("Job Seeker already logged in!")
+              this.toastService.showMessage("Other Job Seeker already logged in on app!")
             }
           }, 2500)
         }
@@ -149,6 +164,19 @@ export class AppComponent {
         });
 
         App.addListener('backButton', ({ canGoBack }) => {
+
+          this.actionSheetController.getTop().then((res) => {
+            if (res) {
+              this.actionSheetController.dismiss();
+              return;
+            }
+          })
+
+          this.alertCtrl.getTop().then((res) => {
+            this.alertCtrl.dismiss();
+            return;
+          })
+
           if (canGoBack) {
             this.modalCtrl.getTop().then((res: any) => {
               if (res) {

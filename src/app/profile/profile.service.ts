@@ -17,6 +17,7 @@ import { ToastService } from '../core/services/toast.service';
 import { ExperiencesListPage } from './experiences-list/experiences-list.page';
 import { Storage } from '@ionic/storage';
 import { OnboardingService } from '../onboarding/onboarding.service';
+import { ActionAlertService } from '../core/services/action-alert.service';
 declare var google;
 
 export class UploadPhotos {
@@ -90,7 +91,8 @@ export class ProfileService {
     public loadingService: LoadingService,
     public storage: Storage,
     public onboardingService: OnboardingService,
-    public cdr: ApplicationRef
+    public cdr: ApplicationRef,
+    public actionAlertService: ActionAlertService
   ) {
     this.setInitialValues();
   }
@@ -261,6 +263,7 @@ export class ProfileService {
 
   // Upload profile picture options
   async uploadProfilePicture(index = -1) {
+    await this.actionAlertService.getTopActionSheet();
     const actionSheet = await this.actionSheetController.create({
       header: 'Select Image source',
       buttons: [
@@ -561,6 +564,7 @@ export class ProfileService {
 
   // Selecet option introduction video
   async selectIntoVideoUploadOptions() {
+    await this.actionAlertService.getTopActionSheet();
     const actionSheet = await this.actionSheetController.create({
       header: 'Select Image source',
       buttons: [
@@ -619,6 +623,7 @@ export class ProfileService {
 
   // Profile more options
   async profileMoreOptions() {
+    await this.actionAlertService.getTopActionSheet();
     const actionSheet = await this.actionSheetController.create({
       cssClass: 'logout-actionsheet',
       buttons: [

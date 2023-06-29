@@ -22,7 +22,10 @@ export class LaunchScreen1Page implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("Capacitor.getPlatform()", Capacitor.getPlatform())
+
+  }
+
+  ionViewWillEnter() {
     if (Capacitor.getPlatform() == 'web') {
       this.isWeb = true;
     } else {
@@ -38,11 +41,9 @@ export class LaunchScreen1Page implements OnInit {
   checkForReferral() {
     console.log(this.router.url.split('champs/'))
     this.commonProvider.GetMethod(Apiurl.CheckReferralCode + this.router.url.split('champs/')[1], null).then(async (res: any) => {
-      console.log("res", res)
       if (res && res?.id) {
         const lanchScreensVisited = await this.storage.get('lanchScreensVisited');
         if (!lanchScreensVisited) {
-          console.log("+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
           this.router.navigateByUrl('launch-screen');
         } else {
           this.router.navigateByUrl('onboarding/onboarding-phone-number');

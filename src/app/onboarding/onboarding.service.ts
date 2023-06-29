@@ -22,6 +22,7 @@ import * as moment from 'moment';
 import { Address } from '../core/modal/address.modal';
 import { AppUpdateService } from '../core/services/app-update.service';
 import { Capacitor } from '@capacitor/core';
+import { ActionAlertService } from '../core/services/action-alert.service';
 
 declare var google;
 
@@ -108,7 +109,8 @@ export class OnboardingService {
     public locationService: LocationService,
     public modalCtrl: ModalController,
     public storage: Storage,
-    public appUpdateService: AppUpdateService
+    public appUpdateService: AppUpdateService,
+    public actionAlertService: ActionAlertService
   ) {
     this.setInitialValues();
     this.checkRedirection();
@@ -271,8 +273,10 @@ export class OnboardingService {
   }
 
   async setInitialValues() {
+    console.log("@@@@@@@@@@@@@@@@@@@@@@")
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
-    this.mobile = loginUserMobileNo ? loginUserMobileNo : null;
+    this.mobile = loginUserMobileNo ? loginUserMobileNo : this.mobile;
+    return this.mobile;
   }
 
   // Send OTP to give mobile Number
@@ -280,7 +284,6 @@ export class OnboardingService {
     this.loadingService.show();
     this.commonProvider.GetMethod(Apiurl.SendOTPUrl + this.mobile, null).then((res) => {
       this.loadingService.dismiss();
-      this.storage.set('loginUserMobileNo', this.mobile);
       this.toastService.showMessage("OTP send to " + this.mobile);
       this.router.navigateByUrl('onboarding/onboarding-otp');
     }).catch((err: HttpErrorResponse) => {
@@ -291,10 +294,11 @@ export class OnboardingService {
 
   // Login after verifying OTP
   async login() {
-    const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
+    const loginUserMobileNo = await this.setInitialValues();
     this.loadingService.show();
     this.commonProvider.PostMethod(Apiurl.LoginWithOTPUrl, new LoginRequest(loginUserMobileNo, this.otp)).then(async (res: LoginResponse) => {
       this.loadingService.dismiss();
+      this.storage.set('loginUserMobileNo', this.mobile);
       await this.toastService.showMessage("Login successfully");
       // if (res) {
       this.storage.set(TOKEN_KEY, res.jwtToken)
@@ -499,6 +503,7 @@ export class OnboardingService {
 
   // Upload profile picture options
   async uploadProfilePicture() {
+    await this.actionAlertService.getTopActionSheet();
     const actionSheet = await this.actionSheetController.create({
       header: 'Select Image source',
       buttons: [
@@ -941,6 +946,9 @@ export class OnboardingService {
               console.log("222222222222222222222222222222222222222222222222222222222222222222222222222222")
               this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
             }
+            if (this.appUpdateService.showListPage && loginUserId) {
+              this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+            }
           }
         }
       }
@@ -955,6 +963,9 @@ export class OnboardingService {
         if (!this.router.url.includes('tabs') && !this.appUpdateService.forDeepLink) {
           this.onbordingFlowVisited();
           console.log("33333333333333333333333333333333333333333333333333333333333333333333")
+          this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
+        }
+        if (this.appUpdateService.showListPage && loginUserId) {
           this.router.navigateByUrl('tabs/available-jobs/available-jobs-list');
         }
       }

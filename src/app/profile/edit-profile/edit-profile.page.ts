@@ -11,6 +11,7 @@ import { ProfileService } from '../profile.service';
 })
 export class EditProfilePage implements OnInit {
   disabled: boolean = false;
+  locationClick: boolean = false;
 
   @ViewChild('search', { static: false }) public searchElementRef: ElementRef;
 
@@ -100,17 +101,25 @@ export class EditProfilePage implements OnInit {
       this.profileService.autocompleteItems = [];
       return;
     }
+    this.setAutocompleteAdress();
+  }
 
-    const me = this;
+  setAutocompleteAdress(searchString?: string) {
+    const self = this;
+    let input = null;
+    if (searchString) {
+      input = searchString
+    } else {
+      input = this.profileService.autocomplete.query
+    }
     this.profileService.service.getPlacePredictions({
-      input: this.profileService.autocomplete.query,
-
+      input: input,
     }, (predictions, status) => {
-      me.profileService.autocompleteItems = [];
-      me.ngZone.run(() => {
+      self.profileService.autocompleteItems = [];
+      self.ngZone.run(() => {
         if (predictions != null) {
           predictions.forEach((prediction) => {
-            me.profileService.autocompleteItems.push(prediction.description);
+            self.profileService.autocompleteItems.push(prediction.description);
           });
           // this.profileService.autocomplete.query= predictions[0].description;
         }
@@ -127,6 +136,16 @@ export class EditProfilePage implements OnInit {
     this.profileService.geoCode(this.profileService.geo); // convert Address to lat and long
   }
 
-
-
+  locationIconClick() {
+    this.locationClick = !this.locationClick;
+    let searchString = null;
+    if (this.locationClick) {
+      if (this.profileService.autocomplete.query?.includes(',')) {
+        searchString = this.profileService.autocomplete.query.split(',')[1]
+      }
+      this.setAutocompleteAdress(searchString);
+    } else {
+      this.profileService.autocompleteItems = [];
+    }
+  }
 }

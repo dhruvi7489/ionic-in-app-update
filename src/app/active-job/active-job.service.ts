@@ -20,6 +20,7 @@ import { Storage } from '@ionic/storage';
 import { JobUtilervice } from '../core/util/job-util.service';
 import { Address } from '../core/modal/address.modal';
 import { Capacitor } from '@capacitor/core';
+import { ActionAlertService } from '../core/services/action-alert.service';
 declare var google;
 
 @Injectable({
@@ -88,7 +89,8 @@ export class ActiveJobService {
     public loadingService: LoadingService,
     public storage: Storage,
     public jobUtilService: JobUtilervice,
-    public cdr: ApplicationRef
+    public cdr: ApplicationRef,
+    public actionAlertService: ActionAlertService
   ) {
     // Location cordinates subscribe if get
     this.locationService.getLocationCordinates().subscribe(async (res) => {
@@ -473,6 +475,7 @@ export class ActiveJobService {
 
   // Upload profile picture options
   async uploadProfilePicture(enumType) {
+    await this.actionAlertService.getTopActionSheet();
     const actionSheet = await this.actionSheetController.create({
       header: 'Select Image source',
       buttons: [

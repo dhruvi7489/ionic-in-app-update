@@ -291,9 +291,10 @@ export class ProfileService {
   // After selecting img from camera and gallery
   async pickImage(source: CameraSource, index) {
     const image = await Camera.getPhoto({
-      quality: 50,
+      quality: 80,
       height: 700,
       width: 700,
+      saveToGallery: true,
       source,
       correctOrientation: true,
       resultType: CameraResultType.DataUrl,
@@ -594,6 +595,7 @@ export class ProfileService {
       quality: 80,
       height: 700,
       width: 700,
+      saveToGallery: true,
       source,
       correctOrientation: true,
       resultType: CameraResultType.DataUrl,

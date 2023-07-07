@@ -509,6 +509,7 @@ export class ActiveJobService {
       height: 700,
       width: 700,
       source,
+      saveToGallery: true,
       correctOrientation: true,
       resultType: CameraResultType.DataUrl,
     });

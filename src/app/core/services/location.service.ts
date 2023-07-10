@@ -7,6 +7,9 @@ import { Subject } from 'rxjs';
 import { ToastService } from './toast.service';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { Capacitor } from '@capacitor/core';
+import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings';
+import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionAlertService } from './action-alert.service';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +27,10 @@ export class LocationService {
         public location: Location,
         public toastService: ToastService,
         private zone: NgZone,
-        private locationAccuracy: LocationAccuracy
+        private locationAccuracy: LocationAccuracy,
+        public actionSheetController: ActionSheetController,
+        public actionAlertService: ActionAlertService,
+        private alertCtrl: AlertController
     ) {
         Geolocation.checkPermissions().then(async (res) => {
             if (res.location === 'denied') {
@@ -81,17 +87,94 @@ export class LocationService {
             this.locationCordinates = res;
             this.watchPosition();
             this.setLocationCordinates(res);
-        }).catch((err: HttpErrorResponse) => {
+        }).catch(async (err: HttpErrorResponse) => {
             this.setLocationCordinates(null);
             console.log("location fetch err=", err)
-            if (showErrorMsg) {
-                if (err.message.includes('disabled')) {
-                    this.toastService.showMessage("Please enable your device location");
-                } else {
-                    this.toastService.showMessage(err.message);
-                    // this.requestLocationPermission();
-                }
-            }
+
+            // Open App setting If Location denied by user
+            await this.actionAlertService.getTopActionSheet();
+            const actionSheet = await this.actionSheetController.create({
+                header: 'Give location access permission to go forward',
+                backdropDismiss: false,
+                buttons: [
+                    {
+                        text: 'Enable Location',
+                        handler: () => {
+                            NativeSettings.open({
+                                optionAndroid: AndroidSettings.ApplicationDetails,
+                                optionIOS: IOSSettings.App
+                            }).then((res: any) => {
+                                this.getCurrentLocationPosition();
+                            }).catch((err: any) => {
+                                console.log("NativeSettings.open", err)
+                            })
+                        }
+                    },
+                ]
+            });
+            await actionSheet.present();
+
+            // let alert = this.alertCtrl.create({
+            //     header: 'Open Device Settings',
+            //     cssClass: 'exit-alert',
+            //     id: 'exit-alert',
+            //     message: 'Open Device Settings For Permission',
+            //     backdropDismiss: false,
+            //     buttons: [
+            //         {
+            //             text: 'Cancel',
+            //             role: 'cancel',
+            //             cssClass: 'cancel-btn',
+            //             handler: () => {
+            //                 console.log('Cancel clicked');
+            //             }
+            //         },
+            //         {
+            //             text: 'Open Settings',
+            //             cssClass: 'exit-btn',
+            //             handler: () => {
+            //                 NativeSettings.open({
+            //                     optionAndroid: AndroidSettings.ApplicationDetails,
+            //                     optionIOS: IOSSettings.App
+            //                 }).catch(err => {
+            //                     console.log("NativeSettings.open", err)
+            //                 })
+            //             }
+            //         }
+            //     ]
+            // });
+            // alert.then(res => {
+            //     res.present();
+            // });
+
+
+            // NativeSettings.open({
+            //     optionAndroid: AndroidSettings.ApplicationDetails,
+            //     optionIOS: IOSSettings.App
+            // }).catch(err => {
+            //     console.log("NativeSettings.open", err)
+            // })
+
+            // NativeSettings.openAndroid({
+            //     option: AndroidSettings.ApplicationDetails,
+            // }).catch(err => {
+            //     console.log("NativeSettings.openAndroid", err)
+            // })
+
+            // NativeSettings.openIOS({
+            //     option: IOSSettings.App,
+            // }).catch(err => {
+            //     console.log("NativeSettings.openIOS", err)
+            // })
+
+            // if (showErrorMsg) {
+            //     if (err.message.includes('disabled')) {
+            //         this.toastService.showMessage("Please enable your device location");
+            //     } else {
+            //         this.toastService.showMessage(err.message);
+            //         // this.requestLocationPermission();
+            //     }
+            // }
         });
     }
 
@@ -105,6 +188,7 @@ export class LocationService {
             this.requestToSwitchOnGPS(showErrorMsg);
             // }
         }).catch(err => {
+            console.log("errr0", err)
             if (!err.includes('cordova_not_available')) {
                 this.toastService.showMessage(err.message);
             }

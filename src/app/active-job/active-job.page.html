@@ -2,6 +2,10 @@
 
 <ion-content>
   <div class="content-wrap">
+    <div class="data-not-found-wrap" *ngIf="activeJobService?.isLoading">
+      <div id="loader"></div>
+      <div class="mt-10 ml-12 primary fw-500 sub-heading-sm"> Loading...</div>
+    </div>
     <!-- <div class="data-not-found-wrap" *ngIf="!activeJobService.activeJob?.job">
       <div class="pb-0">
         <ion-row>

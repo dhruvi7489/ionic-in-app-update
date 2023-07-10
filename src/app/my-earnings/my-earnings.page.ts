@@ -24,9 +24,13 @@ export class MyEarningsPage implements OnInit {
     this.myEarningsService.selectedTab = 'Unapproved';
     await this.myEarningsService.getPaymentStatus();
     await this.myEarningsService.resetPayload();
-    await this.myEarningsService.getPaymentRecords();
     await this.myEarningsService.fetchUserWallet();
-    await this.myEarningsService.fetchUserPayouts(false);
+    if (this.myEarningsService.selectedTab == 'Paid') {
+      await this.myEarningsService.fetchUserPayouts(false);
+    } else {
+      await this.myEarningsService.fetchUserPayouts(true);
+      await this.myEarningsService.getPaymentRecords();
+    }
   }
 
   ngOnInit(): void {
@@ -49,7 +53,7 @@ export class MyEarningsPage implements OnInit {
     });
     await this.myEarningsService.resetPayload();
     if (event.target.value == 'Paid') {
-      await this.myEarningsService.fetchUserPayouts(true);
+      await this.myEarningsService.fetchUserPayouts(false);
     } else {
       await this.myEarningsService.getPaymentRecords();
     }
@@ -62,7 +66,7 @@ export class MyEarningsPage implements OnInit {
       if (this.myEarningsService.selectedTab != 'Paid') {
         await this.myEarningsService.getPaymentRecords();
       } else {
-        await this.myEarningsService.fetchUserPayouts(true);
+        await this.myEarningsService.fetchUserPayouts(false);
       }
       await setTimeout(() => {
         infiniteScroll.target.complete();
@@ -72,5 +76,20 @@ export class MyEarningsPage implements OnInit {
         infiniteScroll.target.complete();
       }, 500)
     }
+  }
+
+  async doRefresh(event) {
+    this.myEarningsService.earningRecords = [];
+    this.myEarningsService.page = 0;
+    await this.myEarningsService.getPaymentStatus();
+    await this.myEarningsService.resetPayload();
+    await this.myEarningsService.fetchUserWallet();
+    if (this.myEarningsService.selectedTab == 'Paid') {
+      await this.myEarningsService.fetchUserPayouts(false);
+    } else {
+      await this.myEarningsService.fetchUserPayouts(true);
+      await this.myEarningsService.getPaymentRecords();
+    }
+    await event.target.complete();
   }
 }

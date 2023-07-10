@@ -59,7 +59,8 @@ export class AvailableJobsService {
   // Get all jobs list
   async getAllJobsList(search?) {
     this.showNoJobFound = false;
-    const loginUserGender = await this.storage.get('loginUserGender');
+    const loginUserGender = await this.storage.get('loginUserGender') ? await this.storage.get('loginUserGender') : localStorage.getItem('loginUserGender');
+    console.log(loginUserGender, await this.storage.get('loginUserGender'), localStorage.getItem('loginUserGender'))
     if (search) {
       this.jobLists = [];
       this.page = 0;
@@ -67,7 +68,7 @@ export class AvailableJobsService {
     this.loadingService.show();
     let params = '?sort=createdOn,desc&page=' + this.page + '&size=' + this.pageSize;
     let param = { "gender": loginUserGender, "query": search }
-    this.commonProvider.PostMethod(Apiurl.GetJobsList + params, param).then((res: any) => {
+    await this.commonProvider.PostMethod(Apiurl.GetJobsList + params, param).then((res: any) => {
       this.loadingService.dismiss();
       this.errorInApiCall = false;
       if (res && res.content?.length != 0) {
@@ -110,6 +111,7 @@ export class AvailableJobsService {
         this.loadingService.dismiss();
         if (res) {
           this.selectedJobDetails = res;
+          console.log("selectedJobDetails------------", this.selectedJobDetails)
           this.jobApplicationId = this.selectedJobDetails?.jobApplicationId;
           this.selectedJobDetails?.dates?.forEach(date => {
             this.jobUtilService.shiftDayChange(date.date, date.timeFrom, date.timeTo);
@@ -141,8 +143,7 @@ export class AvailableJobsService {
         this.loadingService.dismiss();
         if (res) {
           this.selectedJobDetails = res;
-          console.log("*************", this.selectedJobDetails)
-
+          console.log("selectedJobDetails===", this.selectedJobDetails)
           this.jobApplicationId = this.selectedJobDetails?.jobApplicationId;
           this.selectedJobDetails?.dates?.forEach(date => {
             this.jobUtilService.shiftDayChange(date.date, date.timeFrom, date.timeTo);
@@ -183,6 +184,7 @@ export class AvailableJobsService {
   // Login user eligible for apply job or not that logic set here
   async logicForValidToApplyJob(res, typeIdFound) {
     // this.loadingService.show();
+    console.log(this.selectedJobDetails)
     if (res && res.content.length != 0 && res.content[0]?.jobTypePreferences?.length != 0) {
       // this.loadingService.dismiss();
       for (let pref of res?.content[0]?.jobTypePreferences) {

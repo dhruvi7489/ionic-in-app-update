@@ -117,17 +117,17 @@ export class OnboardingService {
     // Location cordinates subscribe if get
     this.locationService.getLocationCordinates().subscribe(async (res) => {
       console.log("Location Res============================", res)
-      this.loadingService.show();
+      // this.loadingService.show();
       this.savePersonalInfoBtnDisabled = false;
       if (res) {
-        this.loadingService.dismiss();
+        // this.loadingService.dismiss();
         if (this.locationCheckClick) {
           this.savePersonalInfoBtnDisabled = true;
           await this.getAddress(res?.coords?.latitude, res?.coords?.longitude);
         }
         return;
       } else {
-        this.loadingService.dismiss();
+        // this.loadingService.dismiss();
       }
     })
   }
@@ -304,7 +304,6 @@ export class OnboardingService {
       this.storage.set(TOKEN_KEY, res.jwtToken)
       this.storage.set(TOKEN_TYPE, res.tokentype)
       await this.getPersonalInfo();
-      await this.checkRedirection();
       // await this.router.navigateByUrl('onboarding/onboarding-personal-info');
 
       // }
@@ -332,6 +331,7 @@ export class OnboardingService {
         this.storage.set('loginUserInfo', JSON.stringify(this.loginUserPersonalInfo));
         this.storage.set('loginUserId', this.id);
         this.storage.set('loginUserGender', this.gender);
+        localStorage.setItem('loginUserGender', this.gender);
         this.storage.set('loginUserInitial', await this.getLoginUserNameInitial(this.full_name));
         this.initial = await this.storage.get('loginUserInitial');
         if (this.loginUserPersonalInfo?.workExperiences && this.loginUserPersonalInfo?.workExperiences?.length != 0) {
@@ -367,7 +367,7 @@ export class OnboardingService {
         await this.checkEmailValidation();
         await this.setProfilePicture();
         if (isUpdateProfile) {
-          this.updateProfile();
+          await this.updateProfile();
         }
       } else {
         this.router.navigateByUrl('onboarding/onboarding-personal-info');
@@ -375,6 +375,7 @@ export class OnboardingService {
     }).catch((err: HttpErrorResponse) => {
       console.log(err);
     })
+    await this.checkRedirection();
   }
 
   // Check email validation

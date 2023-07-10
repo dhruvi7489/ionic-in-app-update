@@ -19,10 +19,10 @@ export class AvailableJobsListPage implements OnInit {
   ngOnInit() {
   }
 
-  async ionViewWillEnter() {
+  ionViewWillEnter() {
     this.availableJobsService.jobLists = [];
     this.availableJobsService.page = 0;
-    await this.availableJobsService.getAllJobsList();
+    this.availableJobsService.getAllJobsList();
   }
 
   async searchAvailableJobs(event) {

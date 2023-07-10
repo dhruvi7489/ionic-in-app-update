@@ -110,11 +110,9 @@ export class AvailableJobDetailsPage implements OnInit {
     //   return;
     // }
     // if (JSON.parse(loginUserInfo)?.status == 'Pending' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level == "Beginner") {
-    //   console.log("@@@@@@@@")
     //   await this.availableJobsService.JobPreference(true);
     // }
     // else if (JSON.parse(loginUserInfo)?.status != 'Active' && this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level != "Beginner") {
-    //   console.log("%%%%%%%%%%%%")
     //   this.toastService.showMessage("You can't apply to this job now because this job is open for " + this.availableJobsService?.selectedJobDetails?.jobSeekerPaymentInfo?.level + " level, please wait for profile approval.")
     //   return;
     // }

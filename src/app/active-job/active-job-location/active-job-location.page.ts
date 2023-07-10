@@ -30,7 +30,7 @@ export class ActiveJobLocationPage implements OnInit {
     await this.activeJobService.checkLocationEnable();
   }
 
-  async navigateLocation() {
+  async navigateLocationClick() {
     await this.activeJobService.navigateToMap();
   }
 

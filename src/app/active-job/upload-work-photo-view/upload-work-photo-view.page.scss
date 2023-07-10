@@ -1,8 +1,16 @@
 .content-wrap {
     .content-wrap-inner {
-        margin-top: -155px;
+        // margin-top: -155px;
         background: #fff;
         backdrop-filter: blur(40px);
+    }
+
+    .img-container {
+        // max-height: 80vh !important;
+        // height: 75vh !important;
+        max-height: 60vh !important;
+        // height: 60vh !important;
+        width: 100% !important;
     }
 }
 

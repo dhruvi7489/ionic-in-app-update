@@ -653,6 +653,7 @@ export class ProfileService {
   // logoOut
   async logoOut() {
     this.storage.clear();
+    localStorage.clear();
     this.onboardingService.resetOnbordingValues();
     this.router.navigateByUrl('onboarding/onboarding-phone-number');
     this.cdr.tick();

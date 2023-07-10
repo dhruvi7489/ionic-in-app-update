@@ -32,12 +32,13 @@ export class AvailableJobDetailsGlobalComponent implements OnInit {
 
   async ionViewWillEnter() {
     this.btnTitle = "Apply";
-    await this.availableJobsService.getSelectedJobByIdGlobally();
     const loginUserInfo = await this.storage.get('loginUserInfo');
     if (JSON.parse(loginUserInfo)) {
       // let url = this.router.url.replace('available-job-details-global/', 'available-job-details/');
       // this.router.navigateByUrl(url);
-      this.availableJobsService.getSelectedJobById(this.router.url.split('available-job-details-global/')[1]);
+      await this.availableJobsService.getSelectedJobById(this.router.url.split('available-job-details-global/')[1]);
+    } else {
+      await this.availableJobsService.getSelectedJobByIdGlobally();
     }
   }
 

@@ -387,6 +387,9 @@ export class AppComponent {
           this.router.navigateByUrl('tabs/active-job');
         }
         if (notification?.data?.title == 'Your payment is approved!' || notification?.data?.title == 'Your money is waiting for you!') {
+          if (this.router.url.includes('tabs/my-earnings')) {
+            this.commonProvider.setRefreshMyEarningPage(true);
+          }
           this.router.navigateByUrl('tabs/my-earnings');
         }
         if (notification?.data?.title == 'We found you a new job') {
@@ -422,6 +425,9 @@ export class AppComponent {
           this.router.navigateByUrl('tabs/active-job');
         }
         if (notification?.notification?.title == 'Your payment is approved!' || notification?.notification?.title == 'Your money is waiting for you!') {
+          if (this.router.url.includes('tabs/my-earnings')) {
+            this.commonProvider.setRefreshMyEarningPage(true);
+          }
           this.router.navigateByUrl('tabs/my-earnings');
         }
         if (notification?.notification?.title == 'We found you a new job') {

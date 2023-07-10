@@ -168,7 +168,6 @@ export class AppComponent {
       this.fcm.onNotification().subscribe(async (payload: INotificationPayload) => {
         console.log("payload------", payload)
         // this.pushPayload = payload;
-        console.log('new notif ## ', payload);
         // this.jobRemiderService.employmentId = this.pushPayload.jobId;
         // if (this.pushPayload.wasTapped) {
         //     this.notification.receiveNew(this.notification.saveNotification(this.pushPayload));

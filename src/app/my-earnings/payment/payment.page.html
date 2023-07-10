@@ -24,7 +24,8 @@
       [placeholder]="'Confirm your account number'" [ngModelData]="myEarningsService.confirm_accountNumber"
       [id]="'confirm_accountNumber'" (keyUp)="getConfirmAccountNumber($event)">
     </custom-input>
-    <div *ngIf="myEarningsService.confirm_accountNumber != myEarningsService.accountNumber"
+    <div
+      *ngIf="myEarningsService.confirm_accountNumber && myEarningsService.confirm_accountNumber != myEarningsService.accountNumber"
       class="mb-4 mt-4 ml-4 danger sub-heading-xs"> Account number not match </div>
 
     <div class="secondary fw-500 sub-heading-sm secondary mb-8 mt-16">

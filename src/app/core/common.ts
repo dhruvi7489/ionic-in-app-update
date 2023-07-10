@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ToastService } from './services/toast.service';
 import { ApiService } from './services/api.service';
 import { Apiurl } from './route';
@@ -14,6 +14,7 @@ import { Storage } from '@ionic/storage';
 })
 export class CommonProvider {
     ImagePath = Apiurl.ImagePath;
+    public refreshPage = new Subject<any>();
 
     constructor(
         public http: HttpClient,
@@ -233,4 +234,15 @@ export class CommonProvider {
         });
     }
 
+
+    // Observable for page refresh
+    // Set location Coordinates
+    setRefreshMyEarningPage(data: any) {
+        this.refreshPage.next(data);
+    }
+
+    // Get location Coordinates
+    getRefreshMyEarningPage(): Subject<any> {
+        return this.refreshPage;
+    }
 }

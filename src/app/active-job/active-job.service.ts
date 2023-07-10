@@ -76,6 +76,7 @@ export class ActiveJobService {
     distance: null
   };
   locationCheckClick: boolean = false;
+  isLoading: boolean = true;
 
   constructor(
     public commonProvider: CommonProvider,
@@ -95,10 +96,10 @@ export class ActiveJobService {
     // Location cordinates subscribe if get
     this.locationService.getLocationCordinates().subscribe(async (res) => {
       if (res) {
-        // this.locationCheckClick = false;
-        await this.checkLocationCordinates();
         if (this.locationCheckClick) {
           await this.getAddress(res?.coords?.latitude, res?.coords?.longitude);
+        } else {
+          await this.checkLocationCordinates();
         }
       } else {
         this.navigateLocation = false;
@@ -108,13 +109,14 @@ export class ActiveJobService {
 
   // Get active job data from login user id
   async GetActiveJob() {
-    this.loadingService.show();
+    this.isLoading = true;
+    // this.loadingService.show();
     this.activeJob = null;
     const loginUserId = await this.storage.get('loginUserId');
     const activeJob = await this.storage.get('activeJob');
 
     await this.commonProvider.GetMethod(Apiurl.GetActiveJob + loginUserId, null).then(async (res: any) => {
-      this.loadingService.dismiss();
+      // this.loadingService.dismiss();
       this.activeJob = new ActiveJob();
       this.activeJob.job = res ? res : JSON.parse(activeJob);
       if (this.activeJob?.job) {
@@ -131,8 +133,10 @@ export class ActiveJobService {
       } else {
         this.router.navigateByUrl('tabs/active-job/no-active-job')
       }
+      this.isLoading = false;
     }).catch((err: HttpErrorResponse) => {
-      this.loadingService.dismiss();
+      this.isLoading = false;
+      // this.loadingService.dismiss();
       console.log(err);
     })
   }
@@ -153,13 +157,14 @@ export class ActiveJobService {
   async checkLocationEnable() {
     this.navigateLocation = false;
     this.enableLocationClick = true;
-    this.locationService.currentLocationFetch = false;
-    if (this.activeJob?.job.attendanceAtVenueRequired) {
-      this.locationService.currentLocationFetch = true;
-      if (!this.locationService.locationPermissionGranted) {
-        await this.locationService.requestLocationPermission();
-      }
-    }
+    // this.locationService.currentLocationFetch = false;
+    // if (this.activeJob?.job.attendanceAtVenueRequired) {
+    this.locationService.currentLocationFetch = true;
+    this.askForAccessLocationPermission();
+    // if (!this.locationService.locationPermissionGranted) {
+    //   await this.locationService.requestLocationPermission();
+    // }
+    // }
   }
 
   // Location cordinates get
@@ -167,6 +172,8 @@ export class ActiveJobService {
     // if (this.enableLocationClick) {
     if (this.locationService.locationCordinates && this.activeJob?.job.location) {
       this.navigateLocation = true;
+    } else {
+      this.navigateLocation = false;
     }
     // }
   }
@@ -181,6 +188,7 @@ export class ActiveJobService {
 
   // Redirection of pages based on condition
   checkRedirection() {
+    this.isLoading = false;
     this.checkLocationCordinates();
     if (this.activeJob && this.activeJob?.job && !this.jobCompleted) {
       // if (this.activeJob?.job?.attendanceAtVenueRequired && !this?.endBeforeFifteenMin) {
@@ -248,6 +256,7 @@ export class ActiveJobService {
     } else {
       this.router.navigateByUrl('tabs/active-job/no-active-job');
     }
+    this.isLoading = false;
   }
 
   //Get attendance
@@ -460,6 +469,7 @@ export class ActiveJobService {
   // Mark attendance(Check-in)
   async markAttendance() {
     await this.getEmployeeAttendance();
+    console.log("this.addressObj", this.addressObj)
     if (this.addressObj?.latitude && this.addressObj?.longitude) {
       if (this.activeJob.attendance && this.activeJob.attendance.content?.length == 0) {
         if (this.activeJob?.job.attendanceLogInSelfieRequired) {
@@ -652,10 +662,21 @@ export class ActiveJobService {
     });
   }
 
-
   // Get user heck in location before mark attendance
   async saveMarkAttendance() {
     this.locationCheckClick = true;
+    if (this.locationService.locationCordinates) {
+      this.locationService.currentLocationFetch = true;
+      await this.getAddress(this.locationService.locationCordinates?.coords?.latitude, this.locationService.locationCordinates?.coords?.longitude);
+    } else {
+      this.locationService.currentLocationFetch = false;
+      this.navigateLocation = false;
+      this.router.navigateByUrl('tabs/active-job/active-job-location');
+    }
+  }
+
+  // Take location permission from user
+  async askForAccessLocationPermission() {
     if (Capacitor.getPlatform() !== 'web') {
       if (!this.locationService.locationPermissionGranted) {
         await this.locationService.requestLocationPermission(true);
@@ -678,7 +699,7 @@ export class ActiveJobService {
   async saveMarkAttendanceWithLocationInfo() {
     const loginUserId = await this.storage.get('loginUserId');
     const loginUserInfo = await this.storage.get('loginUserInfo');
-    await this.loadingService.show();
+    this.loadingService.show();
     if (this.addressObj.latitude && this.addressObj.longitude) {
       let param: AttendanceBody = {
         employmentId: this.activeJob?.job?.employmentId,
@@ -688,8 +709,8 @@ export class ActiveJobService {
         address: this.addressObj,
       }
       console.log("Mark attendance", param)
-      await this.commonProvider.PostMethod(Apiurl.MarkAttendance, param).then(async (res: any) => {
-        await this.loadingService.dismiss();
+      this.commonProvider.PostMethod(Apiurl.MarkAttendance, param).then(async (res: any) => {
+        this.loadingService.dismiss();
         this.activeJob.attendance = res;
         // if(res){
         await this.getEmployeementHistory();
@@ -859,7 +880,7 @@ export class ActiveJobService {
 
   // Save Job payment
   async savePayment() {
-    await this.loadingService.show();
+    this.loadingService.show();
     const loginUserId = await this.storage.get('loginUserId');
     let param: Payment = {
       "amount": this.totalPayment,
@@ -873,8 +894,8 @@ export class ActiveJobService {
       "reasonForExpectedAmount": this.reasonForExpectedAmount,
       "feedback": this.jobRatingDescription
     }
-    await this.commonProvider.PostMethod(Apiurl.Payment, param).then(async (res: any) => {
-      await this.loadingService.dismiss();
+    this.commonProvider.PostMethod(Apiurl.Payment, param).then(async (res: any) => {
+      this.loadingService.dismiss();
       if (res) {
         await this.resetActiveJobData();
         await this.getPaymentStatus();

@@ -51,7 +51,16 @@ export class MyEarningsService {
     public modalCtrl: ModalController,
     public storage: Storage
   ) {
-
+    this.commonProvider.getRefreshMyEarningPage().subscribe(async (res) => {
+      if (res) {
+        this.selectedTab = 'Unapproved';
+        await this.getPaymentStatus();
+        await this.resetPayload();
+        await this.getPaymentRecords();
+        await this.fetchUserWallet();
+        await this.fetchUserPayouts(true);
+      }
+    })
   }
 
   // Get Payment Status
@@ -224,7 +233,7 @@ export class MyEarningsService {
     // + '&asc=' + true;
     this.commonProvider.GetMethod(Apiurl.GetPayoutHistory + param, null).then((res: any) => {
       this.loadingService.dismiss();
-      if (isFortTotalWithdrawnAmount) {
+      if (!isFortTotalWithdrawnAmount) {
         this.earningRecords = [];
         res?.result?.forEach(element => {
           element.bankDetails = JSON.parse(JSON.parse(element?.payoutMeta)?.bankAccountDetails);
@@ -266,7 +275,6 @@ export class MyEarningsService {
 
   async withdrawalModal(res) {
     if (res?.status == 'SUCCESS') {
-      this.wantAmountForWithdraw = null;
       let obj = {
         title: "Withdrawal request successful",
         message: "Congratulations! Your withdrawal request for ₹" + this.wantAmountForWithdraw + " has been processed. You will receive the money in chosen account within 1-2 hours.",
@@ -289,8 +297,9 @@ export class MyEarningsService {
         await this.modalCtrl.dismiss();
         await this.modalCtrl.dismiss();
         await this.fetchUserWallet();
-        await this.fetchUserPayouts(false);
+        await this.fetchUserPayouts(true);
         this.disabledWithdrawalAmount = false;
+        this.wantAmountForWithdraw = null;
       }
     } else {
       this.disabledWithdrawalAmount = false;
@@ -313,8 +322,9 @@ export class MyEarningsService {
         await this.modalCtrl.dismiss();
         await this.modalCtrl.dismiss();
         await this.fetchUserWallet();
-        await this.fetchUserPayouts(false);
+        await this.fetchUserPayouts(true);
         this.disabledWithdrawalAmount = false;
+        this.wantAmountForWithdraw = null;
       }
     }
   }

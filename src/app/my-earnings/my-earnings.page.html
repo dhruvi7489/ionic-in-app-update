@@ -130,6 +130,11 @@
             </ion-segment>
         </div>
 
+        <ion-refresher close-duration="20ms" pullFactor="0.5" pullMin="50" pullMax="100" slot="fixed"
+            (ionRefresh)="doRefresh($event)">
+            <ion-refresher-content refreshingSpinner="lines"></ion-refresher-content>
+        </ion-refresher>
+
         <div *ngIf="myEarningsService.earningRecords?.length != 0 && myEarningsService.selectedTab != 'Paid'">
             <div class="pr-16 pl-16 inner-wrap">
                 <div class="bottom-border pb-12" *ngFor="let earning of myEarningsService.earningRecords">

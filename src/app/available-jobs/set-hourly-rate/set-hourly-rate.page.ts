@@ -52,19 +52,25 @@ export class SetHourlyRatePage implements OnInit {
 
   getMinTotal() {
     this.minTotal = 0;
-    this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
-      const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
-      this.minTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate * hours));
-    });
+    try {
+      this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
+        const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
+        this.minTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate * hours));
+      });
+    } catch {
+    }
     return this.minTotal;
   }
 
   getMaxTotal() {
     this.maxTotal = 0;
-    this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
-      const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
-      this.maxTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate * hours));
-    });
+    try {
+      this.availableJobsService.selectedJobDetails?.dates.forEach(date => {
+        const hours = this.jobUtilService.hoursOfJob(date.date, date.timeFrom, date.timeTo);
+        this.maxTotal += Math.round(this.availableJobsService.selectedJobDetails?.basePrice + (this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.maxRate * hours));
+      });
+    } catch {
+    }
     return this.maxTotal;
   }
 
@@ -91,6 +97,8 @@ export class SetHourlyRatePage implements OnInit {
         //   this.toastService.showMessage("You can't apply to this job now, please wait for job type approval");
         //   this.diableSubmitBtn = true;
         // }
+      } else {
+        this.hourlyRate = this.availableJobsService.selectedJobDetails?.jobSeekerPaymentInfo.minRate;
       }
     });
   }

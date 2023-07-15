@@ -109,7 +109,10 @@ export class AppComponent {
               this.appUpdateService.showListPage = true;
               this.router.navigateByUrl(slug);
             } else {
-              this.toastService.showMessage("Other Job Seeker already logged in on app!")
+              if (slug.includes('supervisor-admin')) {
+                if (loginUserId)
+                  this.toastService.showMessage("Other Job Seeker already logged in on app!")
+              }
             }
           }, 2500)
         }

@@ -18,7 +18,7 @@ export class OnboardingProfilePicturePage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.onboardingService.getPersonalInfo();
+    this.onboardingService.getPersonalInfo(null, false, false);
   }
 
   uploadPicture() {

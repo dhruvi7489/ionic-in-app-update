@@ -24,7 +24,8 @@ export class ActiveJobSummaryPage implements OnInit {
   }
 
   submitPayment() {
-    this.router.navigateByUrl('job-rating');
+    this.activeJobService.savePayment();
+    // this.router.navigateByUrl('job-rating');
   }
 
   editPayment() {

@@ -226,14 +226,18 @@ export class MyEarningsService {
   }
 
   // Fetch user wallet Transection details
-  async fetchUserPayouts(isFortTotalWithdrawnAmount?: boolean) {
+  async fetchUserPayouts(isForTotalWithdrawnAmount?: boolean) {
     const loginUserId = await this.storage.get('loginUserId');
-    this.loadingService.show();
+    if (!isForTotalWithdrawnAmount) {
+      this.loadingService.show();
+    }
     let param = loginUserId + '?pageNumber=' + this.page + '&pageSize=' + this.pageSize + '&sortBy=updatedAt';
     // + '&asc=' + true;
     this.commonProvider.GetMethod(Apiurl.GetPayoutHistory + param, null).then((res: any) => {
-      this.loadingService.dismiss();
-      if (!isFortTotalWithdrawnAmount) {
+      if (!isForTotalWithdrawnAmount) {
+        this.loadingService.dismiss();
+      }
+      if (!isForTotalWithdrawnAmount) {
         this.earningRecords = [];
         res?.result?.forEach(element => {
           element.bankDetails = JSON.parse(JSON.parse(element?.payoutMeta)?.bankAccountDetails);
@@ -247,7 +251,9 @@ export class MyEarningsService {
       this.totalWithdrwnAmount = res?.totalWithdrawnAmount;
     }).catch((err: HttpErrorResponse) => {
       console.log(err)
-      this.loadingService.dismiss();
+      if (!isForTotalWithdrawnAmount) {
+        this.loadingService.dismiss();
+      }
     })
   }
 

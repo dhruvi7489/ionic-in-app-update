@@ -18,6 +18,7 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 import { environment } from 'src/environments/environment';
 import { ToastService } from './core/services/toast.service';
 import { filter } from 'rxjs/operators';
+import { OnboardingJobTypeService } from './onboarding/onboarding-job-type/onboarding-job-type.service';
 
 declare var UXCam: any;
 @Component({
@@ -47,7 +48,8 @@ export class AppComponent {
     public navCtrl: NavController,
     public loadingService: LoadingService,
     private toastService: ToastService,
-    public actionSheetController: ActionSheetController
+    public actionSheetController: ActionSheetController,
+    public onboardingJobTypeService: OnboardingJobTypeService
   ) {
     SplashScreen.show({
       autoHide: true,
@@ -56,7 +58,7 @@ export class AppComponent {
     router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        if (event.url == 'launch-screen1') {
+        if (event.url.includes('launch-screen1')) {
           this.router.navigateByUrl('launch-screen');
         }
       });
@@ -214,7 +216,11 @@ export class AppComponent {
                     res.present();
                   });
                 } else {
-                  window.history.back();
+                  if (!this.onboardingJobTypeService.showExperience) {
+                    window.history.back();
+                  } else {
+                    this.onboardingJobTypeService.showExperience = false;
+                  }
                 }
               }
             }).catch((err: any) => {

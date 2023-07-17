@@ -866,10 +866,12 @@ export class ActiveJobService {
         "employerId": this.activeJob?.job?.employmentId,
         "rating": this.selectedJobRating
       }
-      this.commonProvider.PostMethod(Apiurl.SaveRating, param).then((res: any) => {
+      this.commonProvider.PostMethod(Apiurl.SaveRating, param).then(async (res: any) => {
         this.loadingService.dismiss();
         if (res) {
-          this.savePayment();
+          // this.savePayment();
+          await this.resetActiveJobData();
+          await this.getPaymentStatus();
         }
       }).catch((err: HttpErrorResponse) => {
         this.loadingService.dismiss();
@@ -897,8 +899,10 @@ export class ActiveJobService {
     this.commonProvider.PostMethod(Apiurl.Payment, param).then(async (res: any) => {
       this.loadingService.dismiss();
       if (res) {
-        await this.resetActiveJobData();
-        await this.getPaymentStatus();
+        // await this.resetActiveJobData();
+        // await this.getPaymentStatus();
+        await this.toastService.showMessage('Your work bill submitted successfully!');
+        this.router.navigateByUrl('job-rating');
       }
     }).catch((err: HttpErrorResponse) => {
       this.loadingService.dismiss();

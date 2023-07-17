@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { OnboardingService } from '../onboarding.service';
+import { OnboardingJobTypeService } from '../onboarding-job-type/onboarding-job-type.service';
 
 @Component({
   selector: 'app-onboarding-header',
@@ -42,7 +43,8 @@ export class OnboardingHeaderPage implements OnInit {
   constructor(
     public onboardingService: OnboardingService,
     public location: Location,
-    public router: Router
+    public router: Router,
+    public onboardingJobTypeService: OnboardingJobTypeService
   ) { }
 
 
@@ -61,10 +63,10 @@ export class OnboardingHeaderPage implements OnInit {
   }
 
   async back() {
-    if (!this.onboardingService.showExperience) {
+    if (!this.onboardingJobTypeService.showExperience) {
       this.location.back();
     } else {
-      this.onboardingService.showExperience = false;
+      this.onboardingJobTypeService.showExperience = false;
       this.onboardingService.jobCategories = [];
       await this.onboardingService.getJobCategory();
       await this.onboardingService.checkCounterActive();

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProfileService } from 'src/app/profile/profile.service';
 import { OnboardingService } from '../onboarding.service';
+import { OnboardingJobTypeService } from './onboarding-job-type.service';
 
 @Component({
   selector: 'app-onboarding-job-type',
@@ -12,17 +13,17 @@ export class OnboardingJobTypePage implements OnInit {
   constructor(
     public onboardingService: OnboardingService,
     public router: Router,
-    public profileService: ProfileService
+    public profileService: ProfileService,
+    public onboardingJobTypeService: OnboardingJobTypeService
   ) { }
 
   ngOnInit() { }
 
   async ionViewWillEnter() {
-    this.onboardingService.isJobTypeFirstPage = true;
-    this.onboardingService.showExperience = false;
+    this.onboardingJobTypeService.isJobTypeFirstPage = true;
+    this.onboardingJobTypeService.showExperience = false;
     await this.onboardingService.getJobCategory();
-    await this.onboardingService.checkCounterActive();
-    await this.onboardingService.getPersonalInfo(0);
+    await this.onboardingService.getPersonalInfo(0, false, false);
   }
 
   addSubJobCategory(data) {
@@ -32,9 +33,9 @@ export class OnboardingJobTypePage implements OnInit {
 
   saveJobTypes() {
     this.onboardingService.saveJobTypes();
-    this.onboardingService.isJobTypeFirstPage = false;
-    if (this.onboardingService.showExperience == false) {
-      this.onboardingService.showExperience = true;
+    this.onboardingJobTypeService.isJobTypeFirstPage = false;
+    if (this.onboardingJobTypeService.showExperience == false) {
+      this.onboardingJobTypeService.showExperience = true;
     }
   }
 

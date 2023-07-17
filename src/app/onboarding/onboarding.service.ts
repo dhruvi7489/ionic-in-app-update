@@ -23,6 +23,7 @@ import { Address } from '../core/modal/address.modal';
 import { AppUpdateService } from '../core/services/app-update.service';
 import { Capacitor } from '@capacitor/core';
 import { ActionAlertService } from '../core/services/action-alert.service';
+import { OnboardingJobTypeService } from './onboarding-job-type/onboarding-job-type.service';
 
 declare var google;
 
@@ -32,8 +33,8 @@ declare var google;
 export class OnboardingService {
   initial: string = null;
 
-  isJobTypeFirstPage: boolean = false;
-  showExperience: boolean = false;
+  // isJobTypeFirstPage: boolean = false;
+  // showExperience: boolean = false;
 
   mobile: string = null;
   config = {
@@ -110,7 +111,8 @@ export class OnboardingService {
     public modalCtrl: ModalController,
     public storage: Storage,
     public appUpdateService: AppUpdateService,
-    public actionAlertService: ActionAlertService
+    public actionAlertService: ActionAlertService,
+    public onboardingJobTypeService: OnboardingJobTypeService
   ) {
     this.setInitialValues();
     this.checkRedirection();
@@ -314,7 +316,7 @@ export class OnboardingService {
   }
 
   // Get login user Information by Mobile Number
-  async getPersonalInfo(i?, isUpdateProfile?: boolean) {
+  async getPersonalInfo(i?, isUpdateProfile?: boolean, isRedirect: boolean = true) {
     const loginUserMobileNo = await this.storage.get('loginUserMobileNo');
     this.commonProvider.GetMethod(Apiurl.GetPersonalInfo + loginUserMobileNo, null).then(async (res: any) => {
       if (res) {
@@ -375,7 +377,9 @@ export class OnboardingService {
     }).catch((err: HttpErrorResponse) => {
       console.log(err);
     })
-    await this.checkRedirection();
+    if (isRedirect) {
+      await this.checkRedirection();
+    }
   }
 
   // Check email validation
@@ -497,7 +501,11 @@ export class OnboardingService {
       if (this.loginUserPersonalInfo?.profilePhoto?.includes('platform-lookaside.fbsbx.com')) {
         this.profile_picture = this.loginUserPersonalInfo.profilePhoto
       } else {
-        this.profile_picture = this.commonProvider.ImagePath + this.loginUserPersonalInfo?.profilePhoto + "?" + new Date().getTime();
+        if (this.loginUserPersonalInfo?.profilePhoto?.includes(this.commonProvider.ImagePath)) {
+          this.profile_picture = this.loginUserPersonalInfo?.profilePhoto + "?" + new Date().getTime();
+        } else {
+          this.profile_picture = this.commonProvider.ImagePath + this.loginUserPersonalInfo?.profilePhoto + "?" + new Date().getTime();
+        }
       }
     }
   }
@@ -605,7 +613,7 @@ export class OnboardingService {
           this.loadingService.dismiss();
           if (res) {
             this.loginUserPersonalInfo.profilePhoto = s3Object.key;
-            this.getPersonalInfo();
+            this.getPersonalInfo(null, false, false);
             this.toastService.showMessage("Profile picture saved successfully");
           }
         }).catch((err: HttpErrorResponse) => {
@@ -686,14 +694,13 @@ export class OnboardingService {
     this.jobCategories = [];
     const loginUserId = await this.storage.get('loginUserId');
     let params = "?page=0&size=500&sort=createdOn,asc"
-    this.commonProvider.GetMethod(Apiurl.GetJobCategory + params, null).then(async (res: any) => {
-      if (res) {
-        this.jobCategories = res.content;
+    this.commonProvider.GetMethod(Apiurl.GetJobCategory + params, null).then(async (resp: any) => {
+      if (resp) {
         let obj = '?page=0&size=1&sort=createdOn,desc&jobSeekerId=' + loginUserId;
         this.commonProvider.GetMethod(Apiurl.JobPreference + obj, null).then(async (res: any) => {
           if (res) {
             this.jobPreferences = res.content[0];
-            this.jobCategories.forEach(ele => {
+            resp.content.forEach(ele => {
               ele.jobTypes?.forEach(element => {
                 element.active = false;
                 this.jobPreferences?.jobTypePreferences?.forEach(e => {
@@ -705,6 +712,8 @@ export class OnboardingService {
                 })
               });
             })
+            this.jobCategories = resp.content;
+            await this.checkCounterActive();
           }
         }).catch((err: HttpErrorResponse) => {
           console.log(err);
@@ -980,8 +989,8 @@ export class OnboardingService {
 
   // Reset Onboarding all values
   resetOnbordingValues() {
-    this.isJobTypeFirstPage = false;
-    this.showExperience = false;
+    this.onboardingJobTypeService.isJobTypeFirstPage = false;
+    this.onboardingJobTypeService.showExperience = false;
     this.mobile = null;
     this.otp = "";
     this.otp_input_1 = null;

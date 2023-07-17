@@ -1,7 +1,8 @@
-<app-onboarding-header *ngIf="!onboardingService.showExperience"></app-onboarding-header>
-<app-onboarding-header *ngIf="onboardingService.showExperience" [headerTitle]="'Experiences'"></app-onboarding-header>
+<app-onboarding-header *ngIf="!onboardingJobTypeService.showExperience"></app-onboarding-header>
+<app-onboarding-header *ngIf="onboardingJobTypeService.showExperience"
+  [headerTitle]="'Experiences'"></app-onboarding-header>
 
-<ion-content class="container" *ngIf="!onboardingService.showExperience">
+<ion-content class="container" *ngIf="!onboardingJobTypeService.showExperience">
   <div class="c-container-body mt-24 ml-16 mr-16">
     <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Select the type of jobs you are interested in
     </div>
@@ -32,7 +33,7 @@
     </div>
   </div>
 </ion-content>
-<ion-footer *ngIf="!onboardingService.showExperience">
+<ion-footer *ngIf="!onboardingJobTypeService.showExperience">
   <div class="mt-10">
     <!-- (btnClick)="saveJobTypes()" -->
     <custom-button [title]="'Next'" appDebounceClick (debounceClick)="saveJobTypes()" [debounceTimeConst]="300"
@@ -45,7 +46,7 @@
 </ion-footer>
 
 
-<ion-content class="container" *ngIf="onboardingService.showExperience" class="h-75vh">
+<ion-content class="container" *ngIf="onboardingJobTypeService.showExperience" class="h-75vh">
   <div class="c-container-body mt-24 ml-16 mr-16">
     <div class="main-body-heading-sm bold-graphik-font fw-600 secondary">Share work experiences</div>
     <div class="c-input-label secondary mt-24 mb-8">
@@ -77,7 +78,7 @@
   </div>
 </ion-content>
 
-<ion-footer *ngIf="onboardingService.showExperience">
+<ion-footer *ngIf="onboardingJobTypeService.showExperience">
   <div>
     <!-- [disabled]="onboardingService.disabled" -->
     <!-- (btnClick)="skip()" -->

@@ -189,7 +189,11 @@ export class ProfileService {
         this.profile_picture += 'camera_placeholder.svg';
       }
     } else {
-      this.profile_picture = this.commonProvider.ImagePath + this.profileData?.profilePhoto + '?' + new Date().getTime();
+      if (this.profileData?.profilePhoto?.includes(this.commonProvider.ImagePath)) {
+        this.profile_picture = this.profileData?.profilePhoto + "?" + new Date().getTime();
+      } else {
+        this.profile_picture = this.commonProvider.ImagePath + this.profileData?.profilePhoto + '?' + new Date().getTime();
+      }
     }
   }
 

@@ -34,8 +34,10 @@ zipalign -v 4 ./android/app/build/outputs/apk/release/app-release-unsigned.apk h
 
 ------------ Build IOS APK 
  Also follow this doc : https://capacitorjs.com/docs/ios
+npm i @capacitor/ios
 ionic build
 npx cap sync ios
+npx cap-config run config.yaml // deeplink
 npx cap open ios
 
 

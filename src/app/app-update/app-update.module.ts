@@ -7,8 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { AppUpdatePageRoutingModule } from './app-update-routing.module';
 
 import { AppUpdatePage } from './app-update.page';
-import { CustomButtonModule } from 'w4u-custom-components';
-import { DirectivesModule } from '../directives/directives.module';
 
 @NgModule({
   imports: [
@@ -16,8 +14,6 @@ import { DirectivesModule } from '../directives/directives.module';
     FormsModule,
     IonicModule,
     AppUpdatePageRoutingModule,
-    CustomButtonModule,
-    DirectivesModule
   ],
   declarations: [AppUpdatePage]
 })

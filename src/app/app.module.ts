@@ -11,6 +11,7 @@ import { Facebook } from '@awesome-cordova-plugins/facebook/ngx';
 import { Storage } from '@ionic/storage';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { AppUpdate } from '@ionic-native/app-update/ngx';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { CommonModule } from '@angular/common';
 import { NgOtpInputModule } from 'ng-otp-input';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
@@ -28,7 +29,7 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
     ),
     AppRoutingModule,
     HttpClientModule,
-    NgOtpInputModule
+    NgOtpInputModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
@@ -41,7 +42,8 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
     Storage,
     AppVersion,
     AppUpdate,
-    LocationAccuracy
+    LocationAccuracy,
+    InAppBrowser
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
